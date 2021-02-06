@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button } from 'reactstrap';
 
 import Login from './Login';
+import Manager from './Manager';
 
 class App extends React.Component {
   constructor(props) {
@@ -16,8 +17,8 @@ class App extends React.Component {
   render(){
     return (
 
-      
-        <Login/>
+      <Manager/>
+        //<Login/>
         // <header className="App-header">
         //   <img src={logo} className="App-logo" alt="logo" />
         //   <p>
