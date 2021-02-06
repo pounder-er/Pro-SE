@@ -1,5 +1,30 @@
 .Container{
     display: flex;
-    width: auto;
+    justify-content: flex-start;
+    background-color:rgb(255, 255, 255) ;
+}
+.Content{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    /* background-color: rgb(142, 207, 57); */
     height: 100vh;
+    
+}
+
+.Header{
+    background-color: #46CBE8;
+    height: 50px;
+    padding: 5px;
+}
+
+.Body{
+    padding: 2vh;
+    flex-grow: 1;
+    overflow-y: scroll;
+}
+
+.Sidebar{
+    height: 100%;
+    background-color:black;
 }
