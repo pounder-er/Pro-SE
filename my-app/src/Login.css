@@ -17,3 +17,8 @@
     flex-grow: 1;
     justify-content: center;
 }
+
+.imdog{
+    height: auto;
+    width: 30vh;
+}

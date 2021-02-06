@@ -6,6 +6,9 @@ import logo from './dogecoin.png';
 import { Button,InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import { BsFillPersonFill,BsFillLockFill } from "react-icons/bs";
+
+
 class Login extends React.Component {
     constructor(props) {
         super(props);
@@ -18,19 +21,20 @@ class Login extends React.Component {
             <div className="Login">
                 <body className="Container">
                 <div className="image">
-                <img src={logo} alt="Girl in a jacket" width="180"  />
+                <img className="imdog" src={logo} alt="Dogecoin"/>
                 </div>
 
                     <InputGroup style={{marginTop:10}}>
                         <InputGroupAddon addonType="prepend">
-                            <InputGroupText>@</InputGroupText>
+
+                            <InputGroupText><BsFillPersonFill/></InputGroupText>
                         </InputGroupAddon>
                         <Input placeholder="username"  />
                     </InputGroup>
 
                     <InputGroup style={{marginTop:10}}>
                         <InputGroupAddon addonType="prepend">
-                            <InputGroupText>@</InputGroupText>
+                            <InputGroupText><BsFillLockFill/></InputGroupText>
                         </InputGroupAddon>
                         <Input placeholder="Password" type="password"/>
                     </InputGroup>
