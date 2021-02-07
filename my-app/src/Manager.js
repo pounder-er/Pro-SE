@@ -37,17 +37,15 @@ class Manager extends React.Component {
     render() {
         return (
             <div className="Container">
-                <div className="Sidebar">
-                    <ProSidebar>
-                        <Menu iconShape="square">
-                            <MenuItem >Dashboard</MenuItem>
-                            <SubMenu title="Components" >
-                                <MenuItem>Component 1</MenuItem>
-                                <MenuItem>Component 2</MenuItem>
-                            </SubMenu>
-                        </Menu>
-                    </ProSidebar>
-                </div>
+                <ProSidebar>
+                    <Menu iconShape="square">
+                        <MenuItem >Dashboard</MenuItem>
+                        <SubMenu title="Components" >
+                            <MenuItem>Component 1</MenuItem>
+                            <MenuItem>Component 2</MenuItem>
+                        </SubMenu>
+                    </Menu>
+                </ProSidebar>
                 <div className="Content">
                     <header className="Header">
                         <p>head</p>

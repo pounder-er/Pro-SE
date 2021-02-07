@@ -17,8 +17,10 @@ class App extends React.Component {
   render(){
     return (
 
-      <Manager/>
-        //<Login/>
+
+      <Login/>
+      //<Manager/>
+      
         // <header className="App-header">
         //   <img src={logo} className="App-logo" alt="logo" />
         //   <p>
