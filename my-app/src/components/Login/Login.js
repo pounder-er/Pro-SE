@@ -4,29 +4,53 @@ import './Login.css';
 import logo from './dogecoin.png';
 
 import { Button, InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
 
+import styled from 'styled-components';
 
 class Login extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
 
-        }
     }
-    render() {
-        return (
-            <div className="Container">
-                 <body className="Login">
-                    <div className="Image">
-                        <img className="Logo" src={logo} alt="Dogecoin" />
-                    </div>
 
+    onClickLogin(){
+        window.location.href="/Home"
+    }
+
+    render() {
+
+        const Container = styled.div`
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f10f0f;
+            height: 100vh;
+        `;
+
+        const Body = styled.div`
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-color: #291268;
+       
+        `;
+
+        const Image = styled.img`
+            height: 30vh;
+            width: auto;
+            display: flex;
+            justify-content: center;
+        `;
+
+
+        return (
+            <Container>
+                <Body>
+                    <Image src={logo} alt="Dogecoin" />
                     <InputGroup style={{ marginTop: 15 }}>
                         <InputGroupAddon addonType="prepend">
-
                             <InputGroupText><BsFillPersonFill /></InputGroupText>
                         </InputGroupAddon>
                         <Input placeholder="username" />
@@ -38,10 +62,9 @@ class Login extends React.Component {
                         </InputGroupAddon>
                         <Input placeholder="Password" type="password" />
                     </InputGroup>
-
-                    <Button style={{ marginTop: 15 }} color="primary">Login</Button>
-                </body> 
-            </div>
+                    <Button style={{ marginTop: 15 }} onClick={this.onClickLogin} color="primary">Login</Button>
+                </Body>
+            </Container>
         );
     }
 }

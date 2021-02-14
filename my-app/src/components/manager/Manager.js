@@ -1,6 +1,4 @@
 import React from 'react';
-import './Login.css';
-
 import './Manager.css';
 
 import {
@@ -12,9 +10,10 @@ import {
     Table,
     Pagination,
     PaginationItem,
-    PaginationLink
+    PaginationLink,
+    Alert
 } from 'reactstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 import {
     ProSidebar,
@@ -22,36 +21,54 @@ import {
     MenuItem,
     SubMenu
 } from 'react-pro-sidebar';
-import 'react-pro-sidebar/dist/css/styles.css';
 
-import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
+
+import { BsFillPersonFill, BsFillLockFill, BsFillGrid1X2Fill, BsTextIndentRight } from "react-icons/bs";
 
 
 class Manager extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            test: 0
         }
     }
+
+    onClickButton=()=> {
+        this.setState({test:this.state.test+=1});
+    }
+
     render() {
         return (
             <div className="Container">
                 <ProSidebar>
                     <Menu iconShape="square">
-                        <MenuItem >Dashboard</MenuItem>
-                        <SubMenu title="Components" >
-                            <MenuItem>Component 1</MenuItem>
-                            <MenuItem>Component 2</MenuItem>
+                        <MenuItem icon={<BsFillGrid1X2Fill />}>Dashboard</MenuItem>
+                        <SubMenu title="จัดการสินค้า" >
+                            <MenuItem>รายการซื้อสินค้า</MenuItem>
+                            <MenuItem>รายการขายสินค้า</MenuItem>
+                            <MenuItem>เพิ่มสินค้าใหม่</MenuItem>
                         </SubMenu>
+                        <MenuItem >ตรวจสอบสินค้า</MenuItem>
+                        <MenuItem >ประวัติสินค้าเข้า/ออกคลัง</MenuItem>
+                        <SubMenu title="ผู้ติดต่อ" >
+                            <MenuItem>บริษัท</MenuItem>
+                            <MenuItem>สาขา</MenuItem>
+                        </SubMenu>
+                        <MenuItem >จัดการพนักงาน</MenuItem>
+                        <MenuItem >เช็ค Stock สินค้า</MenuItem>
+                        <MenuItem >ตั้งเวลาเช็ค Stock ประจำวัน</MenuItem>
+                        <MenuItem >ยอดขายสินค้า</MenuItem>
+                        <MenuItem >คำนวนปริมาณการสั่งซื้อสินค้า</MenuItem>
                     </Menu>
                 </ProSidebar>
                 <div className="Content">
                     <header className="Header">
-                        <p>head</p>
+                        <Button color="secondary" onClick={this.onClickButton}><BsTextIndentRight /></Button>
                     </header>
                     <body className="Body">
                         <h3>Body</h3>
+                        <h2>{this.state.test}</h2>
                         <Table hover>
                             <thead>
                                 <tr>

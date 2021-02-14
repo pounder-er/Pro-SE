@@ -13,15 +13,25 @@
 }
 
 .Header{
+    display: flex;
     background-color: #46CBE8;
     height: 50px;
     padding: 5px;
+    align-items: center;
 }
 
 .Body{
     padding: 2vh;
     flex-grow: 1;
     overflow-y: scroll;
+}
+
+#icon{
+    width: 30px;
+    height: 30px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
 }
 
 /* .Sidebar{
