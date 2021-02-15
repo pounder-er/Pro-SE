@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button } from 'reactstrap';
 
 import Login from './Login';
-import Contact from './Contact';
+import Company from './Company';
 import CompanyDetail from './CompanyDetail'
 
 class App extends React.Component {
@@ -20,7 +20,7 @@ class App extends React.Component {
 
 
       //<Login/>
-      <Contact/>
+      <Company/>
       //<CompanyDetail/>
       
         // <header className="App-header">

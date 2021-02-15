@@ -30,7 +30,7 @@ import { IoMdTrash } from "react-icons/io";
 
 
 
-class Contact extends React.Component {
+class Company extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -174,4 +174,4 @@ class Contact extends React.Component {
 }
 
 
-export default Contact;
+export default Company;
