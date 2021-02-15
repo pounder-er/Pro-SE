@@ -8,6 +8,7 @@ import { Button } from 'reactstrap';
 import Login from './Login';
 import Company from './Company';
 import CompanyDetail from './CompanyDetail'
+import AddCompany from './AddCompany'
 import Branch from './Branch';
 
 class App extends React.Component {
@@ -23,7 +24,8 @@ class App extends React.Component {
       //<Login/>
       //<Company/>
       //<CompanyDetail/>
-      <Branch/>
+      <AddCompany/>
+      //<Branch/>
       
         // <header className="App-header">
         //   <img src={logo} className="App-logo" alt="logo" />

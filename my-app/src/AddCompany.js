@@ -26,11 +26,10 @@ import 'react-pro-sidebar/dist/css/styles.css';
 import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
 import { MdSearch, MdDescription } from "react-icons/md";
 import { IoMdTrash } from "react-icons/io";
-import Company from './Company';
 
 
 
-class CompanyDetail extends React.Component {
+class AddCompany extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -78,7 +77,7 @@ class CompanyDetail extends React.Component {
                                     marginBottom:20, 
                                     width:'95%', 
                                     alignSelf:'center',
-                                    color:'white'}}>รายละเอียดบริษัท</h1>
+                                    color:'white'}}>เพิ่มบริษัท</h1>
                         
                         <div className="textInputContainer">
                             <div className="textInputLeft">
@@ -195,11 +194,10 @@ class CompanyDetail extends React.Component {
                         </div>  
 
                         <div className='editButton'>
-                            <Button style={{color:'white', 
-                                            backgroundColor:'#FF9900', 
-                                            borderColor:'#FF9900',
+                            <Button color="success" 
+                                    style={{color:'white', 
                                             width:100,
-                                            marginRight:'5%'}}>แก้ไข</Button>
+                                            marginRight:'5%'}}>เพิ่ม</Button>
                         </div>
                         
                         
@@ -211,4 +209,4 @@ class CompanyDetail extends React.Component {
 }
 
 
-export default CompanyDetail;
+export default AddCompany;
