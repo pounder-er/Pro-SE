@@ -11,10 +11,8 @@ import {
     Table,
     Pagination,
     PaginationItem,
-    PaginationLink,
-    Modal, ModalHeader, ModalBody, ModalFooter
+    PaginationLink
 } from 'reactstrap';
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import {
@@ -23,25 +21,21 @@ import {
     MenuItem,
     SubMenu
 } from 'react-pro-sidebar';
-
 import 'react-pro-sidebar/dist/css/styles.css';
 
 import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
 import { MdSearch, MdDescription } from "react-icons/md";
-import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { IoMdTrash } from "react-icons/io";
+import Company from './Company';
 
 
 
-class AddCompany extends React.Component {
+class BranchDetail extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            modal : false
-        }
-    }
 
-    toggle=()=>{
-        this.setState({modal:!this.state.modal});
+        }
     }
     render() {
         return (
@@ -80,30 +74,16 @@ class AddCompany extends React.Component {
                         </ProSidebar>
                     </div>
                     <body className="CDBody">
-                        
-                        <Modal isOpen={this.state.modal}>
-                            <ModalBody>
-                                {/* <IoMdCheckmarkCircleOutline color="#00BF40" 
-                                                            size={250} 
-                                                            style={{justifySelf:'center'}}/> */}
-                                <h1 style={{color:"#00B046"}}>เพิ่มบริษัทสำเร็จ!</h1>                            
-                            </ModalBody>
-                            <ModalFooter>
-                                {/* <Button color="primary" onClick={this.toggle}>Do Something</Button>{' '} */}
-                                <Button color="primary" onClick={this.toggle}>ตกลง</Button>
-                            </ModalFooter>
-                        </Modal>    
-                        
                         <h1 style={{marginTop:20, 
                                     marginBottom:20, 
                                     width:'95%', 
                                     alignSelf:'center',
-                                    color:'white'}}>เพิ่มบริษัท</h1>
+                                    color:'white'}}>รายละเอียดสาขา</h1>
                         
                         <div className="textInputContainer">
                             <div className="textInputLeft">
                                 <div className="textInput">
-                                    <p className="whiteText">ชื่อบริษัท</p>
+                                    <p className="whiteText">ชื่อสาขา</p>
                                     <InputGroup>
                                         {/* <InputGroupAddon addonType="prepend">
                                             <InputGroupText>@</InputGroupText>
@@ -112,7 +92,7 @@ class AddCompany extends React.Component {
                                     </InputGroup>
                                 </div>
                                 <div className="textInput">
-                                    <p className="whiteText">ชื่อตัวแทนบริษัท</p>
+                                    <p className="whiteText">ชื่อเจ้าของสาขา</p>
                                     <InputGroup>
                                         {/* <InputGroupAddon addonType="prepend">
                                             <InputGroupText>@</InputGroupText>
@@ -215,11 +195,11 @@ class AddCompany extends React.Component {
                         </div>  
 
                         <div className='editButton'>
-                            <Button color="success" 
-                                    onClick={this.toggle}
-                                    style={{color:'white', 
+                            <Button style={{color:'white', 
+                                            backgroundColor:'#FF9900', 
+                                            borderColor:'#FF9900',
                                             width:100,
-                                            marginRight:'5%'}}>เพิ่ม</Button>
+                                            marginRight:'5%'}}>แก้ไข</Button>
                         </div>
                         
                         
@@ -231,4 +211,4 @@ class AddCompany extends React.Component {
 }
 
 
-export default AddCompany;
+export default BranchDetail;
