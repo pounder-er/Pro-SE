@@ -8,10 +8,8 @@ import { Button } from 'reactstrap';
 import Login from './Login';
 import Company from './Company';
 import CompanyDetail from './CompanyDetail'
-import AddCompany from './AddCompany'
 import Branch from './Branch';
-import BranchDetail from './BranchDetail';
-import Contact  from './Contact'
+import HistoryInOut from './HistoryInOut'
 
 class App extends React.Component {
   constructor(props) {
@@ -24,12 +22,11 @@ class App extends React.Component {
 
 
       //<Login/>
-      <Contact/>
       //<Company/>
       //<CompanyDetail/>
-      //<AddCompany/>
       //<Branch/>
-      //<BranchDetail/>
+      <HistoryInOut/>
+
       
         // <header className="App-header">
         //   <img src={logo} className="App-logo" alt="logo" />
