@@ -10,6 +10,7 @@ import Company from './Company';
 import CompanyDetail from './CompanyDetail'
 import Branch from './Branch';
 import HistoryInOut from './HistoryInOut'
+import ProductInspection from './ProductInspection'
 
 class App extends React.Component {
   constructor(props) {
@@ -25,7 +26,8 @@ class App extends React.Component {
       //<Company/>
       //<CompanyDetail/>
       //<Branch/>
-      <HistoryInOut/>
+      //<HistoryInOut/>
+      <ProductInspection/>
 
       
         // <header className="App-header">
