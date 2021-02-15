@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-import './Contact.css';
+import './Company.css';
 
 import {
     Button,
