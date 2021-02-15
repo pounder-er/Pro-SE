@@ -1,11 +1,10 @@
 import logo from './logo.svg';
-import './App.css';
+import './style.css';
 import React from 'react';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import Login from './components/login/Login';
-import Manager from './components/manager/Manager';
+import Login from '../Login/index';
 
 import { Switch, Route } from 'react-router-dom';
 
@@ -75,7 +74,7 @@ class App extends React.Component {
       <Container>
         <ProSidebar>
           <Menu iconShape="square">
-            <MenuItem icon={<BsFillGrid1X2Fill />}>Dashboard</MenuItem>
+            <MenuItem icon={<BsFillGrid1X2Fill />}>Dash</MenuItem>
             <SubMenu title="จัดการสินค้า" >
               <MenuItem>รายการซื้อสินค้า</MenuItem>
               <MenuItem>รายการขายสินค้า</MenuItem>
@@ -98,7 +97,7 @@ class App extends React.Component {
           <Header></Header>
           <Body>
             <Switch>
-              <Route path="/manager" component={Manager} />
+              
             </Switch>
           </Body>
         </Content>
