@@ -8,7 +8,10 @@ import { Button } from 'reactstrap';
 import Login from './Login';
 import Company from './Company';
 import CompanyDetail from './CompanyDetail'
+import AddCompany from './AddCompany'
 import Branch from './Branch';
+import BranchDetail from './BranchDetail';
+import Contact  from './Contact'
 import HistoryInOut from './HistoryInOut'
 import ProductInspection from './ProductInspection'
 
@@ -23,28 +26,14 @@ class App extends React.Component {
 
 
       //<Login/>
-      //<Company/>
+      //<Contact/>
+      <Company/>
       //<CompanyDetail/>
+      //<AddCompany/>
       //<Branch/>
+      //<BranchDetail/>
       //<HistoryInOut/>
-      <ProductInspection/>
-
-      
-        // <header className="App-header">
-        //   <img src={logo} className="App-logo" alt="logo" />
-        //   <p>
-        //     44kl4 <code>src/App.js</code> and save to reload.
-           
-        //   </p>
-        //   <a
-        //     className="App-link"
-        //     href="https://reactjs.org"
-        //     target="_blank"
-        //     rel="noopener noreferrer"
-        //   >
-        //     Learn React
-        //   </a>
-        // </header>
+      //<ProductInspection/>
      
     );
   }
