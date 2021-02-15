@@ -30,7 +30,7 @@ import { IoMdTrash } from "react-icons/io";
 
 
 
-class Company extends React.Component {
+class Branch extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -73,14 +73,15 @@ class Company extends React.Component {
                             </Menu>
                         </ProSidebar>
                     </div>
+
                     <body className="Body">
                         <h1 style={{marginTop:20, 
                                     marginBottom:20, 
                                     width:'95%', 
-                                    alignSelf:'center'}}>ตรวจสอบบริษัท</h1>
+                                    alignSelf:'center'}}>ตรวจสอบสาขา</h1>
                         <div className="Search_Button">
                             <InputGroup style={{width:400}}>
-                                <Input placeholder="รหัสบริษัท/ชื่อบริษัท" />
+                                <Input placeholder="รหัสสาขา/ชื่อสาขา" />
                                 <InputGroupAddon addonType="append">
                                     <InputGroupText><MdSearch color="#1F1F1F" size={22}/></InputGroupText>
                                 </InputGroupAddon>
@@ -92,8 +93,8 @@ class Company extends React.Component {
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>รหัสบริษัท</th>
-                                    <th>ชื่อบริษัท</th>
+                                    <th>รหัสสาขา</th>
+                                    <th>ชื่อสาขา</th>
                                     <th>ที่อยู่</th>
                                     <th>เบอร์ติดต่อ</th>
                                     <th>อีเมลล์</th>
@@ -174,4 +175,4 @@ class Company extends React.Component {
 }
 
 
-export default Company;
+export default Branch;

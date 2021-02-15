@@ -73,11 +73,11 @@ class Contact extends React.Component {
                         </ProSidebar>
                     </div>
                     <body className="CDBody">
-                        <h3 style={{marginTop:20, 
+                        <h1 style={{marginTop:20, 
                                     marginBottom:20, 
                                     width:'95%', 
                                     alignSelf:'center',
-                                    color:'white'}}>รายละเอียดบริษัท</h3>
+                                    color:'white'}}>รายละเอียดบริษัท</h1>
                         
                         <div className="textInputContainer">
                             <div className="textInputLeft">
