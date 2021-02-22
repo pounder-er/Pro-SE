@@ -11,31 +11,24 @@ import Manager from './Manager';
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {}
-}
+    this.state = {
+      count:0
+    }
+  }
+
+  setCount =()=> {
+    this.setState({count:this.state.count+1})
+  }
 
   render(){
     return (
+      <div>
+        <h1>{this.state.count}</h1>
+        <button onClick = {this.setCount.bind(this)}>click</button>
+      </div>
 
-
-      <Login/>
-      //<Manager/>
-      
-        // <header className="App-header">
-        //   <img src={logo} className="App-logo" alt="logo" />
-        //   <p>
-        //     44kl4 <code>src/App.js</code> and save to reload.
-           
-        //   </p>
-        //   <a
-        //     className="App-link"
-        //     href="https://reactjs.org"
-        //     target="_blank"
-        //     rel="noopener noreferrer"
-        //   >
-        //     Learn React
-        //   </a>
-        // </header>
+      // <Login/>
+      // <Manager/>
      
     );
   }
