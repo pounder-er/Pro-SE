@@ -14,6 +14,8 @@ import BranchDetail from './BranchDetail';
 import Contact  from './Contact'
 import HistoryInOut from './HistoryInOut'
 import ProductInspection from './ProductInspection'
+import EditCompany from './EditCompany'
+import EditBranch from './EditBranch'
 
 class App extends React.Component {
   constructor(props) {
@@ -27,11 +29,13 @@ class App extends React.Component {
 
       //<Login/>
       //<Contact/>
-      <Company/>
+      //<Company/>
       //<CompanyDetail/>
+      //<EditCompany/>
       //<AddCompany/>
       //<Branch/>
       //<BranchDetail/>
+      <EditBranch/>
       //<HistoryInOut/>
       //<ProductInspection/>
      
