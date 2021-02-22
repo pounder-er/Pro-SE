@@ -1,36 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
-import React from 'react';
+import Main from './User/Stocking/Main'
+import Stock from './User/Stocking/Stock'
+import Import from './User/Stocking/Import'
+import ImportTable from './User/Stocking/ImportTable'
+import Export from './User/Stocking/Export'
+import ExportTable from './User/Stocking/ExportTable'
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Button } from 'reactstrap';
-
-import Login from './Login';
-import Manager from './Manager';
-
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      count:0
-    }
-  }
-
-  setCount =()=> {
-    this.setState({count:this.state.count+1})
-  }
-
-  render(){
-    return (
-      <div>
-        <h1>{this.state.count}</h1>
-        <button onClick = {this.setCount.bind(this)}>click</button>
-      </div>
-
-      // <Login/>
-      // <Manager/>
-     
-    );
-  }
+function App() {
+  return (
+    <div>
+      <Main></Main>
+      <Stock></Stock>
+      <Import></Import>
+      <ImportTable></ImportTable>
+      <Export></Export>
+      <ExportTable></ExportTable>
+    </div>
+  );
 }
+
 export default App;
