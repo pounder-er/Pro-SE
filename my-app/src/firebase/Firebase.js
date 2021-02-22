@@ -20,15 +20,15 @@ class Firebase {
   
     login = (email, password, success, reject) => {
       firebase.auth().signInWithEmailAndPassword(email, password)
-        .then(function (data) {
-          success(data);
+        .then(function (res) {
+          success(res);
         })
         .catch(function (error) {
           reject(error);
         });
     }
   
-    signOut = (success, reject) => {
+    logOut = (success, reject) => {
       firebase.auth().signOut()
         .then(function () {
           success();
@@ -46,6 +46,16 @@ class Firebase {
         .catch(function (error) {
           reject(error);
         });
+    }
+
+    getStateChangedUser = (success, reject) =>{
+      firebase.auth().onAuthStateChanged(user=>{
+        if (user) {
+          success(user);
+        }else{
+          reject();
+        }
+      })
     }
 
   }

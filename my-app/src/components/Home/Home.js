@@ -1,8 +1,11 @@
-import logo from './logo.svg';
-import './style.css';
 import React from 'react';
 
-import { Switch, Route, Link, NavLink } from 'react-router-dom';
+import { 
+  Switch, 
+  Route, 
+  Link, 
+  NavLink, 
+  withRouter } from 'react-router-dom';
 
 import styled from 'styled-components';
 
@@ -23,68 +26,74 @@ import {
   Pagination,
   PaginationItem,
   PaginationLink,
-  Alert,
-  Dropdown, 
-  DropdownToggle, 
-  DropdownMenu, 
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
   DropdownItem
 } from 'reactstrap';
 
 import {
-  BsFillPersonFill,
   BsFillLockFill,
   BsFillGrid1X2Fill,
   BsFillArchiveFill,
-  BsBriefcaseFill
+  BsBriefcaseFill,
+  BsFillPeopleFill
 } from "react-icons/bs";
 import { CgSidebarOpen, CgSidebar } from "react-icons/cg";
+import fire_base from '../../firebase/Firebase';
 
-class App extends React.Component {
+import { connect } from 'react-redux';
+import { addSession } from '../../redux/actions';
+
+import Employees from '../Employees/Employees'
+
+class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       collapsed: false,
-
       isOpen: false
+    }
+    // fire_base.getStateChangedUser(this.getSuccess, this.getUnsuccess);
+    this.checkUser();
+  }
+
+
+  checkUser=()=>{
+    if (this.props.session) {
+        
+    }else{
+        this.props.history.push("/");
     }
   }
 
-  toggleProfile=()=>{
-    this.setState({isOpen:!this.state.isOpen});
+  toggleProfile = () => {
+    this.setState({ isOpen: !this.state.isOpen });
+  }
+//   getSuccess = (user) => {
+//     console.log(user);
+//     this.props.dispatch(addSession(user));
+//   }
+
+//   getUnsuccess = () => {
+//     this.props.history.push("/");
+//   }
+
+  onLogout = (e) =>{
+    e.preventDefault();
+    fire_base.logOut(this.logOutSuccess,this.logOutUnsuccess);
+  }
+
+  logOutSuccess=()=>{
+    this.props.dispatch(addSession(null));
+    this.props.history.push("/");
+  }
+
+  logOutUnsuccess=(error)=>{
+    console.error(error.message);
   }
 
   render() {
-    const Container = styled.div`
-      display: flex;
-      align-items: flex-start;
-      background-color: #1F1F1F; 
-    `;
-
-    const Content = styled.div`
-      display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    /* background-color: rgb(142, 207, 57); */
-    height: 100vh;
-    `;
-
-    const Header = styled.div`
-       display: flex;
-    background-color: #46CBE8;
-    height: 50px;
-    padding: 5px;
-    align-items: center;
-    `;
-
-    const Body = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-      padding: 2vh;
-    flex-grow: 1;
-    overflow-y: scroll;
-    `;
-
     return (
       <Container>
         <ProSidebar collapsed={this.state.collapsed} >
@@ -101,7 +110,8 @@ class App extends React.Component {
               <MenuItem>บริษัท</MenuItem>
               <MenuItem>สาขา</MenuItem>
             </SubMenu>
-            <MenuItem >จัดการพนักงาน</MenuItem>
+            
+            <MenuItem icon={<BsFillPeopleFill/>}>จัดการพนักงาน<Link to={this.props.match.url+"/employees"}/></MenuItem>
             <MenuItem >เช็ค Stock สินค้า</MenuItem>
             <MenuItem >ตั้งเวลาเช็ค Stock ประจำวัน</MenuItem>
             <MenuItem >ยอดขายสินค้า</MenuItem>
@@ -122,17 +132,58 @@ class App extends React.Component {
               <Dropdown isOpen={this.state.isOpen} toggle={this.toggleProfile}>
                 <DropdownToggle caret >profile</DropdownToggle>
                 <DropdownMenu right>
-                  <NavLink to="/" activeStyle={{textDecorationLine:'unset'}}><DropdownItem>ออกจากระบบ</DropdownItem></NavLink>
+                  <DropdownItem onClick={(e)=>this.onLogout(e)}>ออกจากระบบ</DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             </div>
           </Header>
           <Body>
-
+                <Switch>
+                <Route exact path={this.props.match.path+"/employees"} component={Employees} />
+                </Switch>
           </Body>
         </Content>
       </Container>
     );
   }
 }
-export default App;
+
+const Container = styled.div`
+      display: flex;
+      align-items: flex-start;
+      background-color: #1F1F1F; 
+    `;
+
+const Content = styled.div`
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    /* background-color: rgb(142, 207, 57); */
+    height: 100vh;
+    `;
+
+const Header = styled.div`
+    display: flex;
+    background-color: #46CBE8;
+    height: 50px;
+    padding: 5px;
+    align-items: center;
+    `;
+
+const Body = styled.div`
+    display: flex;
+    flex-direction: column;
+      padding: 2vh;
+    flex-grow: 1;
+    overflow-y: scroll;
+    background-color: red;
+    `;
+    
+
+const mapStateToProps = (state) => {
+    return {
+      session: state.session,
+    }
+}
+
+export default connect(mapStateToProps)(Home);
