@@ -16,6 +16,7 @@ import HistoryInOut from './HistoryInOut'
 import ProductInspection from './ProductInspection'
 import EditCompany from './EditCompany'
 import EditBranch from './EditBranch'
+import DailyStock from './DailyStock'
 
 class App extends React.Component {
   constructor(props) {
@@ -35,9 +36,10 @@ class App extends React.Component {
       //<AddCompany/>
       //<Branch/>
       //<BranchDetail/>
-      <EditBranch/>
+      // <EditBranch/>
       //<HistoryInOut/>
       //<ProductInspection/>
+      <DailyStock/>
      
     );
   }
