@@ -8,10 +8,14 @@ import {BrowserRouter, Router, Route, Link} from 'react-router-dom'
 // import {borwserHistory} from 'react-router'
 
 ReactDOM.render(
+
+  // BrowserRouter use with Router
+
   <BrowserRouter>
     <App />
   </BrowserRouter>,
   document.getElementById('root')
+  
 );
 
 // If you want to start measuring performance in your app, pass a function

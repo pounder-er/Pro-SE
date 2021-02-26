@@ -32,6 +32,8 @@ class Main extends React.Component {
 
     onRoute =(route)=> {
 
+        // Example to 
+
         // console.log(route)
         if(route == "Stock"){
             
@@ -62,8 +64,10 @@ class Main extends React.Component {
 
                 <div className="ContentMain">
                     <body className="BodyMain">
-                        {/* Place the icon here..... */}
                         <Link to = '/Stock' style = {{width:'100%', height:'100%'}}>
+                            
+                            {/* Place the icon here..... */}
+
                             <Button onClick = {() => this.onRoute('Stock')} style = {{width:'100%', height:'100%', fontSize:40}}>Stocking ลองกดได้</Button>
                         </Link>
                     </body>

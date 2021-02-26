@@ -9,18 +9,14 @@ import {BrowserRouter, Router, Route, Link, Redirect} from 'react-router-dom'
 function App() {
   return (
     <div>
-      {/* <Main></Main> */}
-      {/* <Stock></Stock>
-      <Import></Import>
-      <ImportTable></ImportTable>
-      <Export></Export>
-      <ExportTable></ExportTable> */}
-      
+
       <Route exact path = '/' component = {Main}></Route>
       <Route path = '/Stock' component = {Stock}></Route>
       <Route path = '/Import' component = {Import}></Route>
       <Route path = '/Export' component = {Export}></Route>
       
+     {/* Route use navigate to other page */}
+
     </div>
   );
 }
