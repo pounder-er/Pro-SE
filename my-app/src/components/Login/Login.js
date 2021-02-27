@@ -27,7 +27,7 @@ import { connect } from 'react-redux';
 
 import { addSession } from '../../redux/actions';
 
-import { Formik, Field, ErrorMessage } from 'formik'
+import { Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup'
 const LoginSchema = Yup.object().shape({
     email: Yup.string()
@@ -74,7 +74,12 @@ class Login extends React.Component {
         return (
             <Container>
                 <Body>
+                    <Row>
+                    <Col lg="4" />
+                    <Col lg="4" >
+                        <div style={{display:'flex',justifyContent:'center'}}>
                     <Image src={logo} alt="Dogecoin" />
+                    </div>
                     <Formik
                         validationSchema={LoginSchema}
                         onSubmit={values => this.onClickLogin(values)}
@@ -93,7 +98,6 @@ class Login extends React.Component {
                             errors,
                         }) => (
                             <Form onSubmit={handleSubmit} style={{ marginTop: 15 }}>
-                                <Row>
                                 <FormGroup style={{flex:1}}>
                                     <InputGroup>
                                         <InputGroupAddon addonType="prepend">
@@ -106,8 +110,7 @@ class Login extends React.Component {
                                         />
                                     </InputGroup>
                                 </FormGroup>
-                                </Row>
-                                <Row>
+
                                 <FormGroup style={{flex:1}}>
                                     <InputGroup>
                                         <InputGroupAddon addonType="prepend">
@@ -120,11 +123,7 @@ class Login extends React.Component {
                                         />
                                     </InputGroup>
                                 </FormGroup>
-                                </Row>
-                                <Row>
-                                <Button type="submit" color="primary" style={{flex:1}}>Login</Button>
-                                </Row>
-                                
+                                <Button type="submit" color="primary" style={{width:'100%'}}>Login</Button>
                             </Form>
                         )}
 
@@ -132,6 +131,9 @@ class Login extends React.Component {
                     <div style={{height:40,marginTop:15,justifyContent:'center',alignItems:'center',display:'flex'}}>
                     {this.state.spinner&&<Spinner color="info" />}
                     </div>
+                    </Col>
+                    <Col lg="4" />
+                    </Row>
                 </Body>
             </Container>
         );
@@ -140,19 +142,18 @@ class Login extends React.Component {
 
 const Container = styled.div`
     display: flex;
-    justify-content: center;
     align-items: center;
     background-color: #1F1F1F;
     height: 100vh;
 `;
 
 const Body = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+
+    /* flex-direction: column;
+    justify-content: center; */
     background-color: #1F1F1F;
-    width: 40vw;
-    max-width: 100mm  
+    width: 100vw;
+    padding: 5vw;
 `;
 
 const Image = styled.img`

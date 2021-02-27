@@ -11,52 +11,49 @@ import {
     PaginationItem,
     PaginationLink,
     Label,
+    Row,
+    Col,
+    Container,
+    UncontrolledCollapse,
+    CardBody,
+    Card
 } from 'reactstrap';
 
 import styled from 'styled-components';
 
 import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons/md";
 
+import FormEmployee from './FormEmployee';
+
 class Employees extends Component {
 
     render() {
         return (
-            <Container>
+            <Container style={{ backgroundColor: 'white' }}>
                 <h3>จัดการพนักงาน</h3>
-                <Table striped >
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>ชื่อ</th>
-                                    <th>นามสกุล</th>
-                                    <th>เบอร์ติดต่อ</th>
-                                    <th>ตำแหน่ง</th>
-                                    <th>สถานะ</th>
-                                    <th>รายละเอียด</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>ประยา</td>
-                                    <td>จันโอชุท</td>
-                                    <td>083-889456-2</td>
-                                    <td>ผู้จัดการ</td>
-                                    <td>ปกติ</td>
-                                    <td className="CenterTd"><MdDescription color="#00A3FF" size={25} /></td>
-                                </tr>
-                            </tbody>
-                        </Table>
-                    </Container>
+                <Row>
+                    <Col lg="6" md="6">.col-3</Col>
+                    <Col lg="6" md="6" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <Button color="primary" id="toggler" style={{ marginBottom: '1rem' }}>
+                            เพิ่มพนักงาน
+                        </Button>
+                    </Col>
+
+
+                </Row>
+                <UncontrolledCollapse toggler="#toggler">
+                    <FormEmployee />
+                </UncontrolledCollapse>
+            </Container>
         );
     }
 }
 
-const Container = styled.div`
-      display: flex;
-      align-items: flex-start;
-      background-color: white; 
-      flex-direction:column;
-    `;
+// const Container = styled.div`
+//       display: flex;
+//       align-items: flex-start;
+//       background-color: white; 
+//       flex-direction:column;
+//     `;
 
 export default Employees;

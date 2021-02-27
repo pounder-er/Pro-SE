@@ -54,7 +54,6 @@ class Home extends React.Component {
       collapsed: false,
       isOpen: false
     }
-    // fire_base.getStateChangedUser(this.getSuccess, this.getUnsuccess);
     this.checkUser();
   }
 
@@ -70,14 +69,6 @@ class Home extends React.Component {
   toggleProfile = () => {
     this.setState({ isOpen: !this.state.isOpen });
   }
-//   getSuccess = (user) => {
-//     console.log(user);
-//     this.props.dispatch(addSession(user));
-//   }
-
-//   getUnsuccess = () => {
-//     this.props.history.push("/");
-//   }
 
   onLogout = (e) =>{
     e.preventDefault();

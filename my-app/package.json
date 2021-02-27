@@ -19,6 +19,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.2",
     "reactstrap": "^8.9.0",
+    "reactstrap-date-picker": "0.0.11",
     "styled-components": "^5.2.1",
     "web-vitals": "^1.1.0",
     "yup": "^0.32.9"
