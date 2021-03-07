@@ -16,7 +16,8 @@ import {
     Container,
     UncontrolledCollapse,
     CardBody,
-    Card
+    Card,
+    Modal, ModalHeader, ModalBody, ModalFooter
 } from 'reactstrap';
 
 import styled from 'styled-components';
@@ -25,18 +26,30 @@ import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons
 
 import FormEmployee from './FormEmployee';
 
+import {
+    Switch,
+    Route,
+    Link,
+    NavLink,
+    withRouter
+  } from 'react-router-dom';
+
 class Employees extends Component {
 
     render() {
         return (
-            <Container style={{ backgroundColor: 'white' }}>
+            <Container style={{ backgroundColor: 'white', borderRadius:5 }}>
                 <h3>จัดการพนักงาน</h3>
                 <Row>
                     <Col lg="6" md="6">.col-3</Col>
                     <Col lg="6" md="6" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+               
                         <Button color="primary" id="toggler" style={{ marginBottom: '1rem' }}>
+                       
                             เพิ่มพนักงาน
+                           
                         </Button>
+            
                     </Col>
 
 

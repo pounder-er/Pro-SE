@@ -1,11 +1,12 @@
 import React from 'react';
 
-import { 
-  Switch, 
-  Route, 
-  Link, 
-  NavLink, 
-  withRouter } from 'react-router-dom';
+import {
+  Switch,
+  Route,
+  Link,
+  NavLink,
+  withRouter
+} from 'react-router-dom';
 
 import styled from 'styled-components';
 
@@ -45,7 +46,7 @@ import fire_base from '../../firebase/Firebase';
 import { connect } from 'react-redux';
 import { addSession } from '../../redux/actions';
 
-import Employees from '../Employees/Employees'
+import Employees from '../Employees/Employees';
 
 class Home extends React.Component {
   constructor(props) {
@@ -58,11 +59,11 @@ class Home extends React.Component {
   }
 
 
-  checkUser=()=>{
+  checkUser = () => {
     if (this.props.session) {
-        
-    }else{
-        this.props.history.push("/");
+
+    } else {
+      this.props.history.push("/");
     }
   }
 
@@ -70,17 +71,17 @@ class Home extends React.Component {
     this.setState({ isOpen: !this.state.isOpen });
   }
 
-  onLogout = (e) =>{
+  onLogout = (e) => {
     e.preventDefault();
-    fire_base.logOut(this.logOutSuccess,this.logOutUnsuccess);
+    fire_base.logOut(this.logOutSuccess, this.logOutUnsuccess);
   }
 
-  logOutSuccess=()=>{
+  logOutSuccess = () => {
     this.props.dispatch(addSession(null));
     this.props.history.push("/");
   }
 
-  logOutUnsuccess=(error)=>{
+  logOutUnsuccess = (error) => {
     console.error(error.message);
   }
 
@@ -101,8 +102,8 @@ class Home extends React.Component {
               <MenuItem>บริษัท</MenuItem>
               <MenuItem>สาขา</MenuItem>
             </SubMenu>
-            
-            <MenuItem icon={<BsFillPeopleFill/>}>จัดการพนักงาน<Link to={this.props.match.url+"/employees"}/></MenuItem>
+
+            <MenuItem icon={<BsFillPeopleFill />}>จัดการพนักงาน<Link to={this.props.match.url + "/employees"} /></MenuItem>
             <MenuItem >เช็ค Stock สินค้า</MenuItem>
             <MenuItem >ตั้งเวลาเช็ค Stock ประจำวัน</MenuItem>
             <MenuItem >ยอดขายสินค้า</MenuItem>
@@ -123,15 +124,15 @@ class Home extends React.Component {
               <Dropdown isOpen={this.state.isOpen} toggle={this.toggleProfile}>
                 <DropdownToggle caret >profile</DropdownToggle>
                 <DropdownMenu right>
-                  <DropdownItem onClick={(e)=>this.onLogout(e)}>ออกจากระบบ</DropdownItem>
+                  <DropdownItem onClick={(e) => this.onLogout(e)}>ออกจากระบบ</DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             </div>
           </Header>
           <Body>
-                <Switch>
-                <Route exact path={this.props.match.path+"/employees"} component={Employees} />
-                </Switch>
+            <Switch>
+              <Route exact path={this.props.match.path + "/employees"} component={Employees} />
+            </Switch>
           </Body>
         </Content>
       </Container>
@@ -167,14 +168,14 @@ const Body = styled.div`
       padding: 2vh;
     flex-grow: 1;
     overflow-y: scroll;
-    background-color: red;
+    background-color: lightgrey;
     `;
-    
+
 
 const mapStateToProps = (state) => {
-    return {
-      session: state.session,
-    }
+  return {
+    session: state.session,
+  }
 }
 
 export default connect(mapStateToProps)(Home);

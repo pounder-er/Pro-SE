@@ -20,12 +20,12 @@ import * as Yup from 'yup';
 
 import * as data from './data.json';
 
-
-
 // var DatePicker = require("reactstrap-date-picker");
 var checkZip = false;
 var subDistrictFilter = [];
 const formEmployeeSchema = Yup.object().shape({
+  nametitle: Yup.string()
+    .required('ต้องกรอก'),
   firstname: Yup.string()
     .matches(/^[ก-๏]+$/, 'กรอกด้วยตัวอักษรภาษาไทยและไม่มีช่องว่าง')
     .max(40, 'กรอกได้ไม่เกิน 40 ตัวอักษร')
@@ -69,7 +69,7 @@ const formEmployeeSchema = Yup.object().shape({
   // })
   ,
   birthdate: Yup.date()
-    .max((new Date().getFullYear() - 18) + "-12-01")
+    .max((new Date().getFullYear() - 18) + "-12-01", 'ต้องกรอกก่อน 2003-12-01')
     .required('ต้องกรอก'),
   jobtitle: Yup.string()
     .required('ต้องเลือก')
@@ -91,9 +91,9 @@ const formEmployeeSchema = Yup.object().shape({
     .test('test', 'รหัสไปรษณีย์ไม่ถูกต้อง',
       (value) => {
         if (value != null && value.length == 5) {
-          if(checkZip){
+          if (checkZip) {
             return true;
-          }else{
+          } else {
             return false;
           }
           // let filter = data.address.filter((data) => {
@@ -101,17 +101,17 @@ const formEmployeeSchema = Yup.object().shape({
           // });
 
           // if (filter.length > 0) {
-            // subDistrictFilter = [];
-            // let n = 0;
-            // filter.forEach(element => {
-            //   subDistrictFilter.push(<option key={n}>{element.district}</option>);
-            //   n++;
-            // });
-            // console.log(subDistrictFilter);
-            // cityFilter = filter[0].amphoe;
-            // stateFilter = filter[0].province;
-            // console.log(cityFilter);
-            // console.log(stateFilter);
+          // subDistrictFilter = [];
+          // let n = 0;
+          // filter.forEach(element => {
+          //   subDistrictFilter.push(<option key={n}>{element.district}</option>);
+          //   n++;
+          // });
+          // console.log(subDistrictFilter);
+          // cityFilter = filter[0].amphoe;
+          // stateFilter = filter[0].province;
+          // console.log(cityFilter);
+          // console.log(stateFilter);
           //   return true;
           // } else {
           //   return false;
@@ -149,7 +149,7 @@ class FormEmployee extends Component {
             }
             }
             initialValues={{
-              nametitle: '',
+              nametitle: 'นาย',
               firstname: '',
               lastname: '',
               nationalid: '',
@@ -170,14 +170,34 @@ class FormEmployee extends Component {
               handleChange,
               handleBlur,
               setFieldValue,
+              handleReset,
               values,
               touched,
               isValid,
               errors,
             }) => (
-              <Form onSubmit={handleSubmit}>
+              <Form onSubmit={handleSubmit} onReset={handleReset}>
                 <Row form>
-                  <Col md={6}>
+                  <Col md={1}>
+                    <FormGroup>
+                      <Label for="nametitle">คำนำหน้า</Label>
+                      <Input
+                        type="select"
+                        name="nametitle"
+                        id="nametitle"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.subdistrict}
+                        invalid={errors.subdistrict && touched.subdistrict}
+                      >
+                        <option>นาย</option>
+                        <option>นาง</option>
+                        <option>นางสาว</option>
+                      </Input>
+                      {/* <FormFeedback >*{errors.subdistrict}</FormFeedback> */}
+                    </FormGroup>
+                  </Col>
+                  <Col md={5}>
                     <FormGroup>
                       <Label for="firstname">ชื่อ</Label>
                       <Input
@@ -219,7 +239,7 @@ class FormEmployee extends Component {
                         type="text"
                         name="nationalid"
                         id="nationalid"
-                        placeholder="0000000000000"
+                        placeholder="XXXXXXXXXXXXX"
                         onKeyPress={(e) => {
                           setFieldValue('nationalid', values.nationalid.replace(/[^0-9]/, ''))
                         }}
@@ -239,7 +259,7 @@ class FormEmployee extends Component {
                         type="tel"
                         name="phonenumber"
                         id="phonenumber"
-                        placeholder="0000000000"
+                        placeholder="XXXXXXXXXX"
                         // onInput={(e)=>{
                         //   setFieldValue('phonenumber',values.phonenumber.replace(/[^0-9]/,''))
                         // }}
@@ -326,8 +346,8 @@ class FormEmployee extends Component {
                         name="zipcode"
                         id="zip"
                         placeholder="ตย. 20230"
-                        onKeyUp={()=>{
-                          console.log(values.zipcode.length)
+                        onKeyUp={() => {
+                          //console.log(values.zipcode.length);
                           if (values.zipcode.length == 5) {
                             let filter = data.address.filter((data) => {
                               return data.zipcode == Number(values.zipcode)
@@ -343,7 +363,7 @@ class FormEmployee extends Component {
                               setFieldValue('city', filter[0].amphoe);
                               setFieldValue('state', filter[0].province);
                               checkZip = true
-                            }else{
+                            } else {
                               setFieldValue('subdistrict', '');
                               setFieldValue('city', '');
                               setFieldValue('state', '');
@@ -360,7 +380,7 @@ class FormEmployee extends Component {
                         }}
                         onKeyPress={() => {
                           setFieldValue('zipcode', values.zipcode.replace(/[^0-9]/, ''))
-                          
+
                         }}
                         onChange={handleChange}
                         onBlur={handleBlur}
@@ -381,11 +401,11 @@ class FormEmployee extends Component {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         value={values.subdistrict}
-                        invalid={errors.subdistrict && touched.subdistrict}
+                      // invalid={errors.subdistrict && touched.subdistrict}
                       >
                         {subDistrictFilter}
                       </Input>
-                      <FormFeedback >*{errors.subdistrict}</FormFeedback>
+                      {/* <FormFeedback >*{errors.subdistrict}</FormFeedback> */}
                     </FormGroup>
 
                   </Col>
@@ -428,7 +448,19 @@ class FormEmployee extends Component {
                     </FormGroup>
                   </Col>
                 </Row>
-                <Button type="submit" color="primary">บันทึก</Button>
+                <Row form>
+                  <Col md={8}/>
+                  <Col md={2}
+                  style={{ display: 'flex'}}
+
+                  >
+                    <Button type="reset" color="secondary" style={{flex:1}}>เคลียร์</Button>
+                  </Col>
+                  <Col md={2} style={{ display: 'flex'}}>
+                    <Button type="submit" color="success" style={{flex:1}}>บันทึก</Button>
+                  </Col>
+
+                </Row>
               </Form>
             )}
 
