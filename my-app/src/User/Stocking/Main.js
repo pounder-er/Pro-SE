@@ -26,7 +26,7 @@ class Main extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            
+            data: "King"
         }
     }
 
@@ -34,7 +34,7 @@ class Main extends React.Component {
 
         // Example to 
 
-        // console.log(route)
+        console.log(route)
         if(route == "Stock"){
             
         }
@@ -64,20 +64,48 @@ class Main extends React.Component {
 
                 <div className="ContentMain">
                     <body className="BodyMain">
-                        <Link to = '/Stock' style = {{width:'100%', height:'100%'}}>
-                            
-                            {/* Place the icon here..... */}
+                        <Link to = {{
+                            pathname: "/Stock",
+                            data: this.state.data}}
 
-                            <Button onClick = {() => this.onRoute('Stock')} style = {{width:'100%', height:'100%', fontSize:40}}>Stocking ลองกดได้</Button>
+                            style = {{width:'100%', height:'100%'}}>
+                            
+                                {/* Place the icon here..... */}
+
+                            {/* <Button onClick = {() => this.onRoute('Stock')} style = {{width:'100%', height:'100%', fontSize:40}}>Stocking ลองกดได้</Button> */}
+                            <Button style = {{width:'100%', height:'100%', fontSize:40, borderRadius:0}}>Stocking</Button>
+                        
                         </Link>
                     </body>
 
                     <body className="BodyMain">
-                        <Button style = {{width:'100%', height:'100%', fontSize:40}}>Import</Button>
+                        <Link to = {{
+                            pathname: "/Import",
+                            data: this.state.data}}
+                             
+                            style = {{width:'100%', height:'100%'}}>
+                            
+                                {/* Place the icon here..... */}
+
+                            {/* <Button onClick = {() => this.onRoute('Stock')} style = {{width:'100%', height:'100%', fontSize:40}}>Stocking ลองกดได้</Button> */}
+                            <Button style = {{width:'100%', height:'100%', fontSize:40, borderRadius:0}}>Import</Button>
+                        
+                        </Link>
                     </body>
 
                     <body className="BodyMain">
-                        <Button style = {{width:'100%', height:'100%', fontSize:40}}>Export</Button>
+                        <Link to = {{
+                            pathname: "/Export",
+                            data: this.state.data}}
+                             
+                            style = {{width:'100%', height:'100%'}}>
+                            
+                                {/* Place the icon here..... */}
+
+                            {/* <Button onClick = {() => this.onRoute('Stock')} style = {{width:'100%', height:'100%', fontSize:40}}>Stocking ลองกดได้</Button> */}
+                            <Button style = {{width:'100%', height:'100%', fontSize:40, borderRadius:0}}>Export</Button>
+                        
+                        </Link>
                     </body>
 
                 </div>

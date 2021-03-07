@@ -17,17 +17,48 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-pro-sidebar/dist/css/styles.css';
 
+// import FlatList from './FlatList'
+import checkList from './checkList.json'
+
 
 class Stock extends React.Component{
     constructor(props){
         super(props)
         this.state = {
             date:"1/1/2564",
-            time:"12:00"
+            time:this.props.location.data,
+            array:[1,2,3,4,5]
         }
     }
 
+    // Render multi items
     render(){
+        const listItems = checkList.map((data) =>
+            <tr>
+                <th scope="row">1</th>
+                <td>{data.passcode}</td>
+                <td>{data.name}</td>
+
+                <td>
+                    <InputGroup>
+                        <Input/>
+                    </InputGroup>
+                </td>
+
+                <td>
+                    <InputGroup>
+                        <Input/>
+                    </InputGroup>
+                </td>
+
+                <td>
+                    <InputGroup>
+                        <Input/>
+                    </InputGroup>
+                </td>
+            </tr>
+        );
+
         return(
             <div className = "ContainerStocking">
 
@@ -38,7 +69,6 @@ class Stock extends React.Component{
                     
                     <Table hover style={{width:'80%', alignSelf:'center', marginTop:20, marginBottom:20 ,background:"#f1f1f1"}}>
 
-                            {/* -------------------------- This is header for table  --------------------------*/}
                             <thead>
                                 <tr>
                                     <th>ลำดับ</th>
@@ -50,85 +80,13 @@ class Stock extends React.Component{
                                 </tr>
                             </thead>
 
-                            {/* -------------------------- This is datafrom for table  --------------------------*/}
-                            {/* Example */}
                             <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>11323</td>
-                                    <td>ข้าวหอมมะลิ ตราสส</td>
 
-                                    <td>
-                                        <InputGroup>
-                                            <Input/>
-                                        </InputGroup>
-                                    </td>
-
-                                    <td>
-                                        <InputGroup>
-                                            <Input/>
-                                        </InputGroup>
-                                    </td>
-
-                                    <td>
-                                        <InputGroup>
-                                            <Input/>
-                                        </InputGroup>
-                                    </td>
-                                </tr>
+                                {/* <FlatList checkList ={checkList}/> */}
+                                {listItems}
+                                
                             </tbody>
-
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>11323</td>
-                                    <td>ข้าวหอมมะลิ ตราสส</td>
-
-                                    <td>
-                                        <InputGroup>
-                                            <Input/>
-                                        </InputGroup>
-                                    </td>
-
-                                    <td>
-                                        <InputGroup>
-                                            <Input/>
-                                        </InputGroup>
-                                    </td>
-
-                                    <td>
-                                        <InputGroup>
-                                            <Input/>
-                                        </InputGroup>
-                                    </td>
-                                </tr>
-                            </tbody>
-
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>11323</td>
-                                    <td>ข้าวหอมมะลิ ตราสส</td>
-
-                                    <td>
-                                        <InputGroup>
-                                            <Input/>
-                                        </InputGroup>
-                                    </td>
-
-                                    <td>
-                                        <InputGroup>
-                                            <Input/>
-                                        </InputGroup>
-                                    </td>
-
-                                    <td>
-                                        <InputGroup>
-                                            <Input/>
-                                        </InputGroup>
-                                    </td>
-                                </tr>
-                            </tbody>
+                            
                     </Table>
 
                     <body className = 'PaginationStocking'>
