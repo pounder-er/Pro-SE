@@ -2,7 +2,8 @@ import logo from './logo.svg';
 import './App.css';
 import React from 'react';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { Switch, Route, Link, NavLink } from 'react-router-dom';
+
 import { Button } from 'reactstrap';
 
 import Login from './Login';
@@ -16,6 +17,8 @@ import HistoryInOut from './HistoryInOut'
 import ProductInspection from './ProductInspection'
 import EditCompany from './EditCompany'
 import EditBranch from './EditBranch'
+
+import DailyStock from './DailyStock'
 import DashBoard from './DashBoard';
 
 class App extends React.Component {
@@ -36,10 +39,23 @@ class App extends React.Component {
       //<AddCompany/>
       //<Branch/>
       //<BranchDetail/>
+      // <EditBranch/>
+      //<HistoryInOut/>
+      //<ProductInspection/>
+      //<DailyStock/>
       //<EditBranch/>
       //<HistoryInOut/>
       //<ProductInspection/>
-      <DashBoard/>
+      //<DashBoard/>
+      <Switch>
+        {/* <Route component={DashBoard} /> */}
+        {/* <Route component={Company} /> */}
+        <Route component={EditCompany} />
+        {/* <Route component={Branch} /> */}
+        {/* <Route component={EditBranch} /> */}
+        {/* <Route component={Login} /> */}
+      </Switch>
+
      
     );
   }

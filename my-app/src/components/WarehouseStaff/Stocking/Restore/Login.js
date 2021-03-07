@@ -4,7 +4,6 @@ import './Login.css';
 import logo from './dogecoin.png';
 
 import { Button, InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
 

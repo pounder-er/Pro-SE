@@ -14,7 +14,7 @@ import {
     PaginationItem,
     PaginationLink
 } from 'reactstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 import {
     ProSidebar,
@@ -22,7 +22,7 @@ import {
     MenuItem,
     SubMenu
 } from 'react-pro-sidebar';
-import 'react-pro-sidebar/dist/css/styles.css';
+
 
 import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
 import { MdSearch, MdDescription } from "react-icons/md";
