@@ -38,8 +38,8 @@ class Employees extends Component {
 
     render() {
         return (
-            <Container style={{ backgroundColor: 'white', borderRadius:5 }}>
-                <h3>จัดการพนักงาน</h3>
+            
+               <div>
                 <Row>
                     <Col lg="6" md="6">.col-3</Col>
                     <Col lg="6" md="6" style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -57,7 +57,11 @@ class Employees extends Component {
                 <UncontrolledCollapse toggler="#toggler">
                     <FormEmployee />
                 </UncontrolledCollapse>
-            </Container>
+                
+                </div>
+            
+                
+           
         );
     }
 }
