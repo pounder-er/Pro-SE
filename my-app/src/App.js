@@ -50,10 +50,11 @@ class App extends React.Component {
       <Switch>
         {/* <Route component={DashBoard} /> */}
         {/* <Route component={Company} /> */}
-        <Route component={EditCompany} />
+        {/* <Route component={EditCompany} /> */}
         {/* <Route component={Branch} /> */}
         {/* <Route component={EditBranch} /> */}
         {/* <Route component={Login} /> */}
+        <Route component={Contact} />
       </Switch>
 
      

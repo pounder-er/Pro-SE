@@ -60,12 +60,6 @@ class Company extends React.Component {
     }
     toggleSideBar=()=>{
         this.setState({collapsed: !this.state.collapsed});
-        if(this.state.chartWidth == "500%"){
-            this.setState({chartWidth:"550%"});
-        }
-        else{
-            this.setState({chartWidth:"500%"});
-        }
     }
     render() {
         return (
