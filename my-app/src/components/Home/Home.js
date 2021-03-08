@@ -48,6 +48,7 @@ import { addSession } from '../../redux/actions';
 import Employees from '../Employees/Employees'
 import HistoryInOut from '../HistoryInOut/HistoryInOut'
 import SalesReport from '../SalesReport/SalesReport'
+import ProductsReport from '../ProductsReport/ProductReport'
 
 class Home extends React.Component {
   constructor(props) {
@@ -106,7 +107,7 @@ class Home extends React.Component {
               <MenuItem>รายการขายสินค้า</MenuItem>
               <MenuItem>เพิ่มสินค้าใหม่</MenuItem>
             </SubMenu>
-            <MenuItem >ตรวจสอบสินค้า</MenuItem>
+            <MenuItem >ตรวจสอบสินค้า<Link to={this.props.match.url+"/productsReport"}/></MenuItem>
             <MenuItem >ประวัติสินค้าเข้า/ออกคลัง<Link to={this.props.match.url+"/historyInOut"}/></MenuItem>
             <SubMenu title="ผู้ติดต่อ" icon={<BsBriefcaseFill />}>
               <MenuItem>บริษัท</MenuItem>
@@ -144,6 +145,7 @@ class Home extends React.Component {
                 <Route exact path={this.props.match.path+"/employees"} component={Employees} />
                 <Route exact path={this.props.match.path+"/historyInOut"} component={HistoryInOut} />
                 <Route exact path={this.props.match.path+"/salesReport"} component={SalesReport} />
+                <Route exact path={this.props.match.path+"/productsReport"} component={ProductsReport} />
                 </Switch>
           </Body>
         </Content>

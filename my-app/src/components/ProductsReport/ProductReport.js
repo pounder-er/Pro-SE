@@ -1,8 +1,6 @@
 import React from 'react';
 
 
-
-
 import {
     Button,
     InputGroup,
@@ -94,15 +92,6 @@ const ProductTable = (props) => {
                     <th>
                         <button
                             type="button"
-                            onClick={() => requestSort("ชนิด")}
-                            className={getClassNamesFor("ชนิด")}
-                        >
-                            ชนิด
-              </button>
-                    </th>
-                    <th>
-                        <button
-                            type="button"
                             onClick={() => requestSort("รายการสินค้า")}
                             className={getClassNamesFor("รายการสินค้า")}
                         >
@@ -112,21 +101,61 @@ const ProductTable = (props) => {
                     <th>
                         <button
                             type="button"
-                            onClick={() => requestSort("ปริมาณ")}
-                            className={getClassNamesFor("ปริมาณ")}
+                            onClick={() => requestSort("ชนิด")}
+                            className={getClassNamesFor("ชนิด")}
                         >
-                            ปริมาณ
+                            ชนิด
               </button>
                     </th>
                     <th>
                         <button
                             type="button"
-                            onClick={() => requestSort("มูลค่าการขาย")}
-                            className={getClassNamesFor("มูลค่าการขาย")}
+                            onClick={() => requestSort("น้ำหนัก")}
+                            className={getClassNamesFor("น้ำหนัก")}
                         >
-                            มูลค่าการขาย
+                            น้ำหนัก
               </button>
                     </th>
+                    <th>
+                        <button
+                            type="button"
+                            onClick={() => requestSort("เวลา")}
+                            className={getClassNamesFor("เวลา")}
+                        >
+                            เก่า/ใหม่
+              </button>
+                    </th>
+                    <th>
+                        <button
+                            type="button"
+                            onClick={() => requestSort("ราคาต่อหน่วย")}
+                            className={getClassNamesFor("ราคาต่อหน่วย")}
+                        >
+                            ราคาต่อหน่วย
+              </button>
+                    </th>
+                    <th>
+                        <button
+                            type="button"
+                            onClick={() => requestSort("สถานะ")}
+                            className={getClassNamesFor("สถานะ")}
+                        >
+                            สถานะ
+              </button>
+                    </th>
+                    <th>
+                        <button
+                            type="button"
+                            onClick={() => requestSort("ยอดคงเหลือ")}
+                            className={getClassNamesFor("ยอดคงเหลือ")}
+                        >
+                            ยอดคงเหลือ
+              </button>
+                    </th>
+                    <th>
+                        รายละเอียด
+                    </th>
+
                 </tr>
             </thead>
             <tbody>
@@ -134,10 +163,15 @@ const ProductTable = (props) => {
                     <tr key={item.id}>
                         <td>{item.id}</td>
                         <td>{item.รหัสสินค้า}</td>
-                        <td>{item.ชนิด}</td>
                         <td>{item.รายการสินค้า}</td>
-                        <td>{item.ปริมาณ}</td>
-                        <td>${item.มูลค่าการขาย}</td>
+                        <td>{item.ชนิด}</td>
+                        <td>{item.น้ำหนัก}</td>
+                        <td>{item.เวลา}</td>
+                        <td>${item.ราคาต่อหน่วย}</td>
+                        <td>{item.สถานะ}</td>
+                        <td>{item.ยอดคงเหลือ}</td>
+
+                        <td>.pdf</td>
 
                     </tr>
                 ))}
@@ -146,7 +180,7 @@ const ProductTable = (props) => {
     );
 };
 
-class SalesReport extends React.Component {
+class ProductReport extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -157,59 +191,34 @@ class SalesReport extends React.Component {
         return (
             <Container fluid={true} style={{ backgroundColor: 'wheat' }} >
                 <Row >
-                    <h1 style={{
-                        marginTop: 20,
-                        marginBottom: 20,
-                        width: '100%',
-                        alignSelf: 'center'
-                    }}>ยอดขายสินค้า</h1>
+                    <Col>
+                        <h1 style={{
+                            marginTop: 20,
+                            marginBottom: 20,
+                            width: '100%',
+                            alignSelf: 'center'
+                        }}>ตรวขสอบสินค้า</h1>
+                    </Col>
                 </Row>
                 <Row >
-                    <Col sm="1">
-                        Date
-                                </Col>
-                    <Col >
-                        <Input
-                            type="date"
-                            name="date"
-                            id="exampleDate"
-                            placeholder="date placeholder"
-                        />
-                    </Col>
-
-
-                    <Col sm="1">
-                        To Date
-                                </Col>
-                    <Col >
-                        <Input
-                            type="date"
-                            name="date"
-                            id="exampleDate"
-                            placeholder="date placeholder"
-                        />
-                    </Col>
-                    <Col>
+                    <Col md="3">
                         <InputGroup >
                             <Input placeholder="รหัสสินค้า" />
                             <InputGroupAddon addonType="append">
                                 <InputGroupText><MdSearch color="#1F1F1F" size={22} /></InputGroupText>
                             </InputGroupAddon>
                         </InputGroup>
-                        
+
                     </Col>
-                    <Col md="auto">
+                    <Col md={{ span: 4, offset: 7 }}>
                         <Button color="info" style={{ width: 200 }}>fillter</Button>
                     </Col>
                 </Row>
 
                 <ProductTable
                     products={[
-                        { id: 1, "รหัสสินค้า": "110100", ชนิด: "ข้าวหอมมะลิ", รายการสินค้า: "ข้าวหอมมะลิ ตราสส", ปริมาณ: 80000, มูลค่าการขาย: 2000000.00 },
-                        { id: 2, "รหัสสินค้า": "110100", ชนิด: "ข้าวหอมมะลิ", รายการสินค้า: "ข้าวหอมมะลิ ตราสส", ปริมาณ: 70000, มูลค่าการขาย: 7000000.00 },
-                        { id: 3, "รหัสสินค้า": "110110", ชนิด: "มะลิ", รายการสินค้า: "หอมมะลิ ", ปริมาณ: 50000, มูลค่าการขาย: 3000000.00 },
-                        { id: 4, "รหัสสินค้า": "110200", ชนิด: "ข้าวหอม", รายการสินค้า: "ข้าว ตราสส", ปริมาณ: 84000, มูลค่าการขาย: 5000000.00 },
-                        { id: 5, "รหัสสินค้า": "110130", ชนิด: "ข้าว", รายการสินค้า: "มะลิ ตราสส", ปริมาณ: 10000, มูลค่าการขาย: 100000.00 },
+                        { id: 1, "รหัสสินค้า": "110100", รายการสินค้า: "ข้าวหอมมะลิ ตราสส", ชนิด: "ข้าวหอมมะลิ", น้ำหนัก: 5, เวลา: "ใหม่", ราคาต่อหน่วย: 250.00, สถานะ: "ปกติ", ยอดคงเหลือ: 500.00, รายละเอียด: "" }
+
 
 
                     ]}
@@ -251,4 +260,4 @@ class SalesReport extends React.Component {
 }
 
 
-export default SalesReport;
+export default ProductReport;
