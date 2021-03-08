@@ -1,8 +1,6 @@
 import logo from './logo.svg';
 import React from 'react';
 
-
-
 import { Switch, Route, Link, NavLink, Redirect } from 'react-router-dom';
 import {
   BsFillPersonFill,
@@ -20,34 +18,15 @@ import Home from '../Home/Home'
 import { connect } from 'react-redux';
 import { addSession } from '../../redux/actions';
 
+import Employees from '../Employees/Employees';
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
     }
     
-  }
-
-  getSuccess = (user) => {
-    this.props.dispatch(addSession(user));
-    console.log(this.props.session);
-    this.props.history.push("/home");
-  }
-
-  getUnsuccess = () => {
-
-  }
-
-
-  componentDidMount(){
-    fire_base.getStateChangedUser(this.getSuccess, this.getUnsuccess);
-    //console.log(this.props.session);
-  }
-
-  
-
-  render() {
-    const PrivateRoute=({ component: Component, ...rest })=> {
+    this.PrivateRoute=({ component: Component, ...rest })=> {
       return (
         <Route
           {...rest}
@@ -66,11 +45,42 @@ class App extends React.Component {
         />
       );
     }
+    
+  }
+
+  getSuccess = (user) => {
+    this.props.dispatch(addSession(user));
+    console.log(this.props.session);
+    this.props.history.push("/home");
+  }
+
+  getUnsuccess = () => {
+    this.props.history.push("/login");
+  }
+
+
+  async componentDidMount(){
+    await fire_base.getStateChangedUser(this.getSuccess, this.getUnsuccess);
+    // if(this.props.session){
+   
+    //   this.props.history.push('/home');
+  
+    // }
+
+    // console.log(this.props.session);
+
+    
+  }
+
+  
+
+  render() {
+    
     return (
       <Switch>
-        <Route exact path="/login" component={Login} />
-       
-        {/* <Route component={Login} /> */}
+        
+        <this.PrivateRoute path="/home" component={Home} />
+        <Route path="/login" component={Login} />
       </Switch>
     );
   }

@@ -81,7 +81,7 @@ class Home extends React.Component {
     if (this.props.session) {
 
     } else {
-      //this.props.history.push("/login");
+      this.props.history.push("/login");
     }
   }
 
@@ -168,6 +168,7 @@ class Home extends React.Component {
           <Body>
             <Container style={{ backgroundColor: 'white', borderRadius: 5, padding: 10 }}>
               <Switch>
+                
                 <Route exact path={this.props.match.path + "/employees"} component={Employees} />
               </Switch>
             </Container>
