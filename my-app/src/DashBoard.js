@@ -82,7 +82,12 @@ class DashBoard extends React.Component {
 
             collapsed: false,
             isOpen: false,
-            chartWidth : "500%"
+            chartWidth : "500%",
+
+            pineChartOption : {
+                series: [40, 20, 10, 30],
+                labels: ['ข้าว1', 'ข้าว2', 'ข้าว3', 'ว่าง']
+            }
         }
     }
 
@@ -158,34 +163,56 @@ class DashBoard extends React.Component {
                                         backgroundColor: "white"}}
                             />
                         </div>
-                        <Card style={{borderColor:"transparent", 
-                                      width:"47%", 
-                                      marginLeft:"2.5%"}}>
-                            <p/>
-                            <h3 style={{marginLeft:15}}>สินค้าขายดี</h3>
-                            <p/>
-                            <Table striped style={{width:'95%', alignSelf:'center'}}>
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>รหัสสินค้า</th>
-                                        <th>ชื่อสินค้า</th>
-                                        <th>ปริมาณ</th>
-                                        <th>มูลค่า(บาท)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>110101</td>
-                                        <td>ข้าวขาวดี</td>
-                                        <td>1000</td>
-                                        <td>1,000,000</td>
-                                    </tr>
-                                
-                                </tbody>
-                            </Table>
-                        </Card>
+                        <div className="rowContainer">
+                            <div className="donutChartContainer">
+                                <div className="pineChart">
+                                    <h3 style={{justifySelf:'flex-start', 
+                                                marginLeft:'5%', 
+                                                marginTop: 20}}>สัดส่วนเนื้อที่โกดัง</h3>
+                                    <Chart
+                                        options={this.state.pineChartOption}
+                                        series={this.state.pineChartOption.series}
+                                        type="donut"
+                                        width="150%"
+                                        height="150%"
+                                        style={{alignSelf:'center',
+                                                backgroundColor: "white",
+                                                marginBottom:20,
+                                                marginTop:10}}
+                                    />
+                                </div>
+                            </div>
+                            <div className="cardContainer">
+                                <Card style={{borderColor:"transparent", 
+                                            width:"97%"}}>
+                                    <p/>
+                                    <h3 style={{marginLeft:'2.5%'}}>สินค้าขายดี</h3>
+                                    <p/>
+                                    <Table striped style={{width:'95%', alignSelf:'center'}}>
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>รหัสสินค้า</th>
+                                                <th>ชื่อสินค้า</th>
+                                                <th>ปริมาณ</th>
+                                                <th>มูลค่า(บาท)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>110101</td>
+                                                <td>ข้าวขาวดี</td>
+                                                <td>1000</td>
+                                                <td>1,000,000</td>
+                                            </tr>
+                                        
+                                        </tbody>
+                                    </Table>
+                                </Card>
+                            </div>
+                        </div>
+                       
                         
                     </body>
                 </div>
