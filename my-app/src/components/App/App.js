@@ -3,7 +3,7 @@ import React from 'react';
 
 
 
-import { Switch, Route, Link, NavLink } from 'react-router-dom';
+import { Switch, Route, Link, NavLink, Redirect } from 'react-router-dom';
 import {
   BsFillPersonFill,
   BsFillLockFill,
@@ -25,12 +25,13 @@ class App extends React.Component {
     super(props);
     this.state = {
     }
-    fire_base.getStateChangedUser(this.getSuccess, this.getUnsuccess);
+    
   }
 
   getSuccess = (user) => {
     this.props.dispatch(addSession(user));
     console.log(this.props.session);
+    this.props.history.push("/home");
   }
 
   getUnsuccess = () => {
@@ -39,15 +40,37 @@ class App extends React.Component {
 
 
   componentDidMount(){
-    console.log(this.props.session);
+    fire_base.getStateChangedUser(this.getSuccess, this.getUnsuccess);
+    //console.log(this.props.session);
   }
 
+  
+
   render() {
+    const PrivateRoute=({ component: Component, ...rest })=> {
+      return (
+        <Route
+          {...rest}
+          render={props =>
+            this.props.session ? (
+              <Component {...props} />
+            ) : (
+              <Redirect
+                to={{
+                  pathname: "/login",
+                  state: { from: props.location }
+                }}
+              />
+            )
+          }
+        />
+      );
+    }
     return (
       <Switch>
-        <Route exact path="/" component={Login} />
-        {this.props.session&&<Route path="/home" component={Home} />}
-        <Route component={Login} />
+        <Route exact path="/login" component={Login} />
+       
+        {/* <Route component={Login} /> */}
       </Switch>
     );
   }

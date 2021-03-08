@@ -81,7 +81,7 @@ class Home extends React.Component {
     if (this.props.session) {
 
     } else {
-      this.props.history.push("/");
+      //this.props.history.push("/login");
     }
   }
 
@@ -96,7 +96,7 @@ class Home extends React.Component {
 
   logOutSuccess = () => {
     this.props.dispatch(addSession(null));
-    this.props.history.push("/");
+    this.props.history.push("/login");
   }
 
   logOutUnsuccess = (error) => {

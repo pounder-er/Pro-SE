@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import App from './components/App/App';
+import Home from './components/Home/Home'
 import reportWebVitals from './reportWebVitals';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -22,7 +23,8 @@ const store = createStore(rootReducer)
 ReactDOM.render(
   <Provider store={store}>
   <BrowserRouter>
-    <App/>
+  <Route exact path="/" component={App} />
+  <Route exact path="/home" component={Home} />
   </BrowserRouter>
   </Provider> 
   ,
