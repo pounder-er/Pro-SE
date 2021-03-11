@@ -11,7 +11,12 @@ import {
   CardBody,
   Card,
   Button,
-  Col, Row,
+  Col,
+  Row,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter
 } from 'reactstrap';
 
 import { Formik, Field, ErrorMessage } from 'formik';
@@ -20,24 +25,29 @@ import * as Yup from 'yup';
 
 import * as data from './data.json';
 
-//import Avatar from 'react-avatar-edit';
+import AvatarEditor from 'react-avatar-editor';
+
+import { 
+  BsPersonSquare,
+  BsPersonFill
+ } from "react-icons/bs";
 
 var checkZip = false;
 var subDistrictFilter = [];
 const formEmployeeSchema = Yup.object().shape({
   nametitle: Yup.string()
-    .required('ต้องกรอก'),
+    .required('กรุณาเลือกข้อมูล'),
   firstname: Yup.string()
     .matches(/^[ก-๏]+$/, 'กรอกด้วยตัวอักษรภาษาไทยและไม่มีช่องว่าง')
     .max(40, 'กรอกได้ไม่เกิน 40 ตัวอักษร')
-    .required('ต้องกรอก'),
+    .required('กรุณาระบุข้อมูล'),
   lastname: Yup.string()
     .matches(/^[ก-๏]+$/, 'กรอกด้วยตัวอักษรภาษาไทยและไม่มีช่องว่าง')
     .max(40, 'กรอกได้ไม่เกิน 40 ตัวอักษร')
-    .required('ต้องกรอก'),
+    .required('กรุณาระบุข้อมูล'),
   nationalid: Yup.string()
     .matches(/^[0-9]+$/, 'ต้องเป็นตัวเลขเท่านั้น')
-    .required('ต้องกรอก')
+    .required('กรุณาระบุข้อมูล')
     .length(13, 'ไม่ครบ 13 หลัก')
     .test('checkNationalId', 'เลขบัตรประชาชนไม่ถูกต้อง', (value) => {
       if (value != null && value.length == 13) {
@@ -51,7 +61,7 @@ const formEmployeeSchema = Yup.object().shape({
         } else {
           ans = 11 - ans;
         }
-        console.log(ans);
+        //console.log(ans);
         if (ans == parseInt(value[12])) {
 
           return true;
@@ -62,7 +72,7 @@ const formEmployeeSchema = Yup.object().shape({
     }),
   phonenumber: Yup.string()
     .length(10, 'หมายเลขโทรศัพท์ไม่ครบ 10 หลัก')
-    .required('ต้องกรอก')
+    .required('กรุณาระบุข้อมูล')
     .matches(/^[0-9]{10}$/, 'หมายเลขโทรศัพท์ไม่ถูกต้อง')
   // .transform((value, originalvalue)=>{
   //   console.log(originalvalue.replace(/[^0-9]/,''));
@@ -71,14 +81,14 @@ const formEmployeeSchema = Yup.object().shape({
   ,
   birthdate: Yup.date()
     .max((new Date().getFullYear() - 18) + "-12-01", 'ต้องกรอกก่อน 2003-12-01')
-    .required('ต้องกรอก'),
+    .required('กรุณาระบุข้อมูล'),
   jobtitle: Yup.string()
-    .required('ต้องเลือก')
-    .matches(/^[ก-๏]+$/, 'ต้องเลือก'),
-  address: Yup.string().required('ต้องกรอก'),
+    .required('กรุณาเลือกข้อมูล')
+    .matches(/^[ก-๏]+$/, 'กรุณาเลือกข้อมูล'),
+  address: Yup.string().required('กรุณาระบุข้อมูล'),
   subdistrict: Yup.string()
-    .required('ต้องเลือก')
-    .matches(/^[ก-๏]+$/, 'ต้องเลือก'),
+    .required('กรุณาเลือกข้อมูล')
+    .matches(/^[ก-๏]+$/, 'กรุณาเลือกข้อมูล'),
   // city: Yup.string()
   //   .required('ต้องกรอก')
   //   .matches(/^[ก-๏]+$/, 'กรอกด้วยตัวอักษรภาษาไทยและไม่มีช่องว่าง'),
@@ -86,7 +96,7 @@ const formEmployeeSchema = Yup.object().shape({
   //   .required('ต้องกรอก')
   //   .matches(/^[ก-๏]+$/, 'กรอกด้วยตัวอักษรภาษาไทยและไม่มีช่องว่าง'),
   zipcode: Yup.string()
-    .required('ต้องกรอก')
+    .required('กรุณาระบุข้อมูล')
     .length(5, 'รหัสไปรษณีย์ไม่ครบ')
     .matches(/^[0-9]{5}$/, 'ต้องเป็นตัวเลข')
     .test('test', 'รหัสไปรษณีย์ไม่ถูกต้อง',
@@ -119,12 +129,14 @@ const formEmployeeSchema = Yup.object().shape({
           // }
         }
       }),
+  imageProfile: Yup.string(),
 
-  // email: Yup.string()
-  //   .email('Ivalid email')
-  //   .required('This field is requred'),
-  // password: Yup.string()
-  //   .required('This field is requred'),
+  email: Yup.string()
+    .email('อีเมลไม่ถูกต้อง')
+    .required('กรุณาระบุอีเมล')
+    ,
+  password: Yup.string()
+    .required('กรุณาระบุรหัสผ่าน'),
 
 })
 
@@ -134,28 +146,31 @@ class FormEmployee extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      preview: null,
-      src: null
+      sourceImageFile: null,
+      zoom: 1,
+      ModalProfileImage: false,
+      disabledButtonSaveOrEdit: true,
+      disabledButtonDefault: true
     }
-    this.onCrop = this.onCrop.bind(this)
-    this.onClose = this.onClose.bind(this)
-    this.onBeforeFileLoad = this.onBeforeFileLoad.bind(this)
+    this.hiddenFileInputRef = React.createRef()
   }
 
-  onClose() {
-    this.setState({ preview: null })
+  toggleModalProfileImage = (e) => {
+    e.preventDefault();
+    this.setState({ ModalProfileImage: !this.state.ModalProfileImage });
   }
 
-  onCrop(preview) {
-    this.setState({ preview })
+  setDefaultImageCrop = () =>{
+    this.setState({
+      sourceImageFile: null,
+      zoom: 1,
+      disabledButtonSaveOrEdit: true,
+      disabledButtonDefault: true
+    });
   }
 
-  onBeforeFileLoad(elem) {
-    if (elem.target.files[0].size > 71680) {
-      alert("File is too big!");
-      elem.target.value = "";
-    };
-  }
+
+  setEditorRef = (editor) => (this.editor = editor)
 
   render() {
     // console.log(new Date().toLocaleDateString());
@@ -169,6 +184,7 @@ class FormEmployee extends Component {
             }
             }
             initialValues={{
+              imageProfile: '',
               nametitle: 'นาย',
               firstname: '',
               lastname: '',
@@ -181,8 +197,8 @@ class FormEmployee extends Component {
               zipcode: '',
               city: '',
               state: '',
-              // email: '',
-              // password: '',
+              email: '',
+              password: '',
             }}
           >
             {({
@@ -196,37 +212,117 @@ class FormEmployee extends Component {
               isValid,
               errors,
             }) => (
-
-              <Form onSubmit={handleSubmit} onReset={handleReset}>
+              <Form onSubmit={handleSubmit} onReset={(e)=>{this.setDefaultImageCrop();handleReset(e);}}>
+                {/* <Button color="danger" onClick={this.toggleModalProfileImage}>hello</Button> */}
+                <Modal isOpen={this.state.ModalProfileImage} toggle={this.toggleModalProfileImage} backdrop='static' >
+                  <ModalHeader >เลือก/แก้ไข รูปโปรไฟล์</ModalHeader>
+                  <ModalBody>
+                    <FormGroup row>
+                      <Col style={{ display: 'flex', justifyContent: 'center' }}>
+                        {this.state.sourceImageFile && (
+                        <AvatarEditor
+                          image={this.state.sourceImageFile}
+                          width={180}
+                          height={180}
+                          border={40}
+                          onImageReady={()=>this.setState({disabledButtonSaveOrEdit:false})}
+                          scale={this.state.zoom}
+                          crossOrigin="anonymous"
+                          // onMouseUp={() => console.log(typeof this.editor.getImage().toDataURL())}
+                          ref={this.setEditorRef}
+                          
+                          // onImageReady={()=>console.log("hellooooo")}
+                        />
+                        )}
+                        {!this.state.sourceImageFile && (
+                          <Button 
+                          onClick={()=>this.hiddenFileInputRef.current.click()} 
+                          color="secondary" 
+                          style={{height:'260px',width:'260px'}} >
+                          <input 
+                          type="file" 
+                          ref={this.hiddenFileInputRef} 
+                          onChange={(e)=>{
+                            console.log(e.target.files[0]);
+                            this.setState({sourceImageFile:e.target.files[0]});
+                          }} 
+                          style={{ display: 'none' }} 
+                          accept="image/*" 
+                          />
+                          <BsPersonSquare size={100} />
+                          <h6 style={{marginTop:10}}>อัปโหลดรูปภาพ</h6>
+                        </Button>
+                        )}
+                      </Col>
+                    </FormGroup>
+                    {this.state.sourceImageFile && (
+                      <FormGroup row>
+                      <Col >
+                        <Label >ซูม</Label>
+                        <Input 
+                        type='range' 
+                        min="1" 
+                        max="2" 
+                        step="0.01" 
+                        value={this.state.zoom} 
+                        onChange={(e) => this.setState({ zoom: Number(e.target.value) })} 
+                        />
+                      </Col>
+                    </FormGroup>
+                    )}
+                  </ModalBody>
+                  <ModalFooter>
+                  <Button color="primary" onClick={()=>{
+                    setFieldValue('imageProfile','');
+                    this.setDefaultImageCrop();
+                  }} 
+                  disabled={this.state.disabledButtonDefault} >คืนค่าเริ่มต้น</Button>
+                  {' '}
+                    <Button 
+                    color="success" 
+                    disabled={this.state.disabledButtonSaveOrEdit}
+                    onClick={(e)=>{
+                      setFieldValue('imageProfile', this.editor.getImage().toDataURL());
+                      this.toggleModalProfileImage(e);
+                      this.setState({disabledButtonDefault:false});
+                    }}>
+                      แก้ไข/บันทึก
+                    </Button>
+                    {' '}
+                    <Button color="secondary" onClick={this.toggleModalProfileImage}>ยกเลิก</Button>
+                  </ModalFooter>
+                </Modal>
                 <Row form>
                   <Col>
-                    {/* <Avatar
-                      width={390}
-                      height={295}
-                      onCrop={this.onCrop}
-                      onClose={this.onClose}
-                      onBeforeFileLoad={this.onBeforeFileLoad}
-                      src={this.state.src}
-                      exportAsSquare={true}
-                    /> */}
 
-
+                     {/* <label className="custom-file-upload">
+                      <input type="file" style={{ display: 'none' }} accept="image/*" />
+                      <i className="fa fa-cloud-upload" /> Attach
+                    </label> 
                   </Col>
-                  <Col>
-                    <img src={this.state.preview} alt="Preview" />
-                  </Col>
-
-
-
-
+                  <Col>  */}
+                  <FormGroup style={{display:'flex',justifyContent:'center'}} >
+                    <Button 
+                    onClick={this.toggleModalProfileImage} 
+                    style={{height:180,width:180,borderRadius:100,display:'flex',justifyContent:'center',alignItems:'center'}}>
+                    {values.imageProfile && (
+                    <img src={values.imageProfile} style={{height:180,width:180,borderRadius:100}}  />
+                    )}
+                    {!values.imageProfile && (
+                      <div>
+                        <BsPersonFill size={80} />
+                        <h6>คลิกเพื่อเพิ่มรูป</h6>
+                      </div>
+                      )
+    
+                    }    
+                    </Button>          
+                  </FormGroup>
+                  </Col> 
                 </Row>
-
-
-
-
                 <Row form>
-                  <Col md={1}>
-                    <FormGroup>
+                  <Col md={2} >
+                    <FormGroup >
                       <Label for="nametitle">คำนำหน้า</Label>
                       <Input
                         type="select"
@@ -234,8 +330,8 @@ class FormEmployee extends Component {
                         id="nametitle"
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        value={values.subdistrict}
-                        invalid={errors.subdistrict && touched.subdistrict}
+                        value={values.nametitle}
+                        invalid={errors.nametitle && touched.nametitle}
                       >
                         <option>นาย</option>
                         <option>นาง</option>
@@ -244,7 +340,7 @@ class FormEmployee extends Component {
                       {/* <FormFeedback >*{errors.subdistrict}</FormFeedback> */}
                     </FormGroup>
                   </Col>
-                  <Col md={5}>
+                  <Col md={4}>
                     <FormGroup>
                       <Label for="firstname">ชื่อ</Label>
                       <Input
@@ -276,8 +372,6 @@ class FormEmployee extends Component {
                       <FormFeedback >*{errors.lastname}</FormFeedback>
                     </FormGroup>
                   </Col>
-                </Row>
-                <Row form>
                   <Col md={6}>
                     <FormGroup>
                       <Label for="nationalid">เลขบัตรประจำตัวประชาชน</Label>
@@ -287,10 +381,7 @@ class FormEmployee extends Component {
                         name="nationalid"
                         id="nationalid"
                         placeholder="XXXXXXXXXXXXX"
-                        onKeyPress={(e) => {
-                          setFieldValue('nationalid', values.nationalid.replace(/[^0-9]/, ''))
-                        }}
-                        onChange={handleChange}
+                        onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9]/, ''); handleChange(e); }}
                         onBlur={handleBlur}
                         value={values.nationalid}
                         invalid={errors.nationalid && touched.nationalid}
@@ -307,19 +398,10 @@ class FormEmployee extends Component {
                         name="phonenumber"
                         id="phonenumber"
                         placeholder="XXXXXXXXXX"
-                        // onInput={(e)=>{
-                        //   setFieldValue('phonenumber',values.phonenumber.replace(/[^0-9]/,''))
-                        // }}
                         onKeyPress={(e) => {
                           setFieldValue('phonenumber', values.phonenumber.replace(/[^0-9]/, ''))
                         }}
-                        // onKeyUp={(e)=>{
-                        //     setFieldValue('phonenumber',values.phonenumber.replace(/[^0-9]/,''))
-                        //   }}
-                        // onKeyDown={(e)=>{
-                        //   setFieldValue('phonenumber',values.phonenumber.replace(/[^0-9]/,''))
-                        // }}
-                        onChange={handleChange}
+                        onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9]/, ''); handleChange(e); }}
                         onBlur={handleBlur}
                         value={values.phonenumber}
                         invalid={errors.phonenumber && touched.phonenumber}
@@ -327,8 +409,37 @@ class FormEmployee extends Component {
                       <FormFeedback >*{errors.phonenumber}</FormFeedback>
                     </FormGroup>
                   </Col>
-                </Row>
-                <Row form>
+                  <Col md={6}>
+                    <FormGroup>
+                      <Label for="email">อีเมล</Label>
+                      <Input
+                        type="email"
+                        name="email"
+                        id="email"
+                        placeholder="name@example.com"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.email}
+                        invalid={errors.email && touched.email}
+                      />
+                      <FormFeedback >*{errors.email}</FormFeedback>
+                    </FormGroup>
+                  </Col>
+                  <Col md={6}>
+                    <FormGroup>
+                      <Label for="password">รหัสผ่าน</Label>
+                      <Input
+                        type="password"
+                        name="password"
+                        id="password"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.password}
+                        invalid={errors.password && touched.password}
+                      />
+                      <FormFeedback >*{errors.password}</FormFeedback>
+                    </FormGroup>
+                  </Col>
                   <Col md={6}>
                     <FormGroup>
                       <Label for="birthdate">วันเกิด</Label>
@@ -364,9 +475,7 @@ class FormEmployee extends Component {
                       <FormFeedback>*{errors.jobtitle}</FormFeedback>
                     </FormGroup>
                   </Col>
-                </Row>
-                <Row form>
-                  <Col>
+                  <Col lg={12}>
                     <FormGroup>
                       <Label for="address">ที่อยู่</Label>
                       <Input
@@ -382,8 +491,6 @@ class FormEmployee extends Component {
                       <FormFeedback >*{errors.address}</FormFeedback>
                     </FormGroup>
                   </Col>
-                </Row>
-                <Row form>
                   <Col md={6}>
                     <FormGroup>
                       <Label for="zip">รหัสไปรษณีย์</Label>
@@ -425,11 +532,7 @@ class FormEmployee extends Component {
                           //   checkZip = false
                           // }
                         }}
-                        onKeyPress={() => {
-                          setFieldValue('zipcode', values.zipcode.replace(/[^0-9]/, ''))
-
-                        }}
-                        onChange={handleChange}
+                        onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9]/, ''); handleChange(e); }}
                         onBlur={handleBlur}
                         value={values.zipcode}
                         invalid={errors.zipcode && touched.zipcode}
@@ -454,10 +557,7 @@ class FormEmployee extends Component {
                       </Input>
                       {/* <FormFeedback >*{errors.subdistrict}</FormFeedback> */}
                     </FormGroup>
-
                   </Col>
-                </Row>
-                <Row form>
                   <Col md={6}>
                     <FormGroup>
                       <Label for="city">อำเภอ/เขต</Label>
@@ -497,16 +597,16 @@ class FormEmployee extends Component {
                 </Row>
                 <Row form>
                   <Col md={8} />
-                  <Col md={2}
-                    style={{ display: 'flex' }}
-
-                  >
-                    <Button type="reset" color="secondary" style={{ flex: 1 }}>เคลียร์</Button>
+                  <Col md={2} style={{ display: 'flex' }}>
+                    <FormGroup style={{ display: 'flex', flex: 1 }}>
+                      <Button type="reset" color="secondary" style={{ flex: 1 }}>เคลียร์</Button>
+                    </FormGroup>
                   </Col>
                   <Col md={2} style={{ display: 'flex' }}>
-                    <Button type="submit" color="success" style={{ flex: 1 }}>บันทึก</Button>
+                    <FormGroup style={{ display: 'flex', flex: 1 }}>
+                      <Button type="submit" color="success" style={{ flex: 1 }}>บันทึก</Button>
+                    </FormGroup>
                   </Col>
-
                 </Row>
               </Form>
             )}

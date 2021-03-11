@@ -202,7 +202,9 @@ const Content = styled.div`
 const Header = styled.div`
     display: flex;
     background-color: #46CBE8;
-    height: 50px;
+    height: 3vw;
+    max-height: 50px;
+    min-height: 40px;
     padding: 5px;
     align-items: center;
     `;
