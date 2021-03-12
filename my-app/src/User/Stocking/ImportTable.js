@@ -76,7 +76,11 @@ class ImportTable extends React.Component{
 
                                     <td>5</td>
                                     <td>20</td>
-                                    <td>CHECK ICON</td>
+                                    <td>
+                                        <InputGroup>
+                                            <Input addon type="checkbox" style = {{width:20,height:20}} />
+                                        </InputGroup>
+                                    </td>
 
                                 </tr>
                             </tbody>

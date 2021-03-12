@@ -41,7 +41,7 @@ class ExportTable extends React.Component{
 
                             {/* -------------------------- This is header for table  --------------------------*/}
                             <thead>
-                                <tr>
+                                <tr style ={{textAlign:'center'}}>
                                     <th>ลำดับ</th>
                                     <th>รหัสสินค้า</th>
                                     <th>เก่า/ใหม่</th>
@@ -55,7 +55,7 @@ class ExportTable extends React.Component{
                             {/* -------------------------- This is datafrom for table  --------------------------*/}
                             {/* Example */}
                             <tbody>
-                                <tr>
+                                <tr style ={{textAlign:'center'}}>
                                     <th scope="row">1</th>
                                     <td>11323</td>
                                     <td>ใหม่</td>
@@ -63,8 +63,11 @@ class ExportTable extends React.Component{
                                     <td>ข้าวหอมมะลิ ตราสส</td>
                                     <td>5</td>
                                     <td>20</td>
-                                    <td>CHECK ICON</td>
-
+                                    <td>
+                                        <InputGroup>
+                                            <Input addon type="checkbox" style = {{width:20,height:20}} />
+                                        </InputGroup>
+                                    </td>
                                 </tr>
                             </tbody>
                     </Table>

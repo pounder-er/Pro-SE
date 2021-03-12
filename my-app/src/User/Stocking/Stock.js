@@ -27,11 +27,16 @@ class Stock extends React.Component{
         this.state = {
             date:"1/1/2564",
             time:this.props.location.data,
-            array:[1,2,3,4,5]
+            input:""
         }
     }
 
-    // Render multi items
+    handleChangeText =(text)=>{
+        this.setState({input:text.target.value})
+        // console.log("hi")
+    }
+
+    //----------------------------- Render multi items -----------------------------
     render(){
         const listItems = checkList.map((data) =>
             <tr>
@@ -41,7 +46,8 @@ class Stock extends React.Component{
 
                 <td>
                     <InputGroup>
-                        <Input/>
+                            <Input 
+                                onChange={text => this.handleChangeText(text)}/>
                     </InputGroup>
                 </td>
 
@@ -58,6 +64,7 @@ class Stock extends React.Component{
                 </td>
             </tr>
         );
+        //----------------------------- Render multi items -----------------------------
 
         return(
             <div className = "ContainerStocking">
@@ -65,12 +72,12 @@ class Stock extends React.Component{
                 <body className = "ContentStocking">
 
                     <h1 style={{width:'80%', alignSelf:'center', marginTop:60, marginBottom:20}}>รายการที่ต้องเช็ค</h1>
-                    <h3 style={{width:'80%', alignSelf:'center', marginTop:10, marginBottom:20}}>วันที่ : {this.state.date}  เวลา : {this.state.time}</h3>
+                    <h3 style={{width:'80%', alignSelf:'center', marginTop:10, marginBottom:20}}>วันที่ : {this.state.date}  เวลา : {this.state.time} Test: {this.state.input}</h3>
                     
                     <Table hover style={{width:'80%', alignSelf:'center', marginTop:20, marginBottom:20 ,background:"#f1f1f1"}}>
 
                             <thead>
-                                <tr>
+                                <tr style ={{textAlign:'center'}}>
                                     <th>ลำดับ</th>
                                     <th>รหัสสินค้า</th>
                                     <th>รายการสินค้า</th>
@@ -80,9 +87,10 @@ class Stock extends React.Component{
                                 </tr>
                             </thead>
 
-                            <tbody>
+                            <tbody style ={{textAlign:'center'}}>
 
                                 {/* <FlatList checkList ={checkList}/> */}
+
                                 {listItems}
                                 
                             </tbody>

@@ -17,12 +17,20 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-pro-sidebar/dist/css/styles.css';
 
+import { FiFileText } from 'react-icons/fi'
+
+
 class Import extends React.Component{
     constructor(props){
         super(props)
         this.state = {
 
         }
+    }
+
+    importTable =()=> {
+        this.props.history.push("/ImportTable")
+        // console.log("hi")
     }
 
     render(){
@@ -36,7 +44,7 @@ class Import extends React.Component{
 
                             {/* -------------------------- This is header for table  --------------------------*/}
                             <thead>
-                                <tr>
+                                <tr style ={{textAlign:'center'}}>
                                     <th>ลำดับ</th>
                                     <th>หมายเลขล็อต</th>
                                     <th>ช่องขนส่ง</th>
@@ -47,26 +55,16 @@ class Import extends React.Component{
                             {/* -------------------------- This is dataFrom for table that should render --------------------------*/}
                             {/* Example */}
                             <tbody style = {{justifyContent:'center'}}>
-                                <tr>
+
+                                <tr style ={{textAlign:'center'}}>
                                     <th scope="row">1</th>
                                     <td>100100</td>
                                     <td>A1</td>
-                                    <td>ICON</td>
+                                    <td onClick = {this.importTable}>
+                                        <FiFileText style = {{color:"#00A3FF"}}/>
+                                    </td>
                                 </tr>
 
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>100100</td>
-                                    <td>A1</td>
-                                    <td>ICON</td>
-                                </tr>
-
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>100100</td>
-                                    <td>A1</td>
-                                    <td>ICON</td>
-                                </tr>
                             </tbody>
                     </Table>
 

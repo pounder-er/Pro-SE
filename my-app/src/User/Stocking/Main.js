@@ -26,7 +26,7 @@ class Main extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            data: "King"
+            data: new Date
         }
     }
 
@@ -66,7 +66,7 @@ class Main extends React.Component {
                     <body className="BodyMain">
                         <Link to = {{
                             pathname: "/Stock",
-                            data: this.state.data}}
+                            data: this.state.data.toLocaleTimeString()}}
 
                             style = {{width:'100%', height:'100%'}}>
                             
@@ -81,7 +81,7 @@ class Main extends React.Component {
                     <body className="BodyMain">
                         <Link to = {{
                             pathname: "/Import",
-                            data: this.state.data}}
+                            data: this.state.data.toLocaleTimeString()}}
                              
                             style = {{width:'100%', height:'100%'}}>
                             
@@ -96,7 +96,7 @@ class Main extends React.Component {
                     <body className="BodyMain">
                         <Link to = {{
                             pathname: "/Export",
-                            data: this.state.data}}
+                            data: this.state.data.toLocaleTimeString()}}
                              
                             style = {{width:'100%', height:'100%'}}>
                             
