@@ -57,10 +57,7 @@ const SideBar = styled.div`
     align-self: flex-start;
 `;
 
-const Space = styled.div`
-    display: flex;
-    margin-top: 100%
-`;
+
 
 class SideBarComponent extends React.Component {
     constructor(props) {
@@ -123,14 +120,10 @@ class SideBarComponent extends React.Component {
                             <div style={{display:'flex', marginTop:this.state.spaceMargin}}></div>
                             <SidebarFooter/>
                             <div style={{display:'flex', width:'100%'}}>
-                                {/* <FaUserCircle color="gray" size={40} style={{marginLeft:17}}/> */}
-                                {/* <span style={{display:'flex', marginLeft:10}}>Hello Kombanwa</span> */}
+ 
                             </div>
                             <Menu>
-                                {/* <MenuItem icon={<FaUserCircle color="gray" size={45}/>}>
-                                    <span style={{display:'flex', marginLeft:7, color:'white', fontSize:17}}>Hello Kombanwa</span>
-                                    <span style={{display:'flex', marginLeft:7}}>Manager</span>
-                                </MenuItem> */}
+
                                 <SubMenu title={
                                             <div>
                                                 <span style={{display:'flex', marginLeft:7, color:'white', fontSize:17}}>Hello Kombanwa</span>
