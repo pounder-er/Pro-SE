@@ -42,13 +42,7 @@
     font-family: Roboto, sans-serif;
 }
 
-.Sidebar{
-    display: flex;
-    flex-direction: column;
-    align-self: flex-start;
-    font-family: Roboto, sans-serif;
-    
-}
+
 
 .CenterTd{
     display: flex;
