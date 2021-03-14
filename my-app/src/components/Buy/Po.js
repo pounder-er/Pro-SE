@@ -32,8 +32,23 @@ import 'react-pro-sidebar/dist/css/styles.css';
 import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
 import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons/md";
 import { IoMdTrash } from "react-icons/io";
+import { Formik, Field, ErrorMessage } from 'formik';
 
+import * as Yup from 'yup';
 
+const formEmployeeSchema = Yup.object().shape({
+    id_company: Yup.string()
+      .length(7, 'หมายเลขบริษัท')
+      .matches(/^[0-9]{7}$/, 'หมายเลขสินค้าไม่ถูกต้าง')
+      .required('ต้องกรอก'),
+    
+    id_item: Yup.string()
+      .length(7, 'หมายเลขสินค้า')
+      .matches(/^[0-9]{7}$/, 'หมายเลขสินค้าไม่ถูกต้อง')
+      .required('ต้องกรอก'),
+    
+  
+  })
 
 class Buy extends React.Component {
     constructor(props) {
@@ -43,8 +58,10 @@ class Buy extends React.Component {
         }
     }
     render() {
+        console.log(new Date().toLocaleDateString());
         return (
             <div className="Container">
+
 
                 <div className="Content">
                     <body className="Body">
@@ -53,29 +70,38 @@ class Buy extends React.Component {
                             marginBottom: 20,
                             width: '95%',
                             alignSelf: 'center'
-                        }}>รายการสั่งซื้อสินค้า</h1>
+                        }}>ใบสั่งซื้อสินค้า</h1>
+
+
+                       
+                        <Input className="Search_Button" style={{ width: 500 }} placeholder="บริษัท" />
                         <div className="Search_Button">
-                            <InputGroup style={{ width: 400 }}>
-                                <Input placeholder="หมายเลขใบสั่งซื้อ" />
+                            
+                            <InputGroup style={{ width: 700 }}>
+                                <Input placeholder="หมายเลขสินค้า" />
+                                <Input placeholder="จำนวน" />
+                                <Button color="info" style={{ width: 150 }}>เพิ่มรายการ</Button>
                                 <InputGroupAddon addonType="append">
-                                    <InputGroupText><MdSearch color="#1F1F1F" size={22} /></InputGroupText>
                                 </InputGroupAddon>
                             </InputGroup>
-                            <Button color="info" style={{ width: 100 }}>fillter</Button>
-                            <Link to={this.props.match.url+"/po"}>
-                            <Button color="info" style={{ width: 150 }}>เพิ่มรายการสั่งซื้อ</Button>
-                            </Link>
+                            {/* <InputGroup style={{ width: 200 }}>
+                                <Input placeholder="จำนวน" />
+                                <InputGroupAddon addonType="append">
+                                </InputGroupAddon>
+                            </InputGroup> */}
+                            
+
                         </div>
 
                         <Table striped style={{ width: '95%', alignSelf: 'center', marginTop: 20 }}>
                             <thead>
                                 <tr>
                                     <th>ลำดับที่</th>
-                                    <th>บริษัท</th>
-                                    <th>หมายเลขใบสั่งซื้อ</th>
-                                    <th>วันที่สั่งซื้อ</th>
-                                    <th>ผู้รับผิดชอบ</th>
-                                    <th>สถานะ</th>
+                                    <th>หมายเลขสินค้า</th>
+                                    <th>รายการสินค้า</th>
+                                    <th>จำนวน</th>
+                                    <th>ราคาต่อหน่วย</th>
+                                    <th>รวม</th>
                                     <th>รายละเอียด</th>
                                 </tr>
                             </thead>

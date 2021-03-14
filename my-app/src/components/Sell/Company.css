@@ -48,7 +48,6 @@
 .Search_Button{
     display: flex;
     flex-direction: row;
-    margin-top:10px;
     justify-content: space-between;
     width: 95%;
     align-self: center;

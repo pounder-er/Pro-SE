@@ -48,6 +48,7 @@ import { addSession } from '../../redux/actions';
 import Employees from '../Employees/Employees'
 import Sell from '../Sell/Sell'
 import Buy from '../Buy/Buy'
+import Po from '../Buy/Po'
 
 class Home extends React.Component {
   constructor(props) {
@@ -133,8 +134,9 @@ class Home extends React.Component {
           <Body>
                 <Switch>
                 <Route exact path={this.props.match.path+"/employees"} component={Employees} />
-                {/* <Route exact path={this.props.match.path+"/sell"} component={Sell} /> */}
+                <Route exact path={this.props.match.path+"/sell"} component={Sell} />
                 <Route exact path={this.props.match.path+"/buy"} component={Buy} />
+                <Route exact path={this.props.match.path+"/buy/po"} component={Po} />
                 </Switch>
           </Body>
         </Content>
