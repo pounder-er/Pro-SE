@@ -22,9 +22,8 @@ import 'react-pro-sidebar/dist/css/styles.css';
 import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
 import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons/md";
 import { IoMdTrash } from "react-icons/io";
-
-import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
+import * as Yup from 'yup';
 
 const useSortableData = (items, config = null) => {
     const [sortConfig, setSortConfig] = React.useState(config);
@@ -78,84 +77,64 @@ const ProductTable = (props) => {
                             onClick={() => requestSort("id")}
                             className={getClassNamesFor("id")}
                         >
-                            ลำดับ
+                            ลำดับที่
                         </button>
                     </th>
                     <th>
                         <button
                             type="button"
-                            onClick={() => requestSort("รหัสสินค้า")}
-                            className={getClassNamesFor("รหัสสินค้า")}
+                            onClick={() => requestSort("หมายเลขล๊อต")}
+                            className={getClassNamesFor("หมายเลขล๊อต")}
                         >
-                            รหัสสินค้า
+                            หมายเลขล๊อต
                         </button>
                     </th>
                     <th>
                         <button
                             type="button"
                             onClick={() => requestSort("รายการสินค้า")}
-                            className={getClassNamesFor("รายการสินค้า")}
+                            className={getClassNamesFor("ผลิต")}
                         >
-                            รายการสินค้า
+                            ว/ด/ป ผลิต
               </button>
                     </th>
                     <th>
                         <button
                             type="button"
                             onClick={() => requestSort("ชนิด")}
-                            className={getClassNamesFor("ชนิด")}
+                            className={getClassNamesFor("หมดอายุ")}
                         >
-                            ชนิด
+                            ว/ด/ป หมดอายุ
               </button>
                     </th>
                     <th>
                         <button
                             type="button"
                             onClick={() => requestSort("น้ำหนัก")}
-                            className={getClassNamesFor("น้ำหนัก")}
+                            className={getClassNamesFor("จำนวนที่รับเข้า")}
                         >
-                            น้ำหนัก
+                            จำนวนที่รับเข้า
               </button>
                     </th>
                     <th>
                         <button
                             type="button"
                             onClick={() => requestSort("เวลา")}
-                            className={getClassNamesFor("เวลา")}
-                        >
-                            เก่า/ใหม่
-              </button>
-                    </th>
-                    <th>
-                        <button
-                            type="button"
-                            onClick={() => requestSort("ราคาต่อหน่วย")}
-                            className={getClassNamesFor("ราคาต่อหน่วย")}
-                        >
-                            ราคาต่อหน่วย
-              </button>
-                    </th>
-                    <th>
-                        <button
-                            type="button"
-                            onClick={() => requestSort("สถานะ")}
-                            className={getClassNamesFor("สถานะ")}
-                        >
-                            สถานะ
-              </button>
-                    </th>
-                    <th>
-                        <button
-                            type="button"
-                            onClick={() => requestSort("ยอดคงเหลือ")}
                             className={getClassNamesFor("ยอดคงเหลือ")}
                         >
                             ยอดคงเหลือ
               </button>
                     </th>
                     <th>
-                        รายละเอียด
+                        <button
+                            type="button"
+                            onClick={() => requestSort("ราคาต่อหน่วย")}
+                            className={getClassNamesFor("รายละเอียด")}
+                        >
+                            รายละเอียด
+              </button>
                     </th>
+
 
                 </tr>
             </thead>
@@ -163,13 +142,10 @@ const ProductTable = (props) => {
                 {items.map((item) => (
                     <tr key={item.id}>
                         <td>{item.id}</td>
-                        <td>{item.รหัสสินค้า}</td>
-                        <td>{item.รายการสินค้า}</td>
-                        <td>{item.ชนิด}</td>
-                        <td>{item.น้ำหนัก}</td>
-                        <td>{item.เวลา}</td>
-                        <td>${item.ราคาต่อหน่วย}</td>
-                        <td>{item.สถานะ}</td>
+                        <td>{item.หมายเลขล๊อต}</td>
+                        <td>{item.ผลิต}</td>
+                        <td>{item.หมดอายุ}</td>
+                        <td>{item.จำนวนที่รับเข้า}</td>
                         <td>{item.ยอดคงเหลือ}</td>
                         <td>{item.รายละเอียด}</td>
                         
@@ -181,7 +157,7 @@ const ProductTable = (props) => {
     );
 };
 
-class ProductReport extends React.Component {
+class ProductDetail extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -192,34 +168,44 @@ class ProductReport extends React.Component {
         return (
             <Container fluid={true} style={{ backgroundColor: 'wheat' }} >
                 <Row >
-                    <Col>
+                    <Col >
                         <h1 style={{
                             marginTop: 20,
                             marginBottom: 20,
                             width: '100%',
                             alignSelf: 'center'
-                        }}>ตรวขสอบสินค้า</h1>
+                        }}>รายละเอียดสินค้า</h1>
+                    </Col>
+                    <Col xs="2">
+                    <Link to={"/home/productsReport"}><Button color="warning" style={{ width: 200, marginTop: 40 }}>ย้อน</Button></Link>
+                    </Col>
+                    <Col xs="2">
+                        <Button color="danger" style={{ width: 200, marginTop: 40 }}>แก้ไข</Button>
                     </Col>
                 </Row>
-                <Row >
-                    <Col md="3">
-                        <InputGroup >
-                            <Input placeholder="รหัสสินค้า" />
-                            <InputGroupAddon addonType="append">
-                                <InputGroupText><MdSearch color="#1F1F1F" size={22} /></InputGroupText>
-                            </InputGroupAddon>
-                        </InputGroup>
+                <Row style={{ height: 200 }}>
+                    <Col style={{ backgroundColor:'green',marginLeft:"50px" }} md={{size:"2"}}></Col>
+                    <Col >
+                        <Row style={{ height: 80 }}>
+                            <Col md={{ size: '3'}}>รหัสสินค้า:110100</Col>
+                            <Col md="3">รายการสินค้า:ข้าวหอมมะลิ ตราสส</Col>
+                            <Col md="3">ขนิด:ข้าวหอมมะลิ</Col>
+                            <Col md="3">น้ำหนัก:5 กก.</Col>
+                        </Row>
+                        <Row style={{ height: 60 }}>
+                            <Col md={{ size: '3'}}>ราคาต่อหน่วย:250</Col>
+                            <Col md="3">บริษัท:บริษัทสส จำกัด</Col>
+                            <Col md="3">สถานะ:ปกติ</Col>
+                            <Col md="3">เก่า/ใหม่:ใหม่</Col>
+                        </Row>
+                    </Col>
 
-                    </Col>
-                    <Col md={{ span: 4, offset: 7 }}>
-                        <Button color="info" style={{ width: 200 }}>fillter</Button>
-                    </Col>
                 </Row>
-
                 <ProductTable
                     products={[
-                        { id: 1, "รหัสสินค้า": "110100", รายการสินค้า: "ข้าวหอมมะลิ ตราสส", ชนิด: "ข้าวหอมมะลิ", น้ำหนัก: 5, เวลา: "ใหม่", ราคาต่อหน่วย: 250.00, สถานะ: "ปกติ", ยอดคงเหลือ: 500.00, รายละเอียด: <Link to={this.props.match.url+"/productDetail"}>h</Link> },
-                        { id: 1, "รหัสสินค้า": "110100", รายการสินค้า: "ข้าวหอมมะลิ ตราสส", ชนิด: "ข้าวหอมมะลิ", น้ำหนัก: 5, เวลา: "ใหม่", ราคาต่อหน่วย: 250.00, สถานะ: "ปกติ", ยอดคงเหลือ: 500.00, รายละเอียด: "ghjjg" }
+                        { id: 1, หมายเลขล๊อต: "110100", ผลิต: "12/08/2554", หมดอายุ: "12/08/2554", จำนวนที่รับเข้า: 250, สถานะ: "ปกติ", ยอดคงเหลือ: 50, รายละเอียด: "" }
+
+
 
                     ]}
                 />
@@ -260,4 +246,4 @@ class ProductReport extends React.Component {
 }
 
 
-export default ProductReport;
+export default ProductDetail;

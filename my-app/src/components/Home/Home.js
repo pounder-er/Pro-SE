@@ -49,6 +49,7 @@ import Employees from '../Employees/Employees'
 import HistoryInOut from '../HistoryInOut/HistoryInOut'
 import SalesReport from '../SalesReport/SalesReport'
 import ProductsReport from '../ProductsReport/ProductReport'
+import ProductDetail from '../ProductDetail/ProductDetail'
 
 class Home extends React.Component {
   constructor(props) {
@@ -146,6 +147,7 @@ class Home extends React.Component {
                 <Route exact path={this.props.match.path+"/historyInOut"} component={HistoryInOut} />
                 <Route exact path={this.props.match.path+"/salesReport"} component={SalesReport} />
                 <Route exact path={this.props.match.path+"/productsReport"} component={ProductsReport} />
+                <Route exact path={this.props.match.path+"/productsReport/productDetail"} component={ProductDetail} />
                 </Switch>
           </Body>
         </Content>
