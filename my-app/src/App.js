@@ -20,6 +20,7 @@ import EditBranch from './EditBranch'
 
 import DailyStock from './DailyStock'
 import DashBoard from './DashBoard';
+import PDFDisplayTest from './PDFDisplayTest'
 
 class App extends React.Component {
   constructor(props) {
@@ -48,13 +49,14 @@ class App extends React.Component {
       //<ProductInspection/>
       //<DashBoard/>
       <Switch>
-        <Route component={DashBoard} />
+        {/* <Route component={DashBoard} /> */}
         {/* <Route component={Company} /> */}
         {/* <Route component={EditCompany} /> */}
         {/* <Route component={Branch} /> */}
         {/* <Route component={EditBranch} /> */}
         {/* <Route component={Login} /> */}
         {/* <Route component={Contact} /> */}
+        <Route component={PDFDisplayTest} />
       </Switch>
 
      
