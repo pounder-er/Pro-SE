@@ -52,9 +52,12 @@ import { CgSidebarOpen, CgSidebar } from "react-icons/cg";
 import fire_base from '../../firebase/Firebase';
 
 import { connect } from 'react-redux';
-import { addSession } from '../../redux/actions';
+import { addSession, addUserProfile } from '../../redux/actions';
 
-import Employees from '../Employees/Employees';
+import ListEmployee from '../Employees/ListEmployee';
+import AddEmployee from '../Employees/AddEmployee';
+
+
 
 class Home extends React.Component {
   constructor(props) {
@@ -73,16 +76,21 @@ class Home extends React.Component {
     //   'สาขา',
     //   'เช็ค Stock สินค้า',
     //   'ยอดขายสินค้า'];
-    this.checkUser();
+    //this.checkUser();
   }
 
 
-  checkUser = () => {
-    if (this.props.session) {
+  // checkUser = () => {
+  //   if (this.props.session) {
 
-    } else {
-      this.props.history.push("/login");
-    }
+  //   } else {
+  //     this.props.history.push("/login");
+  //     console.log("qqqqqqqq");
+  //   }
+  // }
+
+  async componentDidMount(){
+    console.log(this.props.userProfile);
   }
 
   toggleProfile = () => {
@@ -96,7 +104,7 @@ class Home extends React.Component {
 
   logOutSuccess = () => {
     this.props.dispatch(addSession(null));
-    this.props.history.push("/login");
+    //this.props.history.push("/login");
   }
 
   logOutUnsuccess = (error) => {
@@ -111,12 +119,14 @@ class Home extends React.Component {
         <ProSidebar collapsed={this.state.collapsed}>
           <SidebarHeader>
             <Menu iconShape="circle" >
-              <SubMenu icon={<BsPersonFill />}
+              <SubMenu icon={
+                (this.props.userProfile.imageprofile&&(<img src={this.props.userProfile.imageprofile} style={{ height: 50, width: 50, borderRadius: 100 }} />))||
+                (!this.props.userProfile.imageprofile&&(<BsPersonFill />))
+              }
                 prefix={
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <h5>สมชาย</h5>
-
-                    <label style={{ fontSize: 12 }}>ผู้จัดการ</label>
+                    <h5>{this.props.userProfile.firstname}</h5>
+                    <label style={{ fontSize: 12 }}>{this.props.userProfile.jobtitle}</label>
                   </div>} >
                 <MenuItem suffix={<BsBoxArrowRight />} onClick={(e) => this.onLogout(e)}>ออกจากระบบ</MenuItem>
               </SubMenu>
@@ -136,7 +146,10 @@ class Home extends React.Component {
                 <MenuItem>บริษัท<Link onClick={() => this.setState({ headerTitle: 'บริษัท' })} /></MenuItem>
                 <MenuItem>สาขา<Link onClick={() => this.setState({ headerTitle: 'สาขา' })} /></MenuItem>
               </SubMenu>
-              <MenuItem icon={<BsFillPeopleFill />}>จัดการพนักงาน<Link to={this.props.match.url + "/employees"} onClick={() => this.setState({ headerTitle: 'จัดการพนักงาน' })} /></MenuItem>
+              <SubMenu title="จัดการพนักงาน" icon={<BsFillPeopleFill />}>
+                <MenuItem>เพิ่มพนักงาน<Link to={this.props.match.url + "/add_employee"} onClick={() => this.setState({ headerTitle: 'เพิ่มพนักงาน' })} /></MenuItem>
+                <MenuItem>รายชื่อพนักงาน<Link to={this.props.match.url + "/list_employee"} onClick={()=>this.setState({ headerTitle: 'รายชื่อพนักงาน' })} /></MenuItem>
+              </SubMenu>
               <MenuItem >เช็ค Stock สินค้า<Link onClick={() => this.setState({ headerTitle: 'เช็ค Stock สินค้า' })} /></MenuItem>
               <MenuItem >ตั้งเวลาเช็ค Stock ประจำวัน</MenuItem>
               <MenuItem >ยอดขายสินค้า<Link onClick={() => this.setState({ headerTitle: 'ยอดขายสินค้า' })} /></MenuItem>
@@ -169,7 +182,8 @@ class Home extends React.Component {
             <Container style={{ backgroundColor: 'white', borderRadius: 5, padding: 10 }}>
               <Switch>
                 
-                <Route exact path={this.props.match.path + "/employees"} component={Employees} />
+                <Route exact path={this.props.match.path + "/list_employee"} component={ListEmployee} />
+                <Route exact path={this.props.match.path + "/add_employee"} component={AddEmployee} />
               </Switch>
             </Container>
           </Body>
@@ -222,6 +236,7 @@ const Body = styled.div`
 const mapStateToProps = (state) => {
   return {
     session: state.session,
+    userProfile: state.userProfile
   }
 }
 

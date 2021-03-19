@@ -16,16 +16,14 @@ import Login from '../Login/Login'
 import Home from '../Home/Home'
 
 import { connect } from 'react-redux';
-import { addSession } from '../../redux/actions';
+import { addSession, addUserProfile } from '../../redux/actions';
 
-import Employees from '../Employees/Employees';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
     }
-    
     this.PrivateRoute=({ component: Component, ...rest })=> {
       return (
         <Route
@@ -34,6 +32,7 @@ class App extends React.Component {
             this.props.session ? (
               <Component {...props} />
             ) : (
+              // console.log("test")
               <Redirect
                 to={{
                   pathname: "/login",
@@ -48,37 +47,33 @@ class App extends React.Component {
     
   }
 
-  getSuccess = (user) => {
-    this.props.dispatch(addSession(user));
-    console.log(this.props.session);
+  async componentDidMount(){
+    await fire_base.getStateChangedUser(this.getSuccess, this.getUnsuccess);
+  }
+
+  getSuccess = async(user) => {
+    await this.props.dispatch(addSession(user));
+    await console.log(this.props.session);
+    await fire_base.getUserProfile(this.props.session.uid,this.getUserProfileSuccess,this.getUserProfileUnSuccess);
+  }
+
+  getUserProfileSuccess=(data)=>{
+    this.props.dispatch(addUserProfile(data));
     this.props.history.push("/home");
+  }
+
+  getUserProfileUnSuccess(error){
+    console.error(error);
   }
 
   getUnsuccess = () => {
     this.props.history.push("/login");
   }
 
-
-  async componentDidMount(){
-    await fire_base.getStateChangedUser(this.getSuccess, this.getUnsuccess);
-    // if(this.props.session){
-   
-    //   this.props.history.push('/home');
-  
-    // }
-
-    // console.log(this.props.session);
-
-    
-  }
-
-  
-
   render() {
     
     return (
       <Switch>
-        
         <this.PrivateRoute path="/home" component={Home} />
         <Route path="/login" component={Login} />
       </Switch>

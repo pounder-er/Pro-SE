@@ -27,10 +27,20 @@ import * as data from './data.json';
 
 import AvatarEditor from 'react-avatar-editor';
 
-import { 
+import fire_base from '../../firebase/Firebase';
+
+import LoadingOverlay from 'react-loading-overlay';
+
+import axios from 'axios';
+
+import Resizer from 'react-image-file-resizer';
+
+import swal from 'sweetalert';
+
+import {
   BsPersonSquare,
   BsPersonFill
- } from "react-icons/bs";
+} from "react-icons/bs";
 
 var checkZip = false;
 var subDistrictFilter = [];
@@ -129,20 +139,27 @@ const formEmployeeSchema = Yup.object().shape({
           // }
         }
       }),
-  imageProfile: Yup.string(),
+  imageprofile: Yup.string(),
 
   email: Yup.string()
     .email('อีเมลไม่ถูกต้อง')
     .required('กรุณาระบุอีเมล')
-    ,
+  ,
   password: Yup.string()
     .required('กรุณาระบุรหัสผ่าน'),
 
 })
 
+const resizeImageFile = (file) => new Promise(resolve => {
+  Resizer.imageFileResizer(file, 250, 250, 'JPEG', 50, 0,
+  uri => {
+    resolve(uri);
+  },
+  'blob'
+  );
+});
 
-
-class FormEmployee extends Component {
+class AddEmployee extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -150,9 +167,13 @@ class FormEmployee extends Component {
       zoom: 1,
       ModalProfileImage: false,
       disabledButtonSaveOrEdit: true,
-      disabledButtonDefault: true
+      disabledButtonDefault: true,
+      loading: false,
+      resizeImageUrl: ''
     }
-    this.hiddenFileInputRef = React.createRef()
+    this.loading = false;
+    this.account = null;
+    this.hiddenFileInputRef = React.createRef();
   }
 
   toggleModalProfileImage = (e) => {
@@ -160,17 +181,47 @@ class FormEmployee extends Component {
     this.setState({ ModalProfileImage: !this.state.ModalProfileImage });
   }
 
-  setDefaultImageCrop = () =>{
+  setDefaultImageCrop = () => {
     this.setState({
       sourceImageFile: null,
       zoom: 1,
       disabledButtonSaveOrEdit: true,
-      disabledButtonDefault: true
+      disabledButtonDefault: true,
+      resizeImageUrl: ''
     });
   }
 
 
   setEditorRef = (editor) => (this.editor = editor)
+
+  uploadImageProfileSuccess = (url, uid) => {
+    delete this.account.email;
+    delete this.account.password;
+    this.account.imageProfile = url;
+    fire_base.addUserProfile(uid, this.account, this.addUserProfileSuccess, this.unSuccess);
+    console.log(url);
+  }
+
+  addUserProfileSuccess = () => {
+    this.setState({ loading: false });
+    console.log("success");
+    this.sweetAlret("เสร็จสิ้น","เพิ่มพนักงานแล้วไอ้สัส!!!","success","ตกลง");
+  }
+
+  unSuccess = (error) => {
+    console.log(error);
+    this.sweetAlret("ไม่สำเร็จ","สัส!!! อีเมลซ้ำหรือเน็ตมึงเน่าวะ","error","ตกลง");
+    this.setState({ loading: false });
+  }
+
+  sweetAlret(title,text,icon,button){
+    swal({
+      title: title,
+      text: text,
+      icon: icon,
+      button: button,
+    })
+  }
 
   render() {
     // console.log(new Date().toLocaleDateString());
@@ -179,113 +230,152 @@ class FormEmployee extends Component {
         <CardBody>
           <Formik
             validationSchema={formEmployeeSchema}
-            onSubmit={values => {
-              console.log(values)
+            onSubmit={async (values,{resetForm}) => {
+              this.setState({ loading: true });
+              this.account = values;
+              await axios.post('/appInventory/createUser',
+                {
+                  email: values.email,
+                  password: values.password,
+                })
+                .then(async(res) => {
+                  if(res.data.userRecord){
+                    await fire_base.uploadImageProfile(res.data.userRecord.uid, values.imageprofile, this.uploadImageProfileSuccess, this.unSuccess);
+                  }else{
+                    this.sweetAlret("ไม่สำเร็จ","สัส!!! อีเมลซ้ำหรือเน็ตมึงเน่าวะ","error","ตกลง");
+                    this.setState({loading:false});
+                  }
+                  console.log(res.data);
+                }).catch(error=>{
+                  console.log(error);
+                  this.sweetAlret("ไม่สำเร็จ","สัส!!! เชื่อมต่อปลายทางไม่ได้ว่ะ เน็ตมึงกากป่าววะ","error","ตกลง");
+                  this.setState({loading:false});
+                });
+                resetForm();
+                this.setDefaultImageCrop();
+              console.log(values);
             }
-            }
+          }
+            //กำหนดค่า default from
             initialValues={{
-              imageProfile: '',
-              nametitle: 'นาย',
-              firstname: '',
-              lastname: '',
-              nationalid: '',
-              phonenumber: '',
-              birthdate: '',
-              jobtitle: 'ผู้จัดการ',
-              address: '',
-              subdistrict: '',
-              zipcode: '',
-              city: '',
-              state: '',
-              email: '',
-              password: '',
-            }}
+            imageprofile: '',
+            nametitle: 'นาย',
+            firstname: '',
+            lastname: '',
+            nationalid: '',
+            phonenumber: '',
+            birthdate: '',
+            jobtitle: 'ผู้จัดการ',
+            address: '',
+            subdistrict: '',
+            zipcode: '',
+            city: '',
+            state: '',
+            email: '',
+            password: '',
+          }}
           >
             {({
-              handleSubmit,
-              handleChange,
-              handleBlur,
-              setFieldValue,
-              handleReset,
-              values,
-              touched,
-              isValid,
-              errors,
-            }) => (
-              <Form onSubmit={handleSubmit} onReset={(e)=>{this.setDefaultImageCrop();handleReset(e);}}>
-                {/* <Button color="danger" onClick={this.toggleModalProfileImage}>hello</Button> */}
+            handleSubmit,
+            handleChange,
+            handleBlur,
+            setFieldValue,
+            handleReset,
+            values,
+            touched,
+            isValid,
+            errors,
+          }) => (
+            //loading ขณะที่กำลังเพิ่มข้อมูล
+            <LoadingOverlay
+              active={this.state.loading}
+              spinner
+              text='กำลังเพิ่มพนักงาน...'
+            >
+              {/* from กรอกข้อมูล */}
+              <Form onSubmit={handleSubmit} onReset={(e) => { e.preventDefault(); this.setDefaultImageCrop(); handleReset(e); }}>
+                {/* <Button onClick={()=>this.sweetAlret("ไม่สำเร็จ","สัส!!! อีเมลซ้ำหรือเน็ตมึงเน่าวะ","error","ตกลง")}>hhhh</Button> */}
+                {/* modal แสดงหน้าแก้ไขรูปโปร */}
                 <Modal isOpen={this.state.ModalProfileImage} toggle={this.toggleModalProfileImage} backdrop='static' >
                   <ModalHeader >เลือก/แก้ไข รูปโปรไฟล์</ModalHeader>
                   <ModalBody>
                     <FormGroup row>
                       <Col style={{ display: 'flex', justifyContent: 'center' }}>
+                        {/* แสดงตัวแก้ไขรูปโปร */}
                         {this.state.sourceImageFile && (
-                        <AvatarEditor
-                          image={this.state.sourceImageFile}
-                          width={180}
-                          height={180}
-                          border={40}
-                          onImageReady={()=>this.setState({disabledButtonSaveOrEdit:false})}
-                          scale={this.state.zoom}
-                          crossOrigin="anonymous"
-                          // onMouseUp={() => console.log(typeof this.editor.getImage().toDataURL())}
-                          ref={this.setEditorRef}
-                          
-                          // onImageReady={()=>console.log("hellooooo")}
-                        />
-                        )}
-                        {!this.state.sourceImageFile && (
-                          <Button 
-                          onClick={()=>this.hiddenFileInputRef.current.click()} 
-                          color="secondary" 
-                          style={{height:'260px',width:'260px'}} >
-                          <input 
-                          type="file" 
-                          ref={this.hiddenFileInputRef} 
-                          onChange={(e)=>{
-                            console.log(e.target.files[0]);
-                            this.setState({sourceImageFile:e.target.files[0]});
-                          }} 
-                          style={{ display: 'none' }} 
-                          accept="image/*" 
+                          <AvatarEditor
+                            image={this.state.sourceImageFile}
+                            width={180}
+                            height={180}
+                            border={40}
+                            onImageReady={() => this.setState({ disabledButtonSaveOrEdit: false, disabledButtonDefault: false })}
+                            scale={this.state.zoom}
+                            crossOrigin="anonymous"
+                            ref={this.setEditorRef}
                           />
-                          <BsPersonSquare size={100} />
-                          <h6 style={{marginTop:10}}>อัปโหลดรูปภาพ</h6>
-                        </Button>
+                        )}
+                        {/* แสดงหน้าเลือกรูป */}
+                        {!this.state.sourceImageFile && (
+                          <Button
+                            onClick={() => this.hiddenFileInputRef.current.click()}
+                            color="secondary"
+                            style={{ height: '260px', width: '260px' }} >
+                            <input
+                              type="file"
+                              ref={this.hiddenFileInputRef}
+                              onChange={(e) => {
+                                console.log(e.target.files[0]);
+                                this.setState({ sourceImageFile: e.target.files[0] });
+                              }}
+                              style={{ display: 'none' }}
+                              accept="image/*"
+                            />
+                            <BsPersonSquare size={100} />
+                            <h6 style={{ marginTop: 10 }}>อัปโหลดรูปภาพ</h6>
+                          </Button>
                         )}
                       </Col>
                     </FormGroup>
                     {this.state.sourceImageFile && (
                       <FormGroup row>
-                      <Col >
-                        <Label >ซูม</Label>
-                        <Input 
-                        type='range' 
-                        min="1" 
-                        max="2" 
-                        step="0.01" 
-                        value={this.state.zoom} 
-                        onChange={(e) => this.setState({ zoom: Number(e.target.value) })} 
-                        />
-                      </Col>
-                    </FormGroup>
+                        <Col >
+                          <Label >ซูม</Label>
+                          <Input
+                            type='range'
+                            min="1"
+                            max="2"
+                            step="0.01"
+                            value={this.state.zoom}
+                            onChange={(e) => this.setState({ zoom: Number(e.target.value) })}
+                          />
+                        </Col>
+                      </FormGroup>
                     )}
                   </ModalBody>
                   <ModalFooter>
-                  <Button color="primary" onClick={()=>{
-                    setFieldValue('imageProfile','');
-                    this.setDefaultImageCrop();
-                  }} 
-                  disabled={this.state.disabledButtonDefault} >คืนค่าเริ่มต้น</Button>
-                  {' '}
-                    <Button 
-                    color="success" 
-                    disabled={this.state.disabledButtonSaveOrEdit}
-                    onClick={(e)=>{
-                      setFieldValue('imageProfile', this.editor.getImage().toDataURL());
-                      this.toggleModalProfileImage(e);
-                      this.setState({disabledButtonDefault:false});
-                    }}>
+                    <Button color="primary" onClick={() => {
+                      setFieldValue('imageprofile', '');
+                      this.setDefaultImageCrop();
+                    }}
+                      disabled={this.state.disabledButtonDefault} >คืนค่าเริ่มต้น</Button>
+                    {' '}
+                    <Button
+                      color="success"
+                      disabled={this.state.disabledButtonSaveOrEdit}
+                      onClick={(e) => {
+                       this.editor.getImage().toBlob(async(blob) => {
+                              const resizeBlob = await resizeImageFile(blob);
+                              await console.log(resizeBlob);
+                              await setFieldValue('imageprofile', resizeBlob);
+                              const url =  await URL.createObjectURL(resizeBlob);
+                              await this.setState({resizeImageUrl:url});
+                              await console.log(url);
+                              
+                        },'image/jpeg', 1);
+                        //setFieldValue('imageprofile', this.editor.getImage().toBlob( 'image/jpeg', 0.95));
+                        this.toggleModalProfileImage(e);
+                        this.setState({ disabledButtonDefault: false });
+                      }}>
                       แก้ไข/บันทึก
                     </Button>
                     {' '}
@@ -295,30 +385,30 @@ class FormEmployee extends Component {
                 <Row form>
                   <Col>
 
-                     {/* <label className="custom-file-upload">
+                    {/* <label className="custom-file-upload">
                       <input type="file" style={{ display: 'none' }} accept="image/*" />
                       <i className="fa fa-cloud-upload" /> Attach
                     </label> 
                   </Col>
                   <Col>  */}
-                  <FormGroup style={{display:'flex',justifyContent:'center'}} >
-                    <Button 
-                    onClick={this.toggleModalProfileImage} 
-                    style={{height:180,width:180,borderRadius:100,display:'flex',justifyContent:'center',alignItems:'center'}}>
-                    {values.imageProfile && (
-                    <img src={values.imageProfile} style={{height:180,width:180,borderRadius:100}}  />
-                    )}
-                    {!values.imageProfile && (
-                      <div>
-                        <BsPersonFill size={80} />
-                        <h6>คลิกเพื่อเพิ่มรูป</h6>
-                      </div>
-                      )
-    
-                    }    
-                    </Button>          
-                  </FormGroup>
-                  </Col> 
+                    <FormGroup style={{ display: 'flex', justifyContent: 'center' }} >
+                      <Button
+                        onClick={this.toggleModalProfileImage}
+                        style={{ height: 180, width: 180, borderRadius: 100, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        {values.imageprofile && (
+                          <img src={this.state.resizeImageUrl} style={{ height: 180, width: 180, borderRadius: 100 }} />
+                        )}
+                        {!values.imageprofile && (
+                          <div>
+                            <BsPersonFill size={80} />
+                            <h6>คลิกเพื่อเพิ่มรูป</h6>
+                          </div>
+                        )
+
+                        }
+                      </Button>
+                    </FormGroup>
+                  </Col>
                 </Row>
                 <Row form>
                   <Col md={2} >
@@ -609,17 +699,15 @@ class FormEmployee extends Component {
                   </Col>
                 </Row>
               </Form>
-            )}
+            </LoadingOverlay>
+          )}
 
           </Formik>
         </CardBody>
-      </Card>
+      </Card >
     );
   }
 }
 
-FormEmployee.propTypes = {
 
-};
-
-export default FormEmployee;
+export default AddEmployee;

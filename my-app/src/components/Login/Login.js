@@ -40,16 +40,10 @@ class Login extends React.Component {
         this.state={
             spinner:false
         }
-        fire_base.getStateChangedUser(this.getSuccess, this.getUnsuccess);
-    }
-
-    getSuccess = (user) => {
-        this.props.dispatch(addSession(user));
-        this.props.history.push("/home");
-    }
-
-    getUnsuccess = () => {
-        
+        //fire_base.getStateChangedUser(this.getSuccess, this.getUnsuccess);
+        if(this.props.session){
+            this.props.history.push("/home");
+        }
     }
 
     onClickLogin = async (values) => {
@@ -71,6 +65,7 @@ class Login extends React.Component {
     }
 
     render() {
+        
         return (
             <Container>
                 <Body>
@@ -110,7 +105,6 @@ class Login extends React.Component {
                                         />
                                     </InputGroup>
                                 </FormGroup>
-
                                 <FormGroup style={{flex:1}}>
                                     <InputGroup>
                                         <InputGroupAddon addonType="prepend">
