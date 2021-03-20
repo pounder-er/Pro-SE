@@ -60,7 +60,7 @@ class Import extends React.Component{
                                     <th scope="row">1</th>
                                     <td>100100</td>
                                     <td>A1</td>
-                                    <td onClick = {this.importTable}>
+                                    <td onClick = { () => this.props.history.push("/ImportTable")}>
                                         <FiFileText style = {{color:"#00A3FF"}}/>
                                     </td>
                                 </tr>
@@ -95,7 +95,7 @@ class Import extends React.Component{
                     </body>
 
                     <body className = 'ButtonImport'>
-                        <Button style = {{height:40, width:100, background:"#FF0000"}}>ย้อนกลับ</Button>
+                        <Button style = {{height:40, width:100, background:"#FF0000"}} onClick ={()=> this.props.history.goBack()}>ย้อนกลับ</Button>
                     </body>
 
                 </div>

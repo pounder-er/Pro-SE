@@ -93,7 +93,7 @@ class Export extends React.Component{
                     </body>
 
                     <body className = 'ButtonImport'>
-                        <Button style = {{height:40, width:100, background:"#FF0000"}}>ย้อนกลับ</Button>
+                        <Button style = {{height:40, width:100, background:"#FF0000"}} onClick ={()=> this.props.history.goBack()}>ย้อนกลับ</Button>
                     </body>
 
                 </div>
