@@ -1,7 +1,5 @@
 import React from 'react';
-
-
-
+import fire_base from '../../firebase/Firebase';
 
 import {
     Button,
@@ -18,7 +16,9 @@ import {
     PaginationLink, Row, Col, Container
 } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import ReactDataGrid from '@inovua/reactdatagrid-community'
+import '@inovua/reactdatagrid-community/base.css'
+import '@inovua/reactdatagrid-community/theme/default-light.css'
 import 'react-pro-sidebar/dist/css/styles.css';
 
 import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
@@ -27,132 +27,189 @@ import { IoMdTrash } from "react-icons/io";
 
 import * as Yup from 'yup';
 
-const useSortableData = (items, config = null) => {
-    const [sortConfig, setSortConfig] = React.useState(config);
+// const useSortableData = (items, config = null) => {
+//     const [sortConfig, setSortConfig] = React.useState(config);
 
-    const sortedItems = React.useMemo(() => {
-        let sortableItems = [...items];
-        if (sortConfig !== null) {
-            sortableItems.sort((a, b) => {
-                if (a[sortConfig.key] < b[sortConfig.key]) {
-                    return sortConfig.direction === "ascending" ? -1 : 1;
-                }
-                if (a[sortConfig.key] > b[sortConfig.key]) {
-                    return sortConfig.direction === "ascending" ? 1 : -1;
-                }
-                return 0;
-            });
-        }
-        return sortableItems;
-    }, [items, sortConfig]);
+//     const sortedItems = React.useMemo(() => {
+//         let sortableItems = [...items];
+//         if (sortConfig !== null) {
+//             sortableItems.sort((a, b) => {
+//                 if (a[sortConfig.key] < b[sortConfig.key]) {
+//                     return sortConfig.direction === "ascending" ? -1 : 1;
+//                 }
+//                 if (a[sortConfig.key] > b[sortConfig.key]) {
+//                     return sortConfig.direction === "ascending" ? 1 : -1;
+//                 }
+//                 return 0;
+//             });
+//         }
+//         return sortableItems;
+//     }, [items, sortConfig]);
 
-    const requestSort = (key) => {
-        let direction = "ascending";
-        if (
-            sortConfig &&
-            sortConfig.key === key &&
-            sortConfig.direction === "ascending"
-        ) {
-            direction = "descending";
-        }
-        setSortConfig({ key, direction });
-    };
+//     const requestSort = (key) => {
+//         let direction = "ascending";
+//         if (
+//             sortConfig &&
+//             sortConfig.key === key &&
+//             sortConfig.direction === "ascending"
+//         ) {
+//             direction = "descending";
+//         }
+//         setSortConfig({ key, direction });
+//     };
 
-    return { items: sortedItems, requestSort, sortConfig };
-};
+//     return { items: sortedItems, requestSort, sortConfig };
+// };
 
-const ProductTable = (props) => {
-    const { items, requestSort, sortConfig } = useSortableData(props.products);
-    const getClassNamesFor = (name) => {
-        if (!sortConfig) {
-            return;
-        }
-        return sortConfig.key === name ? sortConfig.direction : undefined;
-    };
-    return (
-        <Table striped>
-            <thead>
-                <tr>
-                    <th>
-                        <button
-                            type="button"
-                            onClick={() => requestSort("id")}
-                            className={getClassNamesFor("id")}
-                        >
-                            ลำดับ
-                        </button>
-                    </th>
-                    <th>
-                        <button
-                            type="button"
-                            onClick={() => requestSort("รหัสสินค้า")}
-                            className={getClassNamesFor("รหัสสินค้า")}
-                        >
-                            รหัสสินค้า
-                        </button>
-                    </th>
-                    <th>
-                        <button
-                            type="button"
-                            onClick={() => requestSort("ชนิด")}
-                            className={getClassNamesFor("ชนิด")}
-                        >
-                            ชนิด
-              </button>
-                    </th>
-                    <th>
-                        <button
-                            type="button"
-                            onClick={() => requestSort("รายการสินค้า")}
-                            className={getClassNamesFor("รายการสินค้า")}
-                        >
-                            รายการสินค้า
-              </button>
-                    </th>
-                    <th>
-                        <button
-                            type="button"
-                            onClick={() => requestSort("ปริมาณ")}
-                            className={getClassNamesFor("ปริมาณ")}
-                        >
-                            ปริมาณ
-              </button>
-                    </th>
-                    <th>
-                        <button
-                            type="button"
-                            onClick={() => requestSort("มูลค่าการขาย")}
-                            className={getClassNamesFor("มูลค่าการขาย")}
-                        >
-                            มูลค่าการขาย
-              </button>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                {items.map((item) => (
-                    <tr key={item.id}>
-                        <td>{item.id}</td>
-                        <td>{item.รหัสสินค้า}</td>
-                        <td>{item.ชนิด}</td>
-                        <td>{item.รายการสินค้า}</td>
-                        <td>{item.ปริมาณ}</td>
-                        <td>${item.มูลค่าการขาย}</td>
+// const ProductTable = (props) => {
+//     const { items, requestSort, sortConfig } = useSortableData(props.products);
+//     const getClassNamesFor = (name) => {
+//         if (!sortConfig) {
+//             return;
+//         }
+//         return sortConfig.key === name ? sortConfig.direction : undefined;
+//     };
+//     return (
+//         <Table striped>
+//             <thead>
+//                 <tr>
+//                     <th>
+//                         <button
+//                             type="button"
+//                             onClick={() => requestSort("id")}
+//                             className={getClassNamesFor("id")}
+//                         >
+//                             ลำดับ
+//                         </button>
+//                     </th>
+//                     <th>
+//                         <button
+//                             type="button"
+//                             onClick={() => requestSort("รหัสสินค้า")}
+//                             className={getClassNamesFor("รหัสสินค้า")}
+//                         >
+//                             รหัสสินค้า
+//                         </button>
+//                     </th>
+//                     <th>
+//                         <button
+//                             type="button"
+//                             onClick={() => requestSort("ชนิด")}
+//                             className={getClassNamesFor("ชนิด")}
+//                         >
+//                             ชนิด
+//               </button>
+//                     </th>
+//                     <th>
+//                         <button
+//                             type="button"
+//                             onClick={() => requestSort("รายการสินค้า")}
+//                             className={getClassNamesFor("รายการสินค้า")}
+//                         >
+//                             รายการสินค้า
+//               </button>
+//                     </th>
+//                     <th>
+//                         <button
+//                             type="button"
+//                             onClick={() => requestSort("ปริมาณ")}
+//                             className={getClassNamesFor("ปริมาณ")}
+//                         >
+//                             ปริมาณ
+//               </button>
+//                     </th>
+//                     <th>
+//                         <button
+//                             type="button"
+//                             onClick={() => requestSort("มูลค่าการขาย")}
+//                             className={getClassNamesFor("มูลค่าการขาย")}
+//                         >
+//                             มูลค่าการขาย
+//               </button>
+//                     </th>
+//                 </tr>
+//             </thead>
+//             <tbody>
+//                 {items.map((item) => (
+//                     <tr key={item.id}>
+//                         <td>{item.id}</td>
+//                         <td>{item.รหัสสินค้า}</td>
+//                         <td>{item.ชนิด}</td>
+//                         <td>{item.รายการสินค้า}</td>
+//                         <td>{item.ปริมาณ}</td>
+//                         <td>${item.มูลค่าการขาย}</td>
 
-                    </tr>
-                ))}
-            </tbody>
-        </Table>
-    );
-};
+//                     </tr>
+//                 ))}
+//             </tbody>
+//         </Table>
+//     );
+// };
+const filterValue = [
+    { name: 'firstname', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'lastname', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'email', operator: 'startsWith', type: 'string', value: '' },
 
+];
+const columns = [
+    { name: 'id', header: 'Id', defaultVisible: false, type: 'number', maxWidth: 40 },
+    { name: 'firstname', groupBy: false, defaultFlex: 1, header: 'ชื่อ' },
+    { name: 'lastname', groupBy: false, defaultFlex: 1, header: 'นามสกุล' },
+    { name: 'email', groupBy: false, defaultFlex: 1, header: 'อีเมล' },
+    { name: 'phonenumber', groupBy: false, defaultFlex: 1, header: 'เบอร์ติดต่อ' },
+    { name: 'jobtitle', groupBy: false, defaultFlex: 1, header: 'ตำแหน่ง' },
+    { name: 'status', groupBy: false, defaultFlex: 1, header: 'สถานะ' },
+    { name: 'detail', header: '', maxWidth: 50 },
+]
+const dataSource = [{ id: '1150', firstName: 'chainan', lastName: 'punsri', email: 'chain@hhh.com' }, { id: '1151', firstName: 'ahainun', lastName: 'vansri', email: 'cain@hhh.com' }]
+const i18n = Object.assign({}, ReactDataGrid.defaultProps.i18n, {
+    sortAsc: 'เรียงน้อยไปมาก',
+    sortDesc: 'เรียงมากไปน้อย',
+    clear: 'ลบ',
+    clearAll: 'ลบทั้งหมด',
+    contains: 'ประกอบด้วย',
+    startsWith: 'เริ่มด้วย',
+    endsWith: 'จบด้วย',
+    neq: 'ไม่เท่ากับ',
+    eq: 'เท่ากับ',
+    notEmpty: 'ไม่ว่าง',
+    empty: 'ว่าง',
+    notContains: 'ไม่ได้ประกอบด้วย',
+    disable: 'ปิดตัวกรอง',
+    enable: 'เปิดตัวกรอง',
+    pageText: 'หน้า ',
+    ofText: ' จาก ',
+    perPageText: 'แสดงรายการทีละ',
+    showingText: 'กำลังแสดงรายการ '
+})
 class SalesReport extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            searchText: '',
+            dataSource: dataSource
         }
     }
+
+    setDataGridRef = (ref) => (this.dataGrid = ref)
+
+    async componentDidMount(){
+        await fire_base.getAllUserProfile(this.getAllUserProfileSuccess,this.unSuccess);
+    }
+
+    getAllUserProfileSuccess=(querySnapshot)=>{
+        let data = []
+        querySnapshot.forEach(doc => {
+            data.push(doc.data());
+            console.log(doc.id, " => ", doc.data());
+        });
+        this.setState({dataSource:data});
+    }
+
+    unSuccess(error){
+        console.log(error);
+    }
+
     render() {
         return (
             <Container fluid={true} style={{ backgroundColor: 'wheat' }} >
@@ -196,14 +253,27 @@ class SalesReport extends React.Component {
                                 <InputGroupText><MdSearch color="#1F1F1F" size={22} /></InputGroupText>
                             </InputGroupAddon>
                         </InputGroup>
-                        
+
                     </Col>
                     <Col md="auto">
                         <Button color="info" style={{ width: 200 }}>fillter</Button>
                     </Col>
                 </Row>
-
-                <ProductTable
+                <ReactDataGrid
+                    onReady={this.setDataGridRef}
+                    i18n={i18n}
+                    idProperty="id"
+                    columns={columns}
+                    pagination
+                    defaultLimit={15}
+                    defaultSkip={15}
+                    pageSizes={[10, 15, 30]}
+                    dataSource={this.state.dataSource}
+                    defaultFilterValue={filterValue}
+                    showColumnMenuTool={true}
+                    emptyText="ไม่มีรายการ"
+                />
+                {/* <ProductTable 
                     products={[
                         { id: 1, "รหัสสินค้า": "110100", ชนิด: "ข้าวหอมมะลิ", รายการสินค้า: "ข้าวหอมมะลิ ตราสส", ปริมาณ: 80000, มูลค่าการขาย: 2000000.00 },
                         { id: 2, "รหัสสินค้า": "110100", ชนิด: "ข้าวหอมมะลิ", รายการสินค้า: "ข้าวหอมมะลิ ตราสส", ปริมาณ: 70000, มูลค่าการขาย: 7000000.00 },
@@ -213,7 +283,7 @@ class SalesReport extends React.Component {
 
 
                     ]}
-                />
+                />*/}
 
 
                 <Pagination aria-label="Page navigation example"

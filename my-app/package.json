@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@inovua/reactdatagrid-community": "^4.0.31",
     "@react-icons/all-files": "^4.1.0",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
@@ -12,6 +13,7 @@
     "firebase": "^8.2.8",
     "formik": "^2.2.6",
     "react": "^17.0.1",
+    "react-data-grid": "^7.0.0-canary.37",
     "react-dom": "^17.0.1",
     "react-icons": "^4.2.0",
     "react-pro-sidebar": "^0.5.0",
