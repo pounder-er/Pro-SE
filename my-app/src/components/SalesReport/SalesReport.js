@@ -146,20 +146,18 @@ import * as Yup from 'yup';
 //     );
 // };
 const filterValue = [
-    { name: 'firstname', operator: 'startsWith', type: 'string', value: '' },
-    { name: 'lastname', operator: 'startsWith', type: 'string', value: '' },
-    { name: 'email', operator: 'startsWith', type: 'string', value: '' },
-
+    { name: 'date', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'productID', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'total', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'volume', operator: 'startsWith', type: 'string', value: '' },
 ];
 const columns = [
     { name: 'id', header: 'Id', defaultVisible: false, type: 'number', maxWidth: 40 },
-    { name: 'firstname', groupBy: false, defaultFlex: 1, header: 'ชื่อ' },
-    { name: 'lastname', groupBy: false, defaultFlex: 1, header: 'นามสกุล' },
-    { name: 'email', groupBy: false, defaultFlex: 1, header: 'อีเมล' },
-    { name: 'phonenumber', groupBy: false, defaultFlex: 1, header: 'เบอร์ติดต่อ' },
-    { name: 'jobtitle', groupBy: false, defaultFlex: 1, header: 'ตำแหน่ง' },
-    { name: 'status', groupBy: false, defaultFlex: 1, header: 'สถานะ' },
-    { name: 'detail', header: '', maxWidth: 50 },
+    { name: 'date', groupBy: false, defaultFlex: 1, header: 'วัน' },
+    { name: 'productID', groupBy: false, defaultFlex: 1, header: 'รหัสสินค้า' },
+    { name: 'total', groupBy: false, defaultFlex: 1, header: 'ปริมาณการขาย' },
+    { name: 'volume', groupBy: false, defaultFlex: 1, header: 'ยอดดขาย' },
+
 ]
 const dataSource = [{ id: '1150', firstName: 'chainan', lastName: 'punsri', email: 'chain@hhh.com' }, { id: '1151', firstName: 'ahainun', lastName: 'vansri', email: 'cain@hhh.com' }]
 const i18n = Object.assign({}, ReactDataGrid.defaultProps.i18n, {
@@ -193,20 +191,20 @@ class SalesReport extends React.Component {
 
     setDataGridRef = (ref) => (this.dataGrid = ref)
 
-    async componentDidMount(){
-        await fire_base.getAllUserProfile(this.getAllUserProfileSuccess,this.unSuccess);
+    async componentDidMount() {
+        await fire_base.getAllUserProfile(this.getAllUserProfileSuccess, this.unSuccess);
     }
 
-    getAllUserProfileSuccess=(querySnapshot)=>{
+    getAllUserProfileSuccess = (querySnapshot) => {
         let data = []
         querySnapshot.forEach(doc => {
             data.push(doc.data());
             console.log(doc.id, " => ", doc.data());
         });
-        this.setState({dataSource:data});
+        this.setState({ dataSource: data });
     }
 
-    unSuccess(error){
+    unSuccess(error) {
         console.log(error);
     }
 
@@ -258,21 +256,24 @@ class SalesReport extends React.Component {
                     <Col md="auto">
                         <Button color="info" style={{ width: 200 }}>fillter</Button>
                     </Col>
+                </Row >
+                <Row style={{ marginTop:'20px'}}>
+                    <ReactDataGrid
+                        onReady={this.setDataGridRef}
+                        i18n={i18n}
+                        idProperty="id"
+                        columns={columns}
+                        pagination
+                        defaultLimit={15}
+                        defaultSkip={15}
+                        pageSizes={[10, 15, 30]}
+                        dataSource={this.state.dataSource}
+                        defaultFilterValue={filterValue}
+                        showColumnMenuTool={true}
+                        emptyText="ไม่มีรายการ"
+                    />
                 </Row>
-                <ReactDataGrid
-                    onReady={this.setDataGridRef}
-                    i18n={i18n}
-                    idProperty="id"
-                    columns={columns}
-                    pagination
-                    defaultLimit={15}
-                    defaultSkip={15}
-                    pageSizes={[10, 15, 30]}
-                    dataSource={this.state.dataSource}
-                    defaultFilterValue={filterValue}
-                    showColumnMenuTool={true}
-                    emptyText="ไม่มีรายการ"
-                />
+
                 {/* <ProductTable 
                     products={[
                         { id: 1, "รหัสสินค้า": "110100", ชนิด: "ข้าวหอมมะลิ", รายการสินค้า: "ข้าวหอมมะลิ ตราสส", ปริมาณ: 80000, มูลค่าการขาย: 2000000.00 },
