@@ -2,27 +2,42 @@
     {
         "no":1,
         "passcode":"1150",
-        "name": "ข้าวมะลิหอม"
+        "name": "ข้าวมะลิหอม",
+        "balance" :0,
+        "damage" :"",
+        "report" :""
     },
     {
         "no":2,
         "passcode":"1151",
-        "name": "ข้าวมะลิหอมบูด"
+        "name": "ข้าวมะลิหอมบูด",
+        "balance" :"",
+        "damage" :"",
+        "report" :""
     },
     {
         "no":3,
         "passcode":"1152",
-        "name": "ข้าวมะลิหอมบู๊ดๆ"
+        "name": "ข้าวมะลิหอมบู๊ดๆ",
+        "balance" :"",
+        "damage" :"",
+        "report" :""
     },
     {
         "no":4,
         "passcode":"1155",
-        "name": "ข้าวมะลิหอมบู๊ดๆ"
+        "name": "ข้าวมะลิหอมบู๊ดๆ",
+        "balance" :"",
+        "damage" :"",
+        "report" :""
     },
     {
         "no":5,
         "passcode":"1134",
-        "name": "ข้าวขาว"
+        "name": "ข้าวขาว",
+        "balance" :"",
+        "damage" :"",
+        "report" :""
     }
 
 ]

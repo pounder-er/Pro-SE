@@ -33,18 +33,37 @@ class Stock extends React.Component {
 
     //----------------------------- GetTextFunction from Input -----------------------------
 
-    handleChangeText = (text, numOrder) => {
-        let array = checkList
+    handleChangeText = (text, numOrder, type) => {
         this.setState({ input: text.target.value })
-        // console.log(numOrder)
-        // console.log(array[numOrder].no)
-        // console.log(array[numOrder].name)
 
-        for (let i = 0; i < array.length; i++) {
-            if (array[i].no === numOrder) {
-                array[i].name = text
-                console.log(array[i].name)
-                break
+        // console.log(numOrder)
+        // console.log(checkList[numOrder].no)
+        // console.log(checkList[numOrder].name)
+
+        if (type == "balance") {
+            for (let i = 0; i < checkList.length; i++) {
+                if (checkList[i].no === numOrder + 1  && !isNaN(text)) {
+                    checkList[i].balance = parseInt(text.target.value, 10)
+                    console.log(checkList[i].balance)
+                    console.log(typeof(checkList[i].balance))
+                    break
+                }
+            }
+        }
+        else if (type == "damage") {
+            for (let i = 0; i < checkList.length; i++) {
+                if (checkList[i].no === numOrder + 1) {
+                    checkList[i].damage = text.target.value
+                    break
+                }
+            }
+        }
+        else if (type == "report") {
+            for (let i = 0; i < checkList.length; i++) {
+                if (checkList[i].no === numOrder + 1) {
+                    checkList[i].report = text.target.value
+                    break
+                }
             }
         }
     }
@@ -59,19 +78,19 @@ class Stock extends React.Component {
 
                 <td>
                     <InputGroup>
-                        <Input onChange={text => this.handleChangeText(text, data.no)} />
+                        <Input onChange={text => this.handleChangeText(text, data.no - 1, "balance")} />
                     </InputGroup>
                 </td>
 
                 <td>
                     <InputGroup>
-                        <Input />
+                        <Input onChange={text => this.handleChangeText(text, data.no - 1, "damage")} />
                     </InputGroup>
                 </td>
 
                 <td>
                     <InputGroup>
-                        <Input />
+                        <Input onChange={text => this.handleChangeText(text, data.no - 1, "report")} />
                     </InputGroup>
                 </td>
             </tr>

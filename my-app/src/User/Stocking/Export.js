@@ -28,7 +28,7 @@ class Export extends React.Component{
     }
 
     exportTable =()=> {
-        this.props.history.push("/ExportTable")
+        this.props.history.push("/Export/ExportTable")
         // console.log("hi")
     }
 
@@ -58,7 +58,7 @@ class Export extends React.Component{
                                     <th scope="row">1</th>
                                     <td>100100</td>
                                     <td>A1</td>
-                                    <td onClick = {this.exportTable}>
+                                    <td  onClick = { () => this.props.history.push("ExportTable")}>
                                         <FiFileText style = {{color:"#00A3FF"}}/>
                                     </td>
                                 </tr>
