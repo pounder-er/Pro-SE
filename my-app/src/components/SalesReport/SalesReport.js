@@ -153,7 +153,7 @@ const filterValue = [
 ];
 const columns = [
     { name: 'id', header: 'Id', defaultVisible: false, type: 'number', maxWidth: 40 },
-    { name: 'date', groupBy: false, defaultFlex: 1, header: 'วัน' },
+    { name: 'date', groupBy: false, defaultFlex: 1, header: 'วัน123' },
     { name: 'productID', groupBy: false, defaultFlex: 1, header: 'รหัสสินค้า' },
     { name: 'total', groupBy: false, defaultFlex: 1, header: 'ปริมาณการขาย' },
     { name: 'volume', groupBy: false, defaultFlex: 1, header: 'ยอดดขาย' },
