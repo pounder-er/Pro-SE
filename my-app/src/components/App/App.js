@@ -58,6 +58,7 @@ class App extends React.Component {
   }
 
   getUserProfileSuccess=(data)=>{
+    data.email = this.props.session.email
     this.props.dispatch(addUserProfile(data));
     this.props.history.push("/home");
   }

@@ -67,6 +67,7 @@ class Home extends React.Component {
       isOpen: false,
       headerTitle: ''
     }
+    this.jobTitle = this.props.userProfile.jobTitle;
     // this.arrHeaderTitle = ['รายการซื้อสินค้า',
     //   'รายการขายสินค้า',
     //   'เพิ่มสินค้าใหม่',
@@ -89,7 +90,7 @@ class Home extends React.Component {
   //   }
   // }
 
-  async componentDidMount(){
+  async componentDidMount() {
     console.log(this.props.userProfile);
   }
 
@@ -115,49 +116,65 @@ class Home extends React.Component {
     return (
       <ContainerHome>
         <Sidebar>
-          
-        <ProSidebar collapsed={this.state.collapsed}>
-          <SidebarHeader>
-            <Menu iconShape="circle" >
-              <SubMenu icon={
-                (this.props.userProfile.imageprofile&&(<img src={this.props.userProfile.imageprofile} style={{ height: 50, width: 50, borderRadius: 100 }} />))||
-                (!this.props.userProfile.imageprofile&&(<BsPersonFill />))
-              }
-                prefix={
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <h5>{this.props.userProfile.firstname}</h5>
-                    <label style={{ fontSize: 12 }}>{this.props.userProfile.jobtitle}</label>
-                  </div>} >
-                <MenuItem suffix={<BsBoxArrowRight />} onClick={(e) => this.onLogout(e)}>ออกจากระบบ</MenuItem>
-              </SubMenu>
-            </Menu>
-          </SidebarHeader>
-          <SidebarContent>
-            <Menu iconShape="square" >
-              <MenuItem icon={<BsFillGrid1X2Fill />}>Dashboard<Link onClick={() => this.setState({ headerTitle: 'Dashboard' })} /></MenuItem>
-              <SubMenu title="จัดการสินค้า" icon={<BsFillArchiveFill />}>
-                <MenuItem>รายการซื้อสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการซื้อสินค้า' })} /></MenuItem>
-                <MenuItem>รายการขายสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการขายสินค้า' })} /></MenuItem>
-                <MenuItem>เพิ่มสินค้าใหม่<Link onClick={() => this.setState({ headerTitle: 'เพิ่มสินค้าใหม่' })} /></MenuItem>
-              </SubMenu>
-              <MenuItem >ตรวจสอบสินค้า<Link onClick={() => this.setState({ headerTitle: 'ตรวจสอบสินค้า' })} /></MenuItem>
-              <MenuItem >ประวัติสินค้าเข้า/ออกคลัง<Link onClick={() => this.setState({ headerTitle: 'ระวัติสินค้าเข้า/ออกคลัง' })} /></MenuItem>
-              <SubMenu title="ผู้ติดต่อ" icon={<BsBriefcaseFill />}>
-                <MenuItem>บริษัท<Link onClick={() => this.setState({ headerTitle: 'บริษัท' })} /></MenuItem>
-                <MenuItem>สาขา<Link onClick={() => this.setState({ headerTitle: 'สาขา' })} /></MenuItem>
-              </SubMenu>
-              <SubMenu title="จัดการพนักงาน" icon={<BsFillPeopleFill />}>
-                <MenuItem>เพิ่มพนักงาน<Link to={this.props.match.url + "/add_employee"} onClick={() => this.setState({ headerTitle: 'เพิ่มพนักงาน' })} /></MenuItem>
-                <MenuItem>รายชื่อพนักงาน<Link to={this.props.match.url + "/list_employee"} onClick={()=>this.setState({ headerTitle: 'รายชื่อพนักงาน' })} /></MenuItem>
-              </SubMenu>
-              <MenuItem >เช็ค Stock สินค้า<Link onClick={() => this.setState({ headerTitle: 'เช็ค Stock สินค้า' })} /></MenuItem>
-              <MenuItem >ตั้งเวลาเช็ค Stock ประจำวัน</MenuItem>
-              <MenuItem >ยอดขายสินค้า<Link onClick={() => this.setState({ headerTitle: 'ยอดขายสินค้า' })} /></MenuItem>
-              <MenuItem >คำนวนปริมาณการสั่งซื้อสินค้า</MenuItem>
-            </Menu>
-          </SidebarContent>
-        </ProSidebar>
-             
+
+          <ProSidebar collapsed={this.state.collapsed}>
+            <SidebarHeader>
+              <Menu iconShape="circle" >
+                <SubMenu icon={
+                  (this.props.userProfile.imageProfile && (<img src={this.props.userProfile.imageProfile} style={{ height: 50, width: 50, borderRadius: 100 }} />)) ||
+                  (!this.props.userProfile.imageProfile && (<BsPersonFill />))
+                }
+                  prefix={
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <h5>{this.props.userProfile.firstName}</h5>
+                      <label style={{ fontSize: 12 }}>{this.props.userProfile.jobTitle}</label>
+                    </div>} >
+                  <MenuItem suffix={<BsBoxArrowRight />} onClick={(e) => this.onLogout(e)}>ออกจากระบบ</MenuItem>
+                </SubMenu>
+              </Menu>
+            </SidebarHeader>
+            <SidebarContent>
+              <Menu iconShape="square" >
+                {this.jobTitle == 'ผู้จัดการ' && <React.Fragment>
+                  <MenuItem icon={<BsFillGrid1X2Fill />}>Dashboard<Link onClick={() => this.setState({ headerTitle: 'Dashboard' })} /></MenuItem>
+                  <SubMenu title="จัดการพนักงาน" icon={<BsFillPeopleFill />}>
+                    <MenuItem>เพิ่มพนักงาน<Link to={this.props.match.url + "/add_employee"} onClick={() => this.setState({ headerTitle: 'เพิ่มพนักงาน' })} /></MenuItem>
+                    <MenuItem>รายชื่อพนักงาน<Link to={this.props.match.url + "/list_employee"} onClick={() => this.setState({ headerTitle: 'รายชื่อพนักงาน' })} /></MenuItem>
+                  </SubMenu>
+                  <MenuItem >คำนวนปริมาณการสั่งซื้อสินค้า</MenuItem>
+                  <MenuItem >ยอดขายสินค้า<Link onClick={() => this.setState({ headerTitle: 'ยอดขายสินค้า' })} /></MenuItem>
+                  <MenuItem >ตั้งเวลาเช็ค Stock ประจำวัน</MenuItem>
+                  </React.Fragment>
+                }
+
+                {(this.jobTitle == 'เจ้าหน้าที่' || this.jobTitle == 'ผู้จัดการ') &&<React.Fragment>
+                  <MenuItem >ผลการเช็คสต๊อกสินค้า<Link onClick={() => this.setState({ headerTitle: 'ผลการเช็คสต๊อกสินค้า' })} /></MenuItem>
+                  <SubMenu title="จัดการสินค้า" icon={<BsFillArchiveFill />}>
+                    <MenuItem>รายการซื้อสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการซื้อสินค้า' })} /></MenuItem>
+                    <MenuItem>รายการขายสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการขายสินค้า' })} /></MenuItem>
+                    <MenuItem>เพิ่มสินค้าใหม่<Link onClick={() => this.setState({ headerTitle: 'เพิ่มสินค้าใหม่' })} /></MenuItem>
+                  </SubMenu>
+                  <MenuItem >ตรวจสอบสินค้า<Link onClick={() => this.setState({ headerTitle: 'ตรวจสอบสินค้า' })} /></MenuItem>        
+                  <MenuItem >ประวัติสินค้าเข้า/ออกคลัง<Link onClick={() => this.setState({ headerTitle: 'ระวัติสินค้าเข้า/ออกคลัง' })} /></MenuItem>
+                  <SubMenu title="ผู้ติดต่อ" icon={<BsBriefcaseFill />}>
+                    <MenuItem>บริษัท<Link onClick={() => this.setState({ headerTitle: 'บริษัท' })} /></MenuItem>
+                    <MenuItem>สาขา<Link onClick={() => this.setState({ headerTitle: 'สาขา' })} /></MenuItem>
+                  </SubMenu>
+                  </React.Fragment>
+                }
+
+               {/* {this.jobTitle == 'พนักงานคลัง' && 
+                  <React.Fragment>
+                    <MenuItem >เช็คสต๊อกสินค้า<Link onClick={() => this.setState({ headerTitle: 'เช็คสต๊อกสินค้า' })} /></MenuItem>
+                     <MenuItem >นำสินค้าออกจากคลัง<Link onClick={() => this.setState({ headerTitle: 'นำสินค้าออกจากคลัง' })} /></MenuItem>
+                    <MenuItem >นำสินค้าเข้าคลัง<Link onClick={() => this.setState({ headerTitle: 'นำสินค้าเข้าคลัง' })} /></MenuItem>
+                  </React.Fragment>
+                } */}
+
+              </Menu>
+            </SidebarContent>
+          </ProSidebar>
+
         </Sidebar>
         <Content>
           <Header>
@@ -168,7 +185,7 @@ class Home extends React.Component {
                 (!this.state.collapsed && <CgSidebar size={25} />)
               }
             </Button>
-              <div style={{ fontSize: 25, color:'#F0FFFF', marginLeft:10}}>{this.state.headerTitle}</div>
+            <div style={{ fontSize: 25, color: '#F0FFFF', marginLeft: 10 }}>{this.state.headerTitle}</div>
             {/* <div>
               <Dropdown isOpen={this.state.isOpen} toggle={this.toggleProfile}>
                 <DropdownToggle caret >profile</DropdownToggle>
@@ -181,7 +198,7 @@ class Home extends React.Component {
           <Body>
             <Container style={{ backgroundColor: 'white', borderRadius: 5, padding: 10 }}>
               <Switch>
-                
+
                 <Route exact path={this.props.match.path + "/list_employee"} component={ListEmployee} />
                 <Route exact path={this.props.match.path + "/add_employee"} component={AddEmployee} />
               </Switch>

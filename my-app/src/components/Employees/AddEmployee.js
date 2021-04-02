@@ -45,21 +45,21 @@ import {
 var checkZip = false;
 var subDistrictFilter = [];
 const formEmployeeSchema = Yup.object().shape({
-  nametitle: Yup.string()
+  nameTitle: Yup.string()
     .required('กรุณาเลือกข้อมูล'),
-  firstname: Yup.string()
+  firstName: Yup.string()
     .matches(/^[ก-๏]+$/, 'กรอกด้วยตัวอักษรภาษาไทยและไม่มีช่องว่าง')
     .max(40, 'กรอกได้ไม่เกิน 40 ตัวอักษร')
     .required('กรุณาระบุข้อมูล'),
-  lastname: Yup.string()
+  lastName: Yup.string()
     .matches(/^[ก-๏]+$/, 'กรอกด้วยตัวอักษรภาษาไทยและไม่มีช่องว่าง')
     .max(40, 'กรอกได้ไม่เกิน 40 ตัวอักษร')
     .required('กรุณาระบุข้อมูล'),
-  nationalid: Yup.string()
+  nationalID: Yup.string()
     .matches(/^[0-9]+$/, 'ต้องเป็นตัวเลขเท่านั้น')
     .required('กรุณาระบุข้อมูล')
     .length(13, 'ไม่ครบ 13 หลัก')
-    .test('checkNationalId', 'เลขบัตรประชาชนไม่ถูกต้อง', (value) => {
+    .test('checkNationalID', 'เลขบัตรประชาชนไม่ถูกต้อง', (value) => {
       if (value != null && value.length == 13) {
         let sum = 0;
         for (let i = 0; i < 12; i++) {
@@ -80,7 +80,7 @@ const formEmployeeSchema = Yup.object().shape({
         }
       }
     }),
-  phonenumber: Yup.string()
+  phoneNumber: Yup.string()
     .length(10, 'หมายเลขโทรศัพท์ไม่ครบ 10 หลัก')
     .required('กรุณาระบุข้อมูล')
     .matches(/^[0-9]{10}$/, 'หมายเลขโทรศัพท์ไม่ถูกต้อง')
@@ -89,10 +89,10 @@ const formEmployeeSchema = Yup.object().shape({
   //     return originalvalue.replace(/^[^0-9]{10}$/,'');
   // })
   ,
-  birthdate: Yup.date()
+  birthDate: Yup.date()
     .max((new Date().getFullYear() - 18) + "-12-01", 'ต้องกรอกก่อน 2003-12-01')
     .required('กรุณาระบุข้อมูล'),
-  jobtitle: Yup.string()
+  jobTitle: Yup.string()
     .required('กรุณาเลือกข้อมูล')
     .matches(/^[ก-๏]+$/, 'กรุณาเลือกข้อมูล'),
   address: Yup.string().required('กรุณาระบุข้อมูล'),
@@ -105,7 +105,7 @@ const formEmployeeSchema = Yup.object().shape({
   // state: Yup.string()
   //   .required('ต้องกรอก')
   //   .matches(/^[ก-๏]+$/, 'กรอกด้วยตัวอักษรภาษาไทยและไม่มีช่องว่าง'),
-  zipcode: Yup.string()
+  zipCode: Yup.string()
     .required('กรุณาระบุข้อมูล')
     .length(5, 'รหัสไปรษณีย์ไม่ครบ')
     .matches(/^[0-9]{5}$/, 'ต้องเป็นตัวเลข')
@@ -118,7 +118,7 @@ const formEmployeeSchema = Yup.object().shape({
             return false;
           }
           // let filter = data.address.filter((data) => {
-          //   return data.zipcode == Number(value)
+          //   return data.zipCode == Number(value)
           // });
 
           // if (filter.length > 0) {
@@ -139,7 +139,7 @@ const formEmployeeSchema = Yup.object().shape({
           // }
         }
       }),
-  imageprofile: Yup.string(),
+  imageProfile: Yup.string(),
 
   email: Yup.string()
     .email('อีเมลไม่ถูกต้อง')
@@ -195,7 +195,6 @@ class AddEmployee extends React.Component {
   setEditorRef = (editor) => (this.editor = editor)
 
   uploadImageProfileSuccess = (url, uid) => {
-    delete this.account.email;
     delete this.account.password;
     this.account.imageProfile = url;
     fire_base.addUserProfile(uid, this.account, this.addUserProfileSuccess, this.unSuccess);
@@ -204,13 +203,13 @@ class AddEmployee extends React.Component {
 
   addUserProfileSuccess = () => {
     this.setState({ loading: false });
-    console.log("success");
-    this.sweetAlret("เสร็จสิ้น","เพิ่มพนักงานแล้วไอ้สัส!!!","success","ตกลง");
+    console.log("add profile success");
+    this.sweetAlret("เสร็จสิ้น","เพิ่มพนักงานแล้ว","success","ตกลง");
   }
 
   unSuccess = (error) => {
     console.log(error);
-    this.sweetAlret("ไม่สำเร็จ","สัส!!! อีเมลซ้ำหรือเน็ตมึงเน่าวะ","error","ตกลง");
+    this.sweetAlret("ไม่สำเร็จ","อีเมลซ้ำหรือการเชื่อมต่อมีปัญหา","error","ตกลง");
     this.setState({ loading: false });
   }
 
@@ -240,15 +239,19 @@ class AddEmployee extends React.Component {
                 })
                 .then(async(res) => {
                   if(res.data.userRecord){
-                    await fire_base.uploadImageProfile(res.data.userRecord.uid, values.imageprofile, this.uploadImageProfileSuccess, this.unSuccess);
+                    if(values.imageProfile){
+                      await fire_base.uploadImageProfile(res.data.userRecord.uid, values.imageProfile, this.uploadImageProfileSuccess, this.unSuccess);
+                    }else{
+                      await this.uploadImageProfileSuccess('',res.data.userRecord.uid);
+                    }
                   }else{
-                    this.sweetAlret("ไม่สำเร็จ","สัส!!! อีเมลซ้ำหรือเน็ตมึงเน่าวะ","error","ตกลง");
+                    this.sweetAlret("ไม่สำเร็จ","อีเมลซ้ำหรือการเชื่อมต่อมีปัญหา","error","ตกลง");
                     this.setState({loading:false});
                   }
                   console.log(res.data);
                 }).catch(error=>{
                   console.log(error);
-                  this.sweetAlret("ไม่สำเร็จ","สัส!!! เชื่อมต่อปลายทางไม่ได้ว่ะ เน็ตมึงกากป่าววะ","error","ตกลง");
+                  this.sweetAlret("ไม่สำเร็จ","ไม่สามารถเชื่อมต่อปลายทางได้","error","ตกลง");
                   this.setState({loading:false});
                 });
                 resetForm();
@@ -258,17 +261,17 @@ class AddEmployee extends React.Component {
           }
             //กำหนดค่า default from
             initialValues={{
-            imageprofile: '',
-            nametitle: 'นาย',
-            firstname: '',
-            lastname: '',
-            nationalid: '',
-            phonenumber: '',
-            birthdate: '',
-            jobtitle: 'ผู้จัดการ',
+            imageProfile: '',
+            nameTitle: 'นาย',
+            firstName: '',
+            lastName: '',
+            nationalID: '',
+            phoneNumber: '',
+            birthDate: '',
+            jobTitle: 'ผู้จัดการ',
             address: '',
             subdistrict: '',
-            zipcode: '',
+            zipCode: '',
             city: '',
             state: '',
             email: '',
@@ -354,7 +357,7 @@ class AddEmployee extends React.Component {
                   </ModalBody>
                   <ModalFooter>
                     <Button color="primary" onClick={() => {
-                      setFieldValue('imageprofile', '');
+                      setFieldValue('imageProfile', '');
                       this.setDefaultImageCrop();
                     }}
                       disabled={this.state.disabledButtonDefault} >คืนค่าเริ่มต้น</Button>
@@ -366,13 +369,13 @@ class AddEmployee extends React.Component {
                        this.editor.getImage().toBlob(async(blob) => {
                               const resizeBlob = await resizeImageFile(blob);
                               await console.log(resizeBlob);
-                              await setFieldValue('imageprofile', resizeBlob);
+                              await setFieldValue('imageProfile', resizeBlob);
                               const url =  await URL.createObjectURL(resizeBlob);
                               await this.setState({resizeImageUrl:url});
                               await console.log(url);
                               
                         },'image/jpeg', 1);
-                        //setFieldValue('imageprofile', this.editor.getImage().toBlob( 'image/jpeg', 0.95));
+                        //setFieldValue('imageProfile', this.editor.getImage().toBlob( 'image/jpeg', 0.95));
                         this.toggleModalProfileImage(e);
                         this.setState({ disabledButtonDefault: false });
                       }}>
@@ -395,10 +398,10 @@ class AddEmployee extends React.Component {
                       <Button
                         onClick={this.toggleModalProfileImage}
                         style={{ height: 180, width: 180, borderRadius: 100, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        {values.imageprofile && (
+                        {values.imageProfile && (
                           <img src={this.state.resizeImageUrl} style={{ height: 180, width: 180, borderRadius: 100 }} />
                         )}
-                        {!values.imageprofile && (
+                        {!values.imageProfile && (
                           <div>
                             <BsPersonFill size={80} />
                             <h6>คลิกเพื่อเพิ่มรูป</h6>
@@ -413,15 +416,15 @@ class AddEmployee extends React.Component {
                 <Row form>
                   <Col md={2} >
                     <FormGroup >
-                      <Label for="nametitle">คำนำหน้า</Label>
+                      <Label for="nameTitle">คำนำหน้า</Label>
                       <Input
                         type="select"
-                        name="nametitle"
-                        id="nametitle"
+                        name="nameTitle"
+                        id="nameTitle"
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        value={values.nametitle}
-                        invalid={errors.nametitle && touched.nametitle}
+                        value={values.nameTitle}
+                        invalid={errors.nameTitle && touched.nameTitle}
                       >
                         <option>นาย</option>
                         <option>นาง</option>
@@ -432,71 +435,71 @@ class AddEmployee extends React.Component {
                   </Col>
                   <Col md={4}>
                     <FormGroup>
-                      <Label for="firstname">ชื่อ</Label>
+                      <Label for="firstName">ชื่อ</Label>
                       <Input
                         type="text"
-                        name="firstname"
-                        id="firstname"
+                        name="firstName"
+                        id="firstName"
                         placeholder="ตย. สมชาย"
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        value={values.firstname}
-                        invalid={errors.firstname && touched.firstname}
+                        value={values.firstName}
+                        invalid={errors.firstName && touched.firstName}
                       />
-                      <FormFeedback>*{errors.firstname}</FormFeedback>
+                      <FormFeedback>*{errors.firstName}</FormFeedback>
                     </FormGroup>
                   </Col>
                   <Col md={6}>
                     <FormGroup>
-                      <Label for="lastname">นามสกุล</Label>
+                      <Label for="lastName">นามสกุล</Label>
                       <Input
                         type="text"
-                        name="lastname"
-                        id="lastname"
+                        name="lastName"
+                        id="lastName"
                         placeholder="ตย. ใจหาญ"
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        value={values.lastname}
-                        invalid={errors.lastname && touched.lastname}
+                        value={values.lastName}
+                        invalid={errors.lastName && touched.lastName}
                       />
-                      <FormFeedback >*{errors.lastname}</FormFeedback>
+                      <FormFeedback >*{errors.lastName}</FormFeedback>
                     </FormGroup>
                   </Col>
                   <Col md={6}>
                     <FormGroup>
-                      <Label for="nationalid">เลขบัตรประจำตัวประชาชน</Label>
+                      <Label for="nationalID">เลขบัตรประจำตัวประชาชน</Label>
                       <Input
                         maxLength={13}
                         type="text"
-                        name="nationalid"
-                        id="nationalid"
+                        name="nationalID"
+                        id="nationalID"
                         placeholder="XXXXXXXXXXXXX"
                         onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9]/, ''); handleChange(e); }}
                         onBlur={handleBlur}
-                        value={values.nationalid}
-                        invalid={errors.nationalid && touched.nationalid}
+                        value={values.nationalID}
+                        invalid={errors.nationalID && touched.nationalID}
                       />
-                      <FormFeedback >*{errors.nationalid}</FormFeedback>
+                      <FormFeedback >*{errors.nationalID}</FormFeedback>
                     </FormGroup>
                   </Col>
                   <Col md={6}>
                     <FormGroup>
-                      <Label for="phonenumber">เบอร์โทรศัพท์มือถือ</Label>
+                      <Label for="phoneNumber">เบอร์โทรศัพท์มือถือ</Label>
                       <Input
                         maxLength={10}
                         type="tel"
-                        name="phonenumber"
-                        id="phonenumber"
+                        name="phoneNumber"
+                        id="phoneNumber"
                         placeholder="XXXXXXXXXX"
                         onKeyPress={(e) => {
-                          setFieldValue('phonenumber', values.phonenumber.replace(/[^0-9]/, ''))
+                          setFieldValue('phoneNumber', values.phoneNumber.replace(/[^0-9]/, ''))
                         }}
                         onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9]/, ''); handleChange(e); }}
                         onBlur={handleBlur}
-                        value={values.phonenumber}
-                        invalid={errors.phonenumber && touched.phonenumber}
+                        value={values.phoneNumber}
+                        invalid={errors.phoneNumber && touched.phoneNumber}
                       />
-                      <FormFeedback >*{errors.phonenumber}</FormFeedback>
+                      <FormFeedback >*{errors.phoneNumber}</FormFeedback>
                     </FormGroup>
                   </Col>
                   <Col md={6}>
@@ -532,37 +535,37 @@ class AddEmployee extends React.Component {
                   </Col>
                   <Col md={6}>
                     <FormGroup>
-                      <Label for="birthdate">วันเกิด</Label>
+                      <Label for="birthDate">วันเกิด</Label>
                       <Input
                         type="date"
-                        name="birthdate"
-                        id="birthdate"
+                        name="birthDate"
+                        id="birthDate"
                         placeholder="Date"
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        value={values.birthdate}
-                        invalid={errors.birthdate && touched.birthdate}
+                        value={values.birthDate}
+                        invalid={errors.birthDate && touched.birthDate}
                       />
-                      <FormFeedback>*{errors.birthdate}</FormFeedback>
+                      <FormFeedback>*{errors.birthDate}</FormFeedback>
                     </FormGroup>
                   </Col>
                   <Col md={6}>
                     <FormGroup>
-                      <Label for="jobtitle">ตำแหน่ง</Label>
+                      <Label for="jobTitle">ตำแหน่ง</Label>
                       <Input
                         type="select"
-                        name="jobtitle"
-                        id="jobtitle"
+                        name="jobTitle"
+                        id="jobTitle"
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        value={values.jobtitle}
-                        invalid={errors.jobtitle && touched.jobtitle}
+                        value={values.jobTitle}
+                        invalid={errors.jobTitle && touched.jobTitle}
                       >
                         <option>ผู้จัดการ</option>
                         <option>เจ้าหน้าที่</option>
                         <option>พนักงานคลัง</option>
                       </Input>
-                      <FormFeedback>*{errors.jobtitle}</FormFeedback>
+                      <FormFeedback>*{errors.jobTitle}</FormFeedback>
                     </FormGroup>
                   </Col>
                   <Col lg={12}>
@@ -587,14 +590,14 @@ class AddEmployee extends React.Component {
                       <Input
                         maxLength={5}
                         type="text"
-                        name="zipcode"
+                        name="zipCode"
                         id="zip"
                         placeholder="ตย. 20230"
                         onKeyUp={() => {
-                          //console.log(values.zipcode.length);
-                          if (values.zipcode.length == 5) {
+                          //console.log(values.zipCode.length);
+                          if (values.zipCode.length == 5) {
                             let filter = data.address.filter((data) => {
-                              return data.zipcode == Number(values.zipcode)
+                              return data.zipcode == Number(values.zipCode)
                             });
                             subDistrictFilter = [];
                             if (filter.length > 0) {
@@ -624,10 +627,10 @@ class AddEmployee extends React.Component {
                         }}
                         onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9]/, ''); handleChange(e); }}
                         onBlur={handleBlur}
-                        value={values.zipcode}
-                        invalid={errors.zipcode && touched.zipcode}
+                        value={values.zipCode}
+                        invalid={errors.zipCode && touched.zipCode}
                       />
-                      <FormFeedback >*{errors.zipcode}</FormFeedback>
+                      <FormFeedback >*{errors.zipCode}</FormFeedback>
                     </FormGroup>
                   </Col>
                   <Col md={6}>
@@ -703,8 +706,8 @@ class AddEmployee extends React.Component {
           )}
 
           </Formik>
-        </CardBody>
-      </Card >
+          </CardBody>
+      </Card>
     );
   }
 }

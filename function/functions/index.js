@@ -9,7 +9,6 @@ const app = express();
 
 app.post('/createUser',function(req, res){
   res.contentType('application/json');
-  admin.storage
   admin.auth().createUser({
           email: req.body.email,
           emailVerified: false,
@@ -28,6 +27,28 @@ app.post('/createUser',function(req, res){
 
   //res.send(req.body);
   return res;
+})
+
+app.post('/updateEmailAndPassword',function(req, res){
+  res.contentType('application/json');
+  admin.auth().updateUser(req.body.uid,{
+    email: req.body.email,
+    password: req.body.password
+  }).then((userRecord) => {
+    admin.firestore()
+    .collection('UserProfiles')
+    .doc(userRecord.uid)
+    .update({
+      email: userRecord.email
+    })
+    // See the UserRecord reference doc for the contents of userRecord.
+    res.send(JSON.stringify({userRecord}));
+    //console.log('Successfully updated user', userRecord.toJSON());
+  })
+  .catch((error) => {
+    res.send(JSON.stringify({error}));
+  });
+
 })
 
 exports.appInventory = builderFunction.onRequest(app);
