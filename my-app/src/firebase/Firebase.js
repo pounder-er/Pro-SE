@@ -68,6 +68,16 @@ class Firebase {
   }
 
   getAllUserProfile = (success,reject)=>{
+    firebase.firestore().collection('UserProfiles')
+    .get()
+    .then(querySnapshot=>{
+        success(querySnapshot);
+    })
+    .catch((error)=>{
+      reject(error);
+    })
+  }
+  getAllSaleReport = (success,reject)=>{
     firebase.firestore().collection('SalesRoport')
     .get()
     .then(querySnapshot=>{
@@ -77,7 +87,16 @@ class Firebase {
       reject(error);
     })
   }
-
+  getAllProduct = (success,reject)=>{
+    firebase.firestore().collection('Product')
+    .get()
+    .then(querySnapshot=>{
+        success(querySnapshot);
+    })
+    .catch((error)=>{
+      reject(error);
+    })
+  }
   getStateChangedUser = (success, reject) => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
