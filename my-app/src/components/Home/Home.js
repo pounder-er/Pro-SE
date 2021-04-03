@@ -65,33 +65,8 @@ class Home extends React.Component {
     this.state = {
       collapsed: false,
       isOpen: false,
-      headerTitle: ''
+      headerTitle: '',
     }
-    this.jobTitle = this.props.userProfile.jobTitle;
-    // this.arrHeaderTitle = ['รายการซื้อสินค้า',
-    //   'รายการขายสินค้า',
-    //   'เพิ่มสินค้าใหม่',
-    //   'ตรวจสอบสินค้า',
-    //   'ประวัติสินค้าเข้า/ออกคลัง',
-    //   'บริษัท',
-    //   'สาขา',
-    //   'เช็ค Stock สินค้า',
-    //   'ยอดขายสินค้า'];
-    //this.checkUser();
-  }
-
-
-  // checkUser = () => {
-  //   if (this.props.session) {
-
-  //   } else {
-  //     this.props.history.push("/login");
-  //     console.log("qqqqqqqq");
-  //   }
-  // }
-
-  async componentDidMount() {
-    console.log(this.props.userProfile);
   }
 
   toggleProfile = () => {
@@ -112,7 +87,52 @@ class Home extends React.Component {
     console.error(error.message);
   }
 
+  checkJobTitle = ()=>{
+    let menu = []
+    if(this.props.userProfile.jobTitle == 'ผู้จัดการ' || this.props.userProfile.jobTitle == 'ผู้ดูแลระบบ'){
+      menu = menu.concat([
+        <MenuItem icon={<BsFillGrid1X2Fill />}>Dashboard<Link onClick={() => this.setState({ headerTitle: 'Dashboard' })} /></MenuItem>,
+        <SubMenu title="จัดการพนักงาน" icon={<BsFillPeopleFill />}>
+        <MenuItem>เพิ่มพนักงาน<Link to={this.props.match.url + "/add_employee"} onClick={() => this.setState({ headerTitle: 'เพิ่มพนักงาน' })} /></MenuItem>
+        <MenuItem>รายชื่อพนักงาน<Link to={this.props.match.url + "/list_employee"} onClick={() => this.setState({ headerTitle: 'รายชื่อพนักงาน' })} /></MenuItem>
+      </SubMenu>,
+        <MenuItem >คำนวนปริมาณการสั่งซื้อสินค้า</MenuItem>,
+        <MenuItem >ยอดขายสินค้า<Link onClick={() => this.setState({ headerTitle: 'ยอดขายสินค้า' })} /></MenuItem>,
+        <MenuItem >ตั้งเวลาเช็ค Stock ประจำวัน</MenuItem>,
+      ])
+    }
+    if(this.props.userProfile.jobTitle == 'ผู้จัดการ' || this.props.userProfile.jobTitle == 'ผู้ดูแลระบบ' || this.props.userProfile.jobTitle == 'เจ้าหน้าที่'){
+      menu = menu.concat(
+        [
+          <MenuItem >ผลการเช็คสต๊อกสินค้า<Link onClick={() => this.setState({ headerTitle: 'ผลการเช็คสต๊อกสินค้า' })} /></MenuItem>,
+          <SubMenu title="จัดการสินค้า" icon={<BsFillArchiveFill />}>
+            <MenuItem>รายการซื้อสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการซื้อสินค้า' })} /></MenuItem>
+            <MenuItem>รายการขายสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการขายสินค้า' })} /></MenuItem>
+            <MenuItem>เพิ่มสินค้าใหม่<Link onClick={() => this.setState({ headerTitle: 'เพิ่มสินค้าใหม่' })} /></MenuItem>
+          </SubMenu>,
+          <MenuItem >ตรวจสอบสินค้า<Link onClick={() => this.setState({ headerTitle: 'ตรวจสอบสินค้า' })} /></MenuItem>,     
+          <MenuItem >ประวัติสินค้าเข้า/ออกคลัง<Link onClick={() => this.setState({ headerTitle: 'ระวัติสินค้าเข้า/ออกคลัง' })} /></MenuItem>,
+          <SubMenu title="ผู้ติดต่อ" icon={<BsBriefcaseFill />}>
+            <MenuItem>บริษัท<Link onClick={() => this.setState({ headerTitle: 'บริษัท' })} /></MenuItem>
+            <MenuItem>สาขา<Link onClick={() => this.setState({ headerTitle: 'สาขา' })} /></MenuItem>
+          </SubMenu>
+        ]
+      )
+    }
+    if(this.props.userProfile.jobTitle == 'พนักงานคลัง'){
+      menu = menu.concat(
+        [
+      <MenuItem >เช็คสต๊อกสินค้า<Link onClick={() => this.setState({ headerTitle: 'เช็คสต๊อกสินค้า' })} /></MenuItem>,
+     <MenuItem >นำสินค้าออกจากคลัง<Link onClick={() => this.setState({ headerTitle: 'นำสินค้าออกจากคลัง' })} /></MenuItem>,
+     <MenuItem >นำสินค้าเข้าคลัง<Link onClick={() => this.setState({ headerTitle: 'นำสินค้าเข้าคลัง' })} /></MenuItem>,
+        ])
+    }
+    console.log(menu);
+    return menu;
+  }
+
   render() {
+    
     return (
       <ContainerHome>
         <Sidebar>
@@ -135,42 +155,7 @@ class Home extends React.Component {
             </SidebarHeader>
             <SidebarContent>
               <Menu iconShape="square" >
-                {this.jobTitle == 'ผู้จัดการ' && <React.Fragment>
-                  <MenuItem icon={<BsFillGrid1X2Fill />}>Dashboard<Link onClick={() => this.setState({ headerTitle: 'Dashboard' })} /></MenuItem>
-                  <SubMenu title="จัดการพนักงาน" icon={<BsFillPeopleFill />}>
-                    <MenuItem>เพิ่มพนักงาน<Link to={this.props.match.url + "/add_employee"} onClick={() => this.setState({ headerTitle: 'เพิ่มพนักงาน' })} /></MenuItem>
-                    <MenuItem>รายชื่อพนักงาน<Link to={this.props.match.url + "/list_employee"} onClick={() => this.setState({ headerTitle: 'รายชื่อพนักงาน' })} /></MenuItem>
-                  </SubMenu>
-                  <MenuItem >คำนวนปริมาณการสั่งซื้อสินค้า</MenuItem>
-                  <MenuItem >ยอดขายสินค้า<Link onClick={() => this.setState({ headerTitle: 'ยอดขายสินค้า' })} /></MenuItem>
-                  <MenuItem >ตั้งเวลาเช็ค Stock ประจำวัน</MenuItem>
-                  </React.Fragment>
-                }
-
-                {(this.jobTitle == 'เจ้าหน้าที่' || this.jobTitle == 'ผู้จัดการ') &&<React.Fragment>
-                  <MenuItem >ผลการเช็คสต๊อกสินค้า<Link onClick={() => this.setState({ headerTitle: 'ผลการเช็คสต๊อกสินค้า' })} /></MenuItem>
-                  <SubMenu title="จัดการสินค้า" icon={<BsFillArchiveFill />}>
-                    <MenuItem>รายการซื้อสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการซื้อสินค้า' })} /></MenuItem>
-                    <MenuItem>รายการขายสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการขายสินค้า' })} /></MenuItem>
-                    <MenuItem>เพิ่มสินค้าใหม่<Link onClick={() => this.setState({ headerTitle: 'เพิ่มสินค้าใหม่' })} /></MenuItem>
-                  </SubMenu>
-                  <MenuItem >ตรวจสอบสินค้า<Link onClick={() => this.setState({ headerTitle: 'ตรวจสอบสินค้า' })} /></MenuItem>        
-                  <MenuItem >ประวัติสินค้าเข้า/ออกคลัง<Link onClick={() => this.setState({ headerTitle: 'ระวัติสินค้าเข้า/ออกคลัง' })} /></MenuItem>
-                  <SubMenu title="ผู้ติดต่อ" icon={<BsBriefcaseFill />}>
-                    <MenuItem>บริษัท<Link onClick={() => this.setState({ headerTitle: 'บริษัท' })} /></MenuItem>
-                    <MenuItem>สาขา<Link onClick={() => this.setState({ headerTitle: 'สาขา' })} /></MenuItem>
-                  </SubMenu>
-                  </React.Fragment>
-                }
-
-               {/* {this.jobTitle == 'พนักงานคลัง' && 
-                  <React.Fragment>
-                    <MenuItem >เช็คสต๊อกสินค้า<Link onClick={() => this.setState({ headerTitle: 'เช็คสต๊อกสินค้า' })} /></MenuItem>
-                     <MenuItem >นำสินค้าออกจากคลัง<Link onClick={() => this.setState({ headerTitle: 'นำสินค้าออกจากคลัง' })} /></MenuItem>
-                    <MenuItem >นำสินค้าเข้าคลัง<Link onClick={() => this.setState({ headerTitle: 'นำสินค้าเข้าคลัง' })} /></MenuItem>
-                  </React.Fragment>
-                } */}
-
+                {this.checkJobTitle()}
               </Menu>
             </SidebarContent>
           </ProSidebar>
