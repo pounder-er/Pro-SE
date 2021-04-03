@@ -20,11 +20,13 @@ import styled from 'styled-components';
 
 import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons/md";
 
-import ReactDataGrid from '@inovua/reactdatagrid-community'
-import '@inovua/reactdatagrid-community/base.css'
-import '@inovua/reactdatagrid-community/theme/default-light.css'
-import NumberFilter from '@inovua/reactdatagrid-community/NumberFilter'
-import SelectFilter from '@inovua/reactdatagrid-community/SelectFilter'
+import {i18n} from '../i18n';
+
+import ReactDataGrid from '@inovua/reactdatagrid-community';
+import '@inovua/reactdatagrid-community/base.css';
+import '@inovua/reactdatagrid-community/theme/default-light.css';
+import NumberFilter from '@inovua/reactdatagrid-community/NumberFilter';
+import SelectFilter from '@inovua/reactdatagrid-community/SelectFilter';
 
 import fire_base from '../../firebase/Firebase';
 
@@ -41,34 +43,14 @@ import { AiFillFileText } from "react-icons/ai";
 import EditEmployee from './EditEmployee';
 
 const filterValue = [
-    { name: 'firstName', operator: 'startsWith', type: 'string', value: '' },
-    { name: 'lastName', operator: 'startsWith', type: 'string', value: '' },
-    { name: 'email', operator: 'startsWith', type: 'string', value: '' },
-    { name: 'phoneNumber', operator: 'startsWith', type: 'string', value: '' },
-    { name: 'jobTitle', operator: 'startsWith', type: 'select',operator: 'inlist', value: '' },
-    { name: 'status', operator: 'startsWith', type: 'select',operator: 'inlist', value: '' },
+    { name: 'firstName', operator: 'startsWith', type: 'string',  },
+    { name: 'lastName', operator: 'startsWith', type: 'string', },
+    { name: 'email', operator: 'startsWith', type: 'string',  },
+    { name: 'phoneNumber', operator: 'startsWith', type: 'string',  },
+    { name: 'jobTitle', operator: 'startsWith', type: 'select',operator: 'inlist',  },
+    { name: 'status', operator: 'startsWith', type: 'select',operator: 'inlist',  },
     
 ];
-const i18n = Object.assign({}, ReactDataGrid.defaultProps.i18n, {
-    sortAsc: 'เรียงน้อยไปมาก',
-    sortDesc: 'เรียงมากไปน้อย',
-    clear: 'ลบ',
-    clearAll: 'ลบทั้งหมด',
-    contains: 'ประกอบด้วย',
-    startsWith: 'เริ่มด้วย',
-    endsWith: 'จบด้วย',
-    neq: 'ไม่เท่ากับ',
-    eq: 'เท่ากับ',
-    notEmpty: 'ไม่ว่าง',
-    empty: 'ว่าง',
-    notContains: 'ไม่ได้ประกอบด้วย',
-    disable:'ปิดตัวกรอง',
-enable:'เปิดตัวกรอง',
-pageText:'หน้า ',
-ofText:' จาก ',
-perPageText:'แสดงรายการทีละ',
-showingText:'กำลังแสดงรายการ '
-})
 
 class ListEmployee extends React.PureComponent {
     constructor(props) {
@@ -80,8 +62,8 @@ class ListEmployee extends React.PureComponent {
         }
         this.profile = {};
         this.columns = [
-            { name: 'id', header: 'Id', defaultVisible: false, maxWidth: 50 },
-            { name: 'no', header: 'No', type: 'number' ,groupBy: false, maxWidth: 50 },
+            { name: 'id', header: 'Id', defaultVisible: false, defaultWidth: 50},
+            { name: 'no', header: '', type: 'number' ,groupBy: false, defaultWidth: 50 },
             { name: 'firstName', groupBy: false,defaultFlex: 1, header: 'ชื่อ' },
             { name: 'lastName', groupBy: false,defaultFlex: 1, header: 'นามสกุล' },
             { name: 'email', groupBy: false, defaultFlex: 1, header: 'อีเมล' },
@@ -128,7 +110,16 @@ class ListEmployee extends React.PureComponent {
             }
             }
             ,
-            { name: 'detail', header: 'รายละเอียด', maxWidth: 109, render: ({data})=><button onClick={(e)=>{this.toggleModalEditEmployee(e);this.profile=data;}} style={{display:'contents'}}><AiFillFileText color='#00A3FF' size={30} /></button> },
+            { name: 'detail', header: 
+            <div style={{ display: 'inline-block' }}>
+                {'รายละเอียด'}
+          </div>,defaultWidth: 109, 
+            render: ({data})=>
+            <button onClick={(e)=>{this.toggleModalEditEmployee(e);this.profile=data;}} style={{display:'contents'}}>
+                <AiFillFileText color='#00A3FF' size={30} />
+            </button> ,
+            textAlign: 'center'
+            }
         ]
     }
 

@@ -21,6 +21,8 @@ import '@inovua/reactdatagrid-community/base.css'
 import '@inovua/reactdatagrid-community/theme/default-light.css'
 import 'react-pro-sidebar/dist/css/styles.css';
 
+import {i18n} from '../i18n';
+
 import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
 import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons/md";
 import { IoMdTrash } from "react-icons/io";
@@ -43,26 +45,7 @@ const columns = [
 
 ]
 const dataSource = [{ id: '1150', firstName: 'chainan', lastName: 'punsri', email: 'chain@hhh.com' }, { id: '1151', firstName: 'ahainun', lastName: 'vansri', email: 'cain@hhh.com' }]
-const i18n = Object.assign({}, ReactDataGrid.defaultProps.i18n, {
-    sortAsc: 'เรียงน้อยไปมาก',
-    sortDesc: 'เรียงมากไปน้อย',
-    clear: 'ลบ',
-    clearAll: 'ลบทั้งหมด',
-    contains: 'ประกอบด้วย',
-    startsWith: 'เริ่มด้วย',
-    endsWith: 'จบด้วย',
-    neq: 'ไม่เท่ากับ',
-    eq: 'เท่ากับ',
-    notEmpty: 'ไม่ว่าง',
-    empty: 'ว่าง',
-    notContains: 'ไม่ได้ประกอบด้วย',
-    disable: 'ปิดตัวกรอง',
-    enable: 'เปิดตัวกรอง',
-    pageText: 'หน้า ',
-    ofText: ' จาก ',
-    perPageText: 'แสดงรายการทีละ',
-    showingText: 'กำลังแสดงรายการ '
-})
+
 class SalesReport extends React.Component {
     constructor(props) {
         super(props);
