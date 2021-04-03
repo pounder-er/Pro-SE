@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-import './Company.css';
+import './HistoryInOut.css';
 
 import {
     Button,
