@@ -160,7 +160,11 @@ class EditEmployee extends React.Component {
 
   uploadImageProfileSuccess = (url, uid) => {
     delete this.account.password;
-    this.account.imageProfile = url;
+    if(url != ''){
+      this.account.imageProfile = url;
+    }else{
+      delete this.account.imageProfile
+    }
     fire_base.updateUserProfile(uid, this.account, this.updateUserProfileSuccess, this.unSuccess);
     console.log(url);
   }
