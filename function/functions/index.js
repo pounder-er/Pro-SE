@@ -53,6 +53,14 @@ app.post('/updateEmailAndPassword',function(req, res){
 
 exports.appInventory = builderFunction.onRequest(app);
 
+exports.scheduledFunction = functions.pubsub.schedule('every 1 minutes').onRun((context) => {
+  console.log('This will be run every 1 minutes!');
+  admin.firestore().collection('test').add({
+    test:1
+  })
+  return null;
+});
+
 // exports.helloWorld = functions.region('asia-southeast2').https.onRequest((req, res) => {
 //     await admin.auth().createUser({
 //       email: req.body.email,

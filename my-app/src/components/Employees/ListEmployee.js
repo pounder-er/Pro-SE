@@ -99,7 +99,34 @@ class ListEmployee extends React.PureComponent {
             filterEditorProps: {
                 placeholder: 'ทั้งหมด',
                 dataSource: [{id:'ปกติ',label:'ปกติ'},{id:'ลาพัก',label:'ลาพัก'},{id:'ออก',label:'ออก'}]
-            }, header: 'สถานะ'},
+            }, header: 'สถานะ',render: ({value})=>{
+                if(value == 'ปกติ'){
+                    return(
+                        <div style={{display:'flex',alignItems:'center'}}>
+                        <div style={{width:8,height:8,margin:5,borderRadius:100,backgroundColor:'#00B046'
+                         }} /> 
+                        {value}
+                    </div>);
+                }
+                else if(value == 'ลาพัก'){
+                    return(
+                        <div style={{display:'flex',alignItems:'center'}}>
+                        <div style={{width:8,height:8,margin:5,borderRadius:100,backgroundColor:'gray'
+                         }} /> 
+                        {value}
+                    </div>);
+                }else{
+                    return(
+                        <div style={{display:'flex',alignItems:'center'}}>
+                        <div style={{width:8,height:8,margin:5,borderRadius:100,backgroundColor:'#FF0B0B'
+                         }} /> 
+                        {value}
+                    </div>);
+                }
+                
+            }
+            }
+            ,
             { name: 'detail', header: 'รายละเอียด', maxWidth: 109, render: ({data})=><button onClick={(e)=>{this.toggleModalEditEmployee(e);this.profile=data;}} style={{display:'contents'}}><AiFillFileText color='#00A3FF' size={30} /></button> },
         ]
     }
