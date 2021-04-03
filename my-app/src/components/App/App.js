@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import React from 'react';
 
-import { Switch, Route, Link, NavLink } from 'react-router-dom';
+import { Switch, Route, Link, NavLink, Redirect } from 'react-router-dom';
 import {
   BsFillPersonFill,
   BsFillLockFill,
@@ -16,36 +16,67 @@ import Login from '../Login/Login'
 import Home from '../Home/Home'
 
 import { connect } from 'react-redux';
-import { addSession } from '../../redux/actions';
+import { addSession, addUserProfile } from '../../redux/actions';
+
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
     }
-    fire_base.getStateChangedUser(this.getSuccess, this.getUnsuccess);
+    this.PrivateRoute=({ component: Component, ...rest })=> {
+      return (
+        <Route
+          {...rest}
+          render={props =>
+            this.props.session ? (
+              <Component {...props} />
+            ) : (
+              // console.log("test")
+              <Redirect
+                to={{
+                  pathname: "/login",
+                  state: { from: props.location }
+                }}
+              />
+            )
+          }
+        />
+      );
+    }
+    
   }
 
-  getSuccess = (user) => {
-    this.props.dispatch(addSession(user));
-    console.log(this.props.session);
+  async componentDidMount(){
+    await fire_base.getStateChangedUser(this.getSuccess, this.getUnsuccess);
+  }
+
+  getSuccess = async(user) => {
+    await this.props.dispatch(addSession(user));
+    await console.log(this.props.session);
+    await fire_base.getUserProfile(this.props.session.uid,this.getUserProfileSuccess,this.getUserProfileUnSuccess);
+  }
+
+  getUserProfileSuccess=(data)=>{
+    data.email = this.props.session.email
+    this.props.dispatch(addUserProfile(data));
+    this.props.history.push("/home");
+  }
+
+  getUserProfileUnSuccess(error){
+    console.error(error);
   }
 
   getUnsuccess = () => {
-
-  }
-
-
-  componentDidMount(){
-    console.log(this.props.session);
+    this.props.history.push("/login");
   }
 
   render() {
+    
     return (
       <Switch>
-        <Route exact path="/" component={Login} />
-        {this.props.session&&<Route path="/home" component={Home} />}
-        <Route component={Login} />
+        <this.PrivateRoute path="/home" component={Home} />
+        <Route path="/login" component={Login} />
       </Switch>
     );
   }

@@ -66,7 +66,7 @@ class Firebase {
       reject(error);
     })
   }
-
+  // /UserProfiles/1/0/00/00/32TqvA4r8X3Y0QSLgC5n
   getAllUserProfile = (success,reject)=>{
     firebase.firestore().collection('UserProfiles')
     .get()
@@ -77,26 +77,7 @@ class Firebase {
       reject(error);
     })
   }
-  getAllSaleReport = (success,reject)=>{
-    firebase.firestore().collection('SalesRoport')
-    .get()
-    .then(querySnapshot=>{
-        success(querySnapshot);
-    })
-    .catch((error)=>{
-      reject(error);
-    })
-  }
-  getAllProduct = (success,reject)=>{
-    firebase.firestore().collection('Product')
-    .get()
-    .then(querySnapshot=>{
-        success(querySnapshot);
-    })
-    .catch((error)=>{
-      reject(error);
-    })
-  }
+
   getStateChangedUser = (success, reject) => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
@@ -108,6 +89,7 @@ class Firebase {
   }
 
   addUserProfile = (uid, profile, success, reject) => {
+    profile.status = 'ปกติ';
     firebase.firestore().collection('UserProfiles').doc(uid)
       .set(profile)
       .then((docRef) => {
@@ -117,6 +99,17 @@ class Firebase {
       .catch((error) => {
         reject(error);
       });
+  }
+
+  updateUserProfile = (uid, profile, success, reject) => {
+    firebase.firestore().collection('UserProfiles').doc(uid)
+    .update(profile)
+    .then(()=>{
+      success();
+    })
+    .catch((error)=>{
+      reject(error);
+    })
   }
 
   uploadImageProfile=async(uid,image,success,reject)=>{
@@ -134,6 +127,16 @@ class Firebase {
       .catch((error) => {
         reject(error);
       });
+  }
+
+  listeningProfile = (success,reject) =>{
+    firebase.firestore().collection('UserProfiles')
+    .where('firstName','!=','แอดมิน')
+    .onSnapshot(function (querySnapshot) {
+      success(querySnapshot);
+    }, function (error) {
+      reject(error);
+    });
   }
 
 }

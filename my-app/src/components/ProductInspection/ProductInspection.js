@@ -25,7 +25,7 @@ import {
 import 'react-pro-sidebar/dist/css/styles.css';
 
 import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
-import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons/md";
+import { MdSearch, MdDescription, MdCallReceived,MdLens, MdCallMade } from "react-icons/md";
 import { IoMdTrash } from "react-icons/io";
 
 
@@ -83,7 +83,7 @@ class HistoryInOut extends React.Component {
                             marginBottom: 20,
                             width: '95%',
                             alignSelf: 'center'
-                        }}>ประวัติสินค้าเข้า/ออกคลัง</h1>
+                        }}>รายการสินค้า</h1>
                         <div className="Search_Button">
                             <InputGroup style={{ width: 400 }}>
                                 <Input placeholder="รหัสสินค้า" />
@@ -98,36 +98,52 @@ class HistoryInOut extends React.Component {
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>หมายเลลขล็อต</th>
-                                    <th>วันที่</th>
-                                    <th>ผู้รับผิดชอบ</th>
-                                    <th>เข้า<MdCallReceived color="#00B09B" size={25} />/ออก<MdCallMade color="#FD3B47" size={25} /></th>
+                                    <th>รหัสสินค้า</th>
+                                    <th>รายการสินค้า</th>
+                                    <th>ชนิด</th>
+                                    <th>น้ำหนัก</th>
+                                    <th>เก่า/ใหม่</th>
+                                    <th>ราคาต่อหน่วย</th>
+                                    <th>สถานะ</th>
+                                    <th>ยอดคงเหลือ</th>
                                     <th>รายละเอียด</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <th scope="row">1</th>
-                                    <td>100012</td>
-                                    <td>01/01/2564</td>
-                                    <td>ประยา จันชุด</td>
-                                    <td>เข้า</td>
+                                    <td>110100</td>
+                                    <td>ข้าวหอมมะลิ ตราสส</td>
+                                    <td>ข้าวหอมมะลิ</td>
+                                    <td>5</td>
+                                    <td>ใหม่</td>
+                                    <td>250</td>
+                                    <td><MdLens color="#00B046" size={20}/>ปกติ</td>
+                                    <td>500</td>
                                     <td className="CenterTd"><MdDescription color="#00A3FF" size={25} /></td>
                                 </tr>
                                 <tr>
                                     <th scope="row">2</th>
-                                    <td>100012</td>
-                                    <td>01/01/2564</td>
-                                    <td>ประยา จันชุด</td>
-                                    <td>ออก</td>
+                                    <td>100100</td>
+                                    <td>ข้าวหอมมะลิ ตราสส</td>
+                                    <td>ข้าวหอมมะลิ</td>
+                                    <td>5</td>
+                                    <td>ก่า</td>
+                                    <td>250</td>
+                                    <td><MdLens color="#000000" size={20}/>ยกเลิกจำหน่าย</td>
+                                    <td>2</td>
                                     <td className="CenterTd"><MdDescription color="#00A3FF" size={25} /></td>
                                 </tr>
                                 <tr>
                                     <th scope="row">3</th>
-                                    <td>100012</td>
-                                    <td>01/01/2564</td>
-                                    <td>ประยา จันชุด</td>
-                                    <td>เข้า</td>
+                                    <td>110200</td>
+                                    <td>ข้าวหอมมะลิ ตรานานา</td>
+                                    <td>ข้าวหอมมะลิ</td>
+                                    <td>5</td>
+                                    <td>ใหม่</td>
+                                    <td>100</td>
+                                    <td><MdLens color="#ffff00" size={20}/>ใกล้หมด</td>
+                                    <td>30</td>
                                     <td className="CenterTd"><MdDescription color="#00A3FF" size={25} /></td>
                                 </tr>
 

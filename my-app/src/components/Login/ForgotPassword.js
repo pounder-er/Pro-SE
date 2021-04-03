@@ -34,15 +34,11 @@ const LoginSchema = Yup.object().shape({
         .email('Ivalid email').required('This field is requred'),
     password: Yup.string().required('This field is requred')
 })
-class Login extends React.Component {
+class ForgotPassword extends React.Component {
     constructor(props) {
         super(props);
         this.state={
             spinner:false
-        }
-        //fire_base.getStateChangedUser(this.getSuccess, this.getUnsuccess);
-        if(this.props.session){
-            this.props.history.push("/home");
         }
     }
 
@@ -51,11 +47,10 @@ class Login extends React.Component {
         await fire_base.login(values.email, values.password, this.loginSuccess, this.loginUnsuccess);
     }
 
-    loginSuccess = async(res) => {
+    SandEmailSuccess = async(res) => {
         this.props.dispatch(addSession(res.user));
-        console.log(this.props.session);
         this.setState({spinner:false});
-        this.props.history.push("/home");
+        this.props.history.push("/login");
     }
 
     loginUnsuccess = (error) => {
@@ -104,24 +99,8 @@ class Login extends React.Component {
                                         invalid={errors.email && touched.email}
                                         />
                                     </InputGroup>
+                                    <Button type="submit" color="primary" style={{width:'100%'}}>ลืมรหัสผ่าน</Button>
                                 </FormGroup>
-                                <FormGroup style={{flex:1}}>
-                                    <InputGroup>
-                                        <InputGroupAddon addonType="prepend">
-                                            <InputGroupText><BsFillLockFill /></InputGroupText>
-                                        </InputGroupAddon>
-                                        <Input placeholder="password" type="password" name="password" 
-                                        value={values.password} 
-                                        onChange={handleChange}
-                                        invalid={errors.password && touched.password}
-                                        />
-                                    </InputGroup>
-                                    {/* <div style={{display:'flex',justifyContent:'flex-end',marginTop:5}}>
-                                        <button style={{display:'contents'}} type='button' onClick={}><h6 style={{color:'skyblue'}}>ลืมรหัสผ่าน?</h6></button>
-                                </div> */}
-                                </FormGroup>
-                                <Button type="submit" color="primary" style={{width:'100%'}}>Login</Button>
-                                
                             </Form>
                         )}
                     </Formik>
@@ -160,4 +139,4 @@ const Image = styled.img`
     object-fit: contain;
  `;
 
-export default connect()(Login);
+export default ForgotPassword;
