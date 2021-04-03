@@ -42,42 +42,61 @@ class Firebase {
 
   createUser = (email, password, success, reject) => {
     firebase.auth().createUserWithEmailAndPassword(email, password)
-      .then((data)=>{
-        
+      .then((data) => {
+
         success(data);
-        
+
       })
-      .catch((error)=>{
+      .catch((error) => {
         reject(error);
       });
   }
 
-  getUserProfile = (uid, success, reject) =>{
+  getUserProfile = (uid, success, reject) => {
     firebase.firestore().collection('UserProfiles').doc(uid)
-    .get()
-    .then(doc=>{
-      if (doc.exists) {
-        success(doc.data());
-    } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-    }
-    }).catch((error)=>{
-      reject(error);
-    })
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          success(doc.data());
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+        }
+      }).catch((error) => {
+        reject(error);
+      })
   }
   // /UserProfiles/1/0/00/00/32TqvA4r8X3Y0QSLgC5n
-  getAllUserProfile = (success,reject)=>{
+  getAllUserProfile = (success, reject) => {
     firebase.firestore().collection('UserProfiles')
-    .get()
-    .then(querySnapshot=>{
+      .get()
+      .then(querySnapshot => {
         success(querySnapshot);
-    })
-    .catch((error)=>{
-      reject(error);
-    })
+      })
+      .catch((error) => {
+        reject(error);
+      })
   }
-
+  getAllSaleReport = (success, reject) => {
+    firebase.firestore().collection('SalesRoport')
+      .get()
+      .then(querySnapshot => {
+        success(querySnapshot);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  }
+  getAllProduct = (success, reject) => {
+    firebase.firestore().collection('Product')
+      .get()
+      .then(querySnapshot => {
+        success(querySnapshot);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  }
   getStateChangedUser = (success, reject) => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
@@ -103,25 +122,25 @@ class Firebase {
 
   updateUserProfile = (uid, profile, success, reject) => {
     firebase.firestore().collection('UserProfiles').doc(uid)
-    .update(profile)
-    .then(()=>{
-      success();
-    })
-    .catch((error)=>{
-      reject(error);
-    })
+      .update(profile)
+      .then(() => {
+        success();
+      })
+      .catch((error) => {
+        reject(error);
+      })
   }
 
-  uploadImageProfile=async(uid,image,success,reject)=>{
+  uploadImageProfile = async (uid, image, success, reject) => {
     var ref = await firebase
       .storage()
       .ref()
-      .child('profile/'+uid);
+      .child('profile/' + uid);
     ref
       .put(image)
       .then(async (snapshot) => {
         await snapshot.ref.getDownloadURL().then((url) => {
-          success(url,uid);
+          success(url, uid);
         });
       })
       .catch((error) => {
@@ -129,14 +148,14 @@ class Firebase {
       });
   }
 
-  listeningProfile = (success,reject) =>{
+  listeningProfile = (success, reject) => {
     firebase.firestore().collection('UserProfiles')
-    .where('firstName','!=','แอดมิน')
-    .onSnapshot(function (querySnapshot) {
-      success(querySnapshot);
-    }, function (error) {
-      reject(error);
-    });
+      .where('firstName', '!=', 'แอดมิน')
+      .onSnapshot(function (querySnapshot) {
+        success(querySnapshot);
+      }, function (error) {
+        reject(error);
+      });
   }
 
 }
