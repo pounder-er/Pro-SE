@@ -57,10 +57,7 @@ import { addSession, addUserProfile } from '../../redux/actions';
 import ListEmployee from '../Employees/ListEmployee';
 import AddEmployee from '../Employees/AddEmployee';
 
-import HistoryInOut from '../HistoryInOut/HistoryInOut'
-import SalesReport from '../SalesReport/SalesReport'
-import ProductsReport from '../ProductsReport/ProductReport'
-import ProductDetail from '../ProductDetail/ProductDetail'
+
 
 class Home extends React.Component {
   constructor(props) {
@@ -100,7 +97,7 @@ class Home extends React.Component {
         <MenuItem>รายชื่อพนักงาน<Link to={this.props.match.url + "/list_employee"} onClick={() => this.setState({ headerTitle: 'รายชื่อพนักงาน' })} /></MenuItem>
       </SubMenu>,
         <MenuItem >คำนวนปริมาณการสั่งซื้อสินค้า</MenuItem>,
-        <MenuItem >ยอดขายสินค้า<Link to={this.props.match.url+"/salesReport"} onClick={() => this.setState({ headerTitle: 'ยอดขายสินค้า' })} /></MenuItem>,
+        <MenuItem >ยอดขายสินค้า<Link onClick={() => this.setState({ headerTitle: 'ยอดขายสินค้า' })} /></MenuItem>,
         <MenuItem >ตั้งเวลาเช็ค Stock ประจำวัน</MenuItem>,
       ])
     }
@@ -113,8 +110,8 @@ class Home extends React.Component {
             <MenuItem>รายการขายสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการขายสินค้า' })} /></MenuItem>
             <MenuItem>เพิ่มสินค้าใหม่<Link onClick={() => this.setState({ headerTitle: 'เพิ่มสินค้าใหม่' })} /></MenuItem>
           </SubMenu>,
-          <MenuItem >ตรวจสอบสินค้า<Link to={this.props.match.url+"/productsReport"} onClick={() => this.setState({ headerTitle: 'ตรวจสอบสินค้า' })} /></MenuItem>,     
-          <MenuItem >ประวัติสินค้าเข้า/ออกคลัง<Link to={this.props.match.url+"/historyInOut"} onClick={() => this.setState({ headerTitle: 'ระวัติสินค้าเข้า/ออกคลัง' })} /></MenuItem>,
+          <MenuItem >ตรวจสอบสินค้า<Link onClick={() => this.setState({ headerTitle: 'ตรวจสอบสินค้า' })} /></MenuItem>,     
+          <MenuItem >ประวัติสินค้าเข้า/ออกคลัง<Link onClick={() => this.setState({ headerTitle: 'ระวัติสินค้าเข้า/ออกคลัง' })} /></MenuItem>,
           <SubMenu title="ผู้ติดต่อ" icon={<BsBriefcaseFill />}>
             <MenuItem>บริษัท<Link onClick={() => this.setState({ headerTitle: 'บริษัท' })} /></MenuItem>
             <MenuItem>สาขา<Link onClick={() => this.setState({ headerTitle: 'สาขา' })} /></MenuItem>
@@ -186,10 +183,7 @@ class Home extends React.Component {
           <Body>
             <Container style={{ backgroundColor: 'white', borderRadius: 5, padding: 10 }}>
               <Switch>
-                <Route exact path={this.props.match.path+"/historyInOut"} component={HistoryInOut} />
-                <Route exact path={this.props.match.path+"/salesReport"} component={SalesReport} />
-                <Route exact path={this.props.match.path+"/productsReport"} component={ProductsReport} />
-                <Route exact path={this.props.match.path+"/productsReport/productDetail"} component={ProductDetail} />
+
                 <Route exact path={this.props.match.path + "/list_employee"} component={ListEmployee} />
                 <Route exact path={this.props.match.path + "/add_employee"} component={AddEmployee} />
               </Switch>
