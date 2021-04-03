@@ -60,7 +60,7 @@ import AddEmployee from '../Employees/AddEmployee';
 import HistoryInOut from '../HistoryInOut/HistoryInOut'
 import SalesReport from '../SalesReport/SalesReport'
 import ProductsReport from '../ProductsReport/ProductReport'
-import ProductDetail from '../ProductDetail/ProductDetail'
+import ProductDetail from '../ProductsReport/ProductDetail/ProductDetail'
 
 class Home extends React.Component {
   constructor(props) {
