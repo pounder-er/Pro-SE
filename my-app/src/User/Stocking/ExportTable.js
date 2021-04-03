@@ -72,7 +72,7 @@ class ExportTable extends React.Component{
                             </tbody>
                     </Table>
 
-                    <body className = 'PaginationTable'>
+                    {/* <body className = 'PaginationTable'>
                         <Pagination aria-label="Page navigation example" style={{justifyContent:'center', marginTop:10}}>
                             <PaginationItem>
                                 <PaginationLink first href="#" />
@@ -96,7 +96,7 @@ class ExportTable extends React.Component{
                                 <PaginationLink last href="#" />
                             </PaginationItem>
                         </Pagination>
-                    </body>
+                    </body> */}
 
                     <body className = "ButtonTable">
                         <Button style = {{height:40, width:80, background:"#FF0000"}}>ยกเลิก</Button>

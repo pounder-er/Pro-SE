@@ -19,6 +19,7 @@ import {
     PaginationItem,
     PaginationLink
 } from 'reactstrap';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {BrowserRouter, Router, Route, Link, Redirect} from 'react-router-dom'
 
