@@ -80,7 +80,8 @@ class ListEmployee extends React.PureComponent {
         }
         this.profile = {};
         this.columns = [
-            { name: 'id', header: 'Id', defaultVisible: false, type: 'number', maxWidth: 50 },
+            { name: 'id', header: 'Id', defaultVisible: false, maxWidth: 50 },
+            { name: 'no', header: 'No', type: 'number' ,groupBy: false, maxWidth: 50 },
             { name: 'firstName', groupBy: false,defaultFlex: 1, header: 'ชื่อ' },
             { name: 'lastName', groupBy: false,defaultFlex: 1, header: 'นามสกุล' },
             { name: 'email', groupBy: false, defaultFlex: 1, header: 'อีเมล' },
@@ -149,15 +150,18 @@ class ListEmployee extends React.PureComponent {
             let d = change.doc.data();
             d.id = change.doc.id
             if (change.type === "added") {
+                d.no = data.length+1;
                 data.push(d);
             }
             if (change.type === "modified") {
+                d.no = data[data.findIndex((obj=>obj.id == d.id))].no
                 data[data.findIndex((obj=>obj.id == d.id))] = d;
                 console.log("Modified : ", d);
             }
-            // if (change.type === "removed") {
-            //     console.log("Removed city: ", change.doc.data());
-            // }
+            if (change.type === "removed") {
+                data.splice(data.findIndex((obj=>obj.id == d.id)),1);
+                console.log("Removed : ", change.doc.data());
+            }
         })
         //console.log(data);
         this.setState({

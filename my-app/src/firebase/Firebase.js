@@ -89,6 +89,7 @@ class Firebase {
   }
 
   addUserProfile = (uid, profile, success, reject) => {
+    profile.CreateDate = firebase.firestore.FieldValue.serverTimestamp();
     profile.status = 'ปกติ';
     firebase.firestore().collection('UserProfiles').doc(uid)
       .set(profile)
