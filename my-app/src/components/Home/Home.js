@@ -51,7 +51,9 @@ import { ImExit } from "react-icons/im";
 import { CgSidebarOpen, CgSidebar } from "react-icons/cg";
 import { IoMdSettings, IoMdCalculator } from "react-icons/io";
 import { IoAlarmSharp } from "react-icons/io5";
-import { FaWarehouse, FaUserPlus } from "react-icons/fa";
+import { FaWarehouse, FaUserPlus, FaThList } from "react-icons/fa";
+import { HiViewGridAdd } from "react-icons/hi";
+import { GiBuyCard } from "react-icons/gi";
 
 // import { MdPermContactCalendar } from "react-icons/md";
 import { RiBarChart2Fill, RiContactsFill } from "react-icons/ri";
@@ -134,12 +136,12 @@ class Home extends React.Component {
         [
 
           <SubMenu title="จัดการสินค้า" icon={<BsFillArchiveFill />}>
-            <MenuItem>เพิ่มสินค้า<Link onClick={() => this.setState({ headerTitle: 'เพิ่มสินค้าใหม่' })} /></MenuItem>
-            <MenuItem >
+            <MenuItem suffix={<HiViewGridAdd size={20} />} >เพิ่มสินค้า<Link onClick={() => this.setState({ headerTitle: 'เพิ่มสินค้าใหม่' })} /></MenuItem>
+            <MenuItem suffix={<FaThList style={{marginRight:2}}  size={15} />} >
               รายการสินค้า
             <Link to={this.props.match.url + "/productsReport"} onClick={() => this.setState({ headerTitle: 'ตรวจสอบสินค้า' })} />
             </MenuItem>
-            <MenuItem>รายการซื้อสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการซื้อสินค้า' })} /></MenuItem>
+            <MenuItem suffix={<GiBuyCard style={{marginRight:2}}  size={18} />} >รายการซื้อสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการซื้อสินค้า' })} /></MenuItem>
             <MenuItem>รายการขายสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการขายสินค้า' })} /></MenuItem>
           </SubMenu>,
           <SubMenu title="คลังสินค้า" icon={<FaWarehouse />}>
