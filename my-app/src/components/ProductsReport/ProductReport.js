@@ -32,9 +32,14 @@ import { Link } from 'react-router-dom';
 
 const filterValue = [
     { name: 'ID', operator: 'startsWith', type: 'string', value: '' },
-    { name: 'cDate', operator: 'startsWith', type: 'string', value: '' },
-    { name: 'responsibleP', operator: 'startsWith', type: 'string', value: '' },
-    { name: 'InOut', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'productID', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'productName', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'productType', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'productWeight', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'newOld', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'productPrice', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'productStatus', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'productTotal', operator: 'startsWith', type: 'string', value: '' },
 ];
 const columns = [
     { name: 'id', header: 'Id', defaultVisible: false, type: 'number', maxWidth: 40 },
@@ -44,8 +49,8 @@ const columns = [
     { name: 'productWeight', groupBy: false, defaultFlex: 0.7, header: 'น้ำหนัก' },
     { name: 'newOld', groupBy: false, defaultFlex: 1, header: 'เก่า/ใหม่' },
     { name: 'productPrice', groupBy: false, defaultFlex: 1.2, header: 'ราคาต่อหน่วย' },
-    { name: 'productTotal', groupBy: false, defaultFlex: 0.7, header: 'สถานะ' },
-    { name: 'InOut', groupBy: false, defaultFlex: 1, header: 'ยอดคงเหลือ' },
+    { name: 'productStatus', groupBy: false, defaultFlex: 0.7, header: 'สถานะ' },
+    { name: 'productTotal', groupBy: false, defaultFlex: 1, header: 'ยอดคงเหลือ' },
     { name: 'detail', header: 'รายละเอียด', maxWidth: 109, render: ({ data }) => <button style={{ display: 'contents' }}><AiFillFileText color='#00A3FF' size={30} /></button> },
 
 ]
