@@ -63,7 +63,7 @@ class ListEmployee extends React.PureComponent {
         this.profile = {};
         this.columns = [
             { name: 'id', header: 'Id', defaultVisible: false, defaultWidth: 50},
-            { name: 'no', header: '', type: 'number' ,groupBy: false, defaultWidth: 50 },
+            // { name: 'no', header: '', type: 'number' ,groupBy: false, defaultWidth: 50 },
             { name: 'firstName', groupBy: false,defaultFlex: 1, header: 'ชื่อ' },
             { name: 'lastName', groupBy: false,defaultFlex: 1, header: 'นามสกุล' },
             { name: 'email', groupBy: false, defaultFlex: 1, header: 'อีเมล' },
@@ -141,7 +141,7 @@ class ListEmployee extends React.PureComponent {
             let d = change.doc.data();
             d.id = change.doc.id
             if (change.type === "added") {
-                d.no = data.length+1;
+                //d.no = data.length+1;
                 data.push(d);
             }
             if (change.type === "modified") {
@@ -155,6 +155,9 @@ class ListEmployee extends React.PureComponent {
             }
         })
         //console.log(data);
+        data.sort(function(a,b){
+            return a.CreateDate.toDate() - b.CreateDate.toDate();
+          });
         this.setState({
             dataSource: [...data]
           });
