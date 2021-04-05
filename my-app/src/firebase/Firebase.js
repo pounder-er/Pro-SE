@@ -97,6 +97,16 @@ class Firebase {
         reject(error);
       })
   }
+  getAllHistoryInOut = (success, reject) => {
+    firebase.firestore().collection('HistoryInOut')
+      .get()
+      .then(querySnapshot => {
+        success(querySnapshot);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  }
   getStateChangedUser = (success, reject) => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
