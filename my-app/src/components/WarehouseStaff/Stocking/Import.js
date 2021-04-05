@@ -40,7 +40,7 @@ class Import extends React.Component{
                 <div className = 'ContentImport'>
                     <h1 style = {{width:'100%', marginTop:60}}>ตารางงานขนสินค้าเข้าคลัง</h1>
 
-                    <Table hover style={{width:'80%', alignSelf:'center', marginTop:30, marginBottom:20 ,background:"#f1f1f1"}}>
+                    <Table hover style={{alignSelf:'center', marginTop:30, marginBottom:20 ,background:"#f1f1f1"}}>
 
                             {/* -------------------------- This is header for table  --------------------------*/}
                             <thead>

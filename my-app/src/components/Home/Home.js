@@ -75,6 +75,8 @@ import ProductDetail from '../ProductDetail/ProductDetail'
 import StockCheck from '../WarehouseStaff/Stocking/Stock'
 import ImportProduct from '../WarehouseStaff/Stocking/Import'
 import ExportProduct from '../WarehouseStaff/Stocking/Export'
+import ImportProductTB from '../WarehouseStaff/Stocking/ImportTable'
+import ExportProductTB from '../WarehouseStaff/Stocking/ExportTable'
 
 class Home extends React.Component {
   constructor(props) {
@@ -231,6 +233,8 @@ class Home extends React.Component {
                 <Route exact path={this.props.match.path + "/stock_check"} component={StockCheck} />
                 <Route exact path={this.props.match.path + "/import_product"} component={ImportProduct} />
                 <Route exact path={this.props.match.path + "/export_product"} component={ExportProduct} />
+                <Route exact path={this.props.match.path + "/import_product_tb"} component={ImportProductTB} />
+                <Route exact path={this.props.match.path + "/export_product_tb"} component={ExportProductTB} />
 
               </Switch>
             </Container>

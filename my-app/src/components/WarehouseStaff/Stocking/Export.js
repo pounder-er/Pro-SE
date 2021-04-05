@@ -34,12 +34,12 @@ class Export extends React.Component{
 
     render(){
         return(
-            <div className = 'ContainerImport'>
+            <div className = 'ContainerExport'>
 
-                <div className = 'ContentImport'>
+                <div className = 'ContentExport'>
                     <h1 style = {{width:'100%', marginTop:60}}>ตารางงานขนสินค้าออกคลัง</h1>
 
-                    <Table hover style={{width:'80%', alignSelf:'center', marginTop:30, marginBottom:20 ,background:"#f1f1f1"}}>
+                    <Table hover style={{ alignSelf:'center', marginTop:30, marginBottom:20 ,background:"#f1f1f1"}}>
 
                             {/* -------------------------- This is header for table  --------------------------*/}
                             <thead>
@@ -58,7 +58,7 @@ class Export extends React.Component{
                                     <th scope="row">1</th>
                                     <td>100100</td>
                                     <td>A1</td>
-                                    <td  onClick = { () => this.props.history.push("ExportTable")}>
+                                    <td  onClick = { () => this.props.history.push(this.props.match.url + "/export_product_tb")}>
                                         <FiFileText style = {{color:"#00A3FF"}}/>
                                     </td>
                                 </tr>
