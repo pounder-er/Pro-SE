@@ -233,8 +233,8 @@ class Home extends React.Component {
                 <Route exact path={this.props.match.path + "/stock_check"} component={StockCheck} />
                 <Route exact path={this.props.match.path + "/import_product"} component={ImportProduct} />
                 <Route exact path={this.props.match.path + "/export_product"} component={ExportProduct} />
-                <Route exact path={this.props.match.path + "/import_product_tb"} component={ImportProductTB} />
-                <Route exact path={this.props.match.path + "/export_product_tb"} component={ExportProductTB} />
+                <Route exact path={this.props.match.path + "/import_product/import_product_tb"} component={ImportProductTB} />
+                <Route exact path={this.props.match.path + "/export_product/export_product_tb"} component={ExportProductTB} />
 
               </Switch>
             </Container>

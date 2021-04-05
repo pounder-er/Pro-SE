@@ -59,7 +59,7 @@ class Import extends React.Component{
                                     <th scope="row">1</th>
                                     <td>100100</td>
                                     <td>A1</td>
-                                    <td onClick = { () => this.props.history.push("ImportTable")}>
+                                    <td onClick = { () => this.props.history.push(this.props.match.url + "/import_product_tb")}>
                                         <FiFileText style = {{color:"#00A3FF"}}/>
                                     </td>
                                 </tr>

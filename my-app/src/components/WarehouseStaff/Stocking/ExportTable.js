@@ -25,20 +25,19 @@ class ExportTable extends React.Component{
             lot:"100100",
             channel:"A1"
         }
-        console.log("hi")
     }
 
     render(){
         return(
             <div className = "ContainerTable">
 
-                <body className = "ContentTable">
+                <body className = "ContentTable" style = {{border: '2px solid gray'}}>
 
-                    <h1 style={{width:'100%', alignSelf:'center', marginTop:60, marginBottom:20}}>รายการนำสินค้าออกคลัง</h1>
-                    <h3 style={{width:'100%', alignSelf:'center', marginTop:10}}>หมายเลขล็อต : {this.state.lot}</h3>
-                    <h3 style={{width:'100%', alignSelf:'center', marginTop:10, marginBottom:20}}>ช่องขนส่ง : {this.state.channel}</h3>
+                    <h1 style={{width:'95%', alignSelf:'center', marginTop:60, marginBottom:20}}>รายการนำสินค้าออกคลัง</h1>
+                    <h3 style={{width:'95%', alignSelf:'center', marginTop:10}}>หมายเลขล็อต : {this.state.lot} | ช่องขนส่ง : {this.state.channel}</h3>
+                    {/* <h3 style={{width:'95%', alignSelf:'center', marginTop:10, marginBottom:20}}>ช่องขนส่ง : {this.state.channel}</h3> */}
                     
-                    <Table hover style={{width:'100%', alignSelf:'center', marginTop:20, marginBottom:20 ,background:"#f1f1f1"}}>
+                    <Table hover style={{width:'95%', alignSelf:'center', marginTop:20, marginBottom:20 ,background:"#f1f1f1"}}>
 
                             {/* -------------------------- This is header for table  --------------------------*/}
                             <thead>
@@ -100,7 +99,7 @@ class ExportTable extends React.Component{
                     </body> */}
 
                     <body className = "ButtonTable">
-                        <Button style = {{height:40, width:80, background:"#FF0000"}}>ยกเลิก</Button>
+                        <Button style = {{height:40, width:80, background:"#FF0000"}}>กลับ</Button>
                         <Button style = {{height:40, width:80, background:"#00B046", marginRight: 20}}>บันทึก</Button>
                     </body>
 

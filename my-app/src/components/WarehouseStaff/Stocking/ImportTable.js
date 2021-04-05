@@ -31,24 +31,24 @@ class ImportTable extends React.Component{
         return(
             <div className = "ContainerTable">
 
-                <body className = "ContentTable">
+                <body className = "ContentTable" style = {{border: '2px solid gray'}}>
 
-                    <h1 style={{width:'100%', alignSelf:'center', marginTop:60, marginBottom:20}}>รายการนำสินค้าเข้าคลัง</h1>
-                    <h3 style={{width:'100%', alignSelf:'center', marginTop:10}}>หมายเลขล็อต : {this.state.lot}</h3>
-                    <h3 style={{width:'100%', alignSelf:'center', marginTop:10, marginBottom:20}}>ช่องขนส่ง : {this.state.channel}</h3>
+                    <h1 style={{width:'95%', alignSelf:'center', marginTop:60, marginBottom:20}}>รายการนำสินค้าเข้าคลัง</h1>
+                    <h3 style={{width:'95%', alignSelf:'center', marginTop:10}}>หมายเลขล็อต : {this.state.lot} | ช่องขนส่ง : {this.state.channel}</h3>
+                    {/* <h3 style={{width:'95%', alignSelf:'center', marginTop:10, marginBottom:20}}>ช่องขนส่ง : {this.state.channel}</h3> */}
                     
-                    <Table hover style={{width:'100%', alignSelf:'center', marginTop:20, marginBottom:20 ,background:"#f1f1f1"}}>
+                    <Table hover style={{width:'95%', alignSelf:'center', marginTop:20, marginBottom:20 ,background:"#f1f1f1"}}>
 
                             {/* -------------------------- This is header for table  --------------------------*/}
                             <thead>
-                                <tr>
+                                <tr style ={{textAlign:'center'}}>
                                     <th>ลำดับ</th>
-                                    <th>รหัสสินค้า</th>
+                                    <th style = {{width:100}}>รหัสสินค้า</th>
                                     <th>ชื่อบริษัท</th>
                                     <th>ชื่อสินค้า</th>
                                     <th>วันผลิต</th>
                                     <th>วันหมดอายุ</th>
-                                    <th>น้ำหนัก</th>
+                                    <th style = {{width:100}}>น้ำหนัก</th>
                                     <th>จำนวน</th>
                                 </tr>
                             </thead>
@@ -56,7 +56,7 @@ class ImportTable extends React.Component{
                             {/* -------------------------- This is datafrom for table  --------------------------*/}
                             {/* Example */}
                             <tbody>
-                                <tr>
+                                <tr style ={{textAlign:'center'}}>
                                     <th scope="row">1</th>
                                     <td>11323</td>
                                     <td>สส.จำกัด</td>
@@ -113,7 +113,7 @@ class ImportTable extends React.Component{
                     </body> */}
 
                     <body className = "ButtonTable">
-                        <Button style = {{height:40, width:80, background:"#FF0000"}}>ยกเลิก</Button>
+                        <Button style = {{height:40, width:80, background:"#FF0000"}}>กลับ</Button>
                         <Button style = {{height:40, width:80, background:"#00B046", marginRight: 20}}>บันทึก</Button>
                     </body>
 
