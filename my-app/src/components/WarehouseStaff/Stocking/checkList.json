@@ -1,0 +1,43 @@
+[
+    {
+        "no":1,
+        "productID":"1150",
+        "productName": "ข้าวมะลิหอม",
+        "balance" :0,
+        "damage" :"",
+        "report" :""
+    },
+    {
+        "no":2,
+        "productID":"1151",
+        "productName": "ข้าวมะลิหอมบูด",
+        "balance" :"",
+        "damage" :"",
+        "report" :""
+    },
+    {
+        "no":3,
+        "productID":"1152",
+        "productName": "ข้าวมะลิหอมบู๊ดๆ",
+        "balance" :"",
+        "damage" :"",
+        "report" :""
+    },
+    {
+        "no":4,
+        "productID":"1155",
+        "productName": "ข้าวมะลิหอมบู๊ดๆ",
+        "balance" :"",
+        "damage" :"",
+        "report" :""
+    },
+    {
+        "no":5,
+        "productID":"1134",
+        "productName": "ข้าวขาว",
+        "balance" :"",
+        "damage" :"",
+        "report" :""
+    }
+
+]
