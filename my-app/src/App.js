@@ -21,6 +21,9 @@ import EditBranch from './EditBranch'
 import DailyStock from './DailyStock'
 import DashBoard from './DashBoard';
 import PDFDisplayTest from './PDFDisplayTest'
+import AddPartnerCompany from './AddPartnerCompany';
+import AddBranch from './AddBranch'
+import PartnerCompanyList from './PartnerCompanyList'
 
 class App extends React.Component {
   constructor(props) {
@@ -56,7 +59,10 @@ class App extends React.Component {
         {/* <Route component={EditBranch} /> */}
         {/* <Route component={Login} /> */}
         {/* <Route component={Contact} /> */}
-        <Route component={PDFDisplayTest} />
+        {/* <Route component={PDFDisplayTest} /> */}
+        {/* <Route component={AddPartnerCompany} /> */}
+        {/* <Route component={AddBranch} /> */}
+        <Route component={PartnerCompanyList}/>
       </Switch>
 
      

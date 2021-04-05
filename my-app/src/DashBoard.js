@@ -158,7 +158,7 @@ class DashBoard extends React.Component {
                             </div>
                             <div className="cardContainer">
                                 <Card style={{borderColor:"transparent", 
-                                            width:"97%"}}>
+                                            width:"97%", marginLeft:'3%'}}>
                                     <p/>
                                     <h3 style={{marginLeft:'2.5%'}}>สินค้าขายดี</h3>
                                     <p/>

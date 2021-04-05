@@ -29,7 +29,7 @@
 }
 
 
-.DBBody{
+.APCBody{
     /* padding: 2vh; */
     /* flex-grow: 1; */
     display: flex;
@@ -39,7 +39,7 @@
     width: 100%;
     height: 100%;
     background-color: #f7f7f7;
-    font-family: Roboto, sans-serif;
+
 }
 
 
@@ -90,30 +90,9 @@
     
 }
 
-.lineChart{
-    display: flex;
-    background-color: white;
-    width: 95%;
-    margin: 2.5%;
-    border-radius: 5px;
-    flex-direction: column;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.15),
-                0 6px 10px 0 rgba(0, 0, 0, 0.15);
-}
-
-.pineChart{
-    display: flex;
-    background-color: white;
-    width: 97%;
-    border-radius: 5px;
-    flex-direction: column;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.15),
-                0 6px 10px 0 rgba(0, 0, 0, 0.15);
-    justify-self: flex-start;
-}
-
 .card {
     display: flex;
+
     background-color: white;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.15),
                 0 6px 10px 0 rgba(0, 0, 0, 0.15);
@@ -133,14 +112,6 @@
 .cardContainer {
     display: flex;
     width: 65%;
-    
-    /* background-color: #19424b; */
-    
-}
-
-.donutChartContainer {
-    display: flex;
-    width: 35%;
     
     /* background-color: #19424b; */
     

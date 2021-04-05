@@ -76,7 +76,7 @@ class SideBarComponent extends React.Component {
     toggleLogoutButton=()=>{
         if(!this.state.collapsed){
             if(this.state.spaceMargin == '30vh'){
-                this.setState({spaceMargin:'24.3vh'})
+                this.setState({spaceMargin:'24vh'})
             }
             else{
                 this.setState({spaceMargin:'30vh'})
@@ -133,13 +133,11 @@ class SideBarComponent extends React.Component {
                                          icon={<FaUserCircle color="gray" size={45}/>}
                                          onClick={this.toggleLogoutButton}>
 
-                                     <MenuItem icon={<BiLogOut size={19}/>}>
-                                         <span style={{display:'flex', color:'#FF0000', fontSize:15}}>ออกจากระบบ</span>
+                                     <MenuItem suffix={<BiLogOut size={23} color="#FE0000"/>}>
+                                         <span style={{display:'flex', fontSize:16}}>ออกจากระบบ</span>
                                      </MenuItem>
                                 </SubMenu>
                             </Menu>
-                           
-   
                         </ProSidebar>
                 </SideBar>
         );
