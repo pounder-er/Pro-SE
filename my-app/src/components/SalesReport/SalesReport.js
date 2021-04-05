@@ -21,7 +21,7 @@ import '@inovua/reactdatagrid-community/base.css'
 import '@inovua/reactdatagrid-community/theme/default-light.css'
 import 'react-pro-sidebar/dist/css/styles.css';
 
-import {i18n} from '../i18n';
+import { i18n } from '../i18n';
 
 import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
 import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons/md";
@@ -38,11 +38,11 @@ const filterValue = [
 const columns = [
     { name: 'id', header: 'Id', defaultVisible: false, type: 'number', maxWidth: 40 },
     { name: 'productID', groupBy: false, defaultFlex: 1, header: 'รหัสสินค้า' },
-    { name: 'productID', groupBy: false, defaultFlex: 1, header: 'ชนิด' },
-    { name: 'total', groupBy: false, defaultFlex: 1, header: 'รายการสินค้า' },
+    { name: 'productType', groupBy: false, defaultFlex: 1, header: 'ชนิด' },
+    { name: 'productName', groupBy: false, defaultFlex: 1, header: 'รายการสินค้า' },
     { name: 'total', groupBy: false, defaultFlex: 1, header: 'ปริมาณ' },
     { name: 'volume', groupBy: false, defaultFlex: 1, header: 'มูลค่าการขาย(บาท)' },
-
+    { name: 'address', groupBy: false, defaultFlex: 1, header: '123(บาท)' },
 ]
 const dataSource = [{ id: '1150', firstName: 'chainan', lastName: 'punsri', email: 'chain@hhh.com' }, { id: '1151', firstName: 'ahainun', lastName: 'vansri', email: 'cain@hhh.com' }]
 
@@ -51,21 +51,30 @@ class SalesReport extends React.Component {
         super(props);
         this.state = {
             searchText: '',
-            dataSource: dataSource
+            dataSource: [],
+
         }
     }
 
     setDataGridRef = (ref) => (this.dataGrid = ref)
 
     async componentDidMount() {
-        await fire_base.getAllUserProfile(this.getAllUserProfileSuccess, this.unSuccess);
+        await fire_base.getAllSaleReport(this.getAllSaleReportSuccess, this.unSuccess);
     }
-
-    getAllUserProfileSuccess = (querySnapshot) => {
+    getAllSaleReportSuccess = (querySnapshot) => {
         let data = []
         querySnapshot.forEach(doc => {
-            data.push(doc.data());
+            console.log(doc);
+            var tifOptions = Object.keys(doc.data());
+            var tifOptions1 = Object.values(doc.data());
+            const entries = Object.entries(doc.data())
+            for (const [k, v] of entries) {
+                if(k == 'productID'){
+                    console.log(v.get().d);
+                }
+              }
             console.log(doc.id, " => ", doc.data());
+           
         });
         this.setState({ dataSource: data });
     }
@@ -123,7 +132,7 @@ class SalesReport extends React.Component {
                         <Button color="info" style={{ width: 200 }}>fillter</Button>
                     </Col>
                 </Row >
-                <Row style={{ marginTop:'20px'}}>
+                <Row style={{ marginTop: '20px' }}>
                     <ReactDataGrid
                         onReady={this.setDataGridRef}
                         i18n={i18n}
