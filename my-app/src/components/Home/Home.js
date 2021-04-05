@@ -81,6 +81,18 @@ class Home extends React.Component {
     }
   }
 
+  componentDidMount(){
+    this.props.userProfile.test.get().then(doc=>{
+      if (doc.exists) {
+        console.log(doc.data());
+      } else {
+        console.log("No such document!");
+      }
+      console.log(doc.data());
+    })
+    
+  }
+
   toggleProfile = () => {
     this.setState({ isOpen: !this.state.isOpen });
   }
