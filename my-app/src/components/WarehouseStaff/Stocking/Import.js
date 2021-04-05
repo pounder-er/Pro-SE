@@ -19,7 +19,6 @@ import 'react-pro-sidebar/dist/css/styles.css';
 
 import { FiFileText } from 'react-icons/fi'
 
-
 class Import extends React.Component{
     constructor(props){
         super(props)
@@ -37,10 +36,10 @@ class Import extends React.Component{
         return(
             <div className = 'ContainerImport'>
 
-                <div className = 'ContentImport'>
-                    <h1 style = {{width:'100%', marginTop:60}}>ตารางงานขนสินค้าเข้าคลัง</h1>
+                <div className = 'ContentImport' style = {{border: '2px solid gray'}}>
+                    <h1 style = {{width:'95%', alignSelf: 'center', marginTop:60}}>ตารางงานขนสินค้าเข้าคลัง</h1>
 
-                    <Table hover style={{alignSelf:'center', marginTop:30, marginBottom:20 ,background:"#f1f1f1"}}>
+                    <Table hover style={{width:'95%', alignSelf:'center', marginTop:30, marginBottom:20 ,background:"#f1f1f1"}}>
 
                             {/* -------------------------- This is header for table  --------------------------*/}
                             <thead>

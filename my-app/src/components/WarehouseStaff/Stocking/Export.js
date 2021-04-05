@@ -36,10 +36,10 @@ class Export extends React.Component{
         return(
             <div className = 'ContainerExport'>
 
-                <div className = 'ContentExport'>
-                    <h1 style = {{width:'100%', marginTop:60}}>ตารางงานขนสินค้าออกคลัง</h1>
+                <div className = 'ContentExport' style = {{border: '2px solid gray'}}>
+                    <h1 style = {{width:'95%', alignSelf: 'center', marginTop:60}}>ตารางงานขนสินค้าออกคลัง</h1>
 
-                    <Table hover style={{ alignSelf:'center', marginTop:30, marginBottom:20 ,background:"#f1f1f1"}}>
+                    <Table hover style={{width:'95%', alignSelf:'center', marginTop:30, marginBottom:20 ,background:"#f1f1f1"}}>
 
                             {/* -------------------------- This is header for table  --------------------------*/}
                             <thead>

@@ -129,7 +129,7 @@ class Stock extends React.Component {
         return (
             <div className="ContainerStocking">
 
-                <body className="ContentStocking">
+                <body className="ContentStocking" style = {{border: '2px solid gray'}}>
 
                     <h1 style={{ width: '95%', alignSelf: 'center', marginTop: 60, marginBottom: 20 }}>รายการที่ต้องเช็ค</h1>
                     <h3 style={{ width: '95%', alignSelf: 'center', marginTop: 10, marginBottom: 20 }}>วันที่ : {this.state.date}  เวลา : {this.state.time} Test: {this.state.input}</h3>

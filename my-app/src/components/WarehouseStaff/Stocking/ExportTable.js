@@ -25,6 +25,7 @@ class ExportTable extends React.Component{
             lot:"100100",
             channel:"A1"
         }
+        console.log("hi")
     }
 
     render(){
