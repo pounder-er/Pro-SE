@@ -30,7 +30,7 @@ class Stock extends React.Component {
         super(props)
         this.state = {
             date: "1/1/2564",
-            time: this.props.location.data,
+            time: "",
             input: "",
             checkList: []
         }
@@ -131,16 +131,16 @@ class Stock extends React.Component {
 
                 <body className="ContentStocking">
 
-                    <h1 style={{ width: '80%', alignSelf: 'center', marginTop: 60, marginBottom: 20 }}>รายการที่ต้องเช็ค</h1>
-                    <h3 style={{ width: '80%', alignSelf: 'center', marginTop: 10, marginBottom: 20 }}>วันที่ : {this.state.date}  เวลา : {this.state.time} Test: {this.state.input}</h3>
+                    <h1 style={{ width: '95%', alignSelf: 'center', marginTop: 60, marginBottom: 20 }}>รายการที่ต้องเช็ค</h1>
+                    <h3 style={{ width: '95%', alignSelf: 'center', marginTop: 10, marginBottom: 20 }}>วันที่ : {this.state.date}  เวลา : {this.state.time} Test: {this.state.input}</h3>
 
                     <div className="TableStocking">
-                        <Table hover style={{ width: '80%', alignSelf: 'center', marginTop: 20, marginBottom: 20, background: "#f1f1f1" }}>
+                        <Table hover style={{ width: '95%', alignSelf: 'center', marginTop: 20, marginBottom: 20, background: "#f1f1f1" }}>
 
                             <thead>
                                 <tr style={{ textAlign: 'center' }}>
                                     <th>ลำดับ</th>
-                                    <th>รหัสสินค้า</th>
+                                    <th style = {{width:100}}>รหัสสินค้า</th>
                                     <th>รายการสินค้า</th>
                                     <th>ยอด</th>
                                     <th>ชำรุด</th>
@@ -161,8 +161,7 @@ class Stock extends React.Component {
 
 
                     <div className="ButtonStocking">
-                        <Button style={{ height: 40, width: 80, background: "#FF0000" }} onClick={() => this.props.history.goBack()}>ยกเลิก</Button>
-                        <Button style={{ height: 40, width: 80, background: "#00B046", marginRight: 20 }}>ตกลง</Button>
+                        <Button style={{ height: 40, width: 80, background: "#00B046"}}>บันทึก</Button>
                     </div>
 
                 </body>

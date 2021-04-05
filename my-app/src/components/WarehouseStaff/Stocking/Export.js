@@ -92,9 +92,9 @@ class Export extends React.Component{
                         </Pagination>
                     </body> */}
 
-                    <body className = 'ButtonImport'>
+                    {/* <body className = 'ButtonImport'>
                         <Button style = {{height:40, width:100, background:"#FF0000"}} onClick ={()=> this.props.history.goBack()}>ย้อนกลับ</Button>
-                    </body>
+                    </body> */}
 
                 </div>
             </div>
