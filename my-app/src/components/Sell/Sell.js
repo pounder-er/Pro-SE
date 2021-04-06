@@ -47,6 +47,7 @@ const filterValue = [
 ];
 
 const columns = [
+    { name: 'id', header: 'id', defaultVisible: false , },
     { name: 'InID', header: 'หมายเลขใบแจ้งหนี้', defaultVisible: true ,groupBy:false },
     { name: 'branchID', groupBy: false, defaultFlex: 1, header: 'สาขา' },
     { name: 'dateCreate', groupBy: false, defaultFlex: 1, header: 'วันที่สร้าง' },
@@ -83,6 +84,7 @@ class Sell extends React.Component {
                 d.branchID = z.data().branchName;
                 
             })
+            d.id = doc.id;
             d.dateCreate = d.dateCreate.toDate().getDate()+"/"+(d.dateCreate.toDate().getMonth()+1)+"/"+d.dateCreate.toDate().getFullYear()
             d.dateIn = d.dateIn.toDate().getDate()+"/"+(d.dateIn.toDate().getMonth()+1)+"/"+d.dateIn.toDate().getFullYear()
             d.datePay = d.datePay.toDate().getDate()+"/"+(d.datePay.toDate().getMonth()+1)+"/"+d.datePay.toDate().getFullYear()
