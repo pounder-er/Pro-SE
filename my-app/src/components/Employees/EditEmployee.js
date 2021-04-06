@@ -200,6 +200,7 @@ class EditEmployee extends React.Component {
         <Card>
           <CardBody>
             <Formik
+              key='1'
               validationSchema={formUserSchema}
               onSubmit={async (values, { resetForm }) => {
                 this.setState({ loading: true });
@@ -292,6 +293,7 @@ class EditEmployee extends React.Component {
         <Card style={{ marginTop: 15 }} >
           <CardBody>
             <Formik
+            key='2'
               validationSchema={formEmployeeSchema}
               onSubmit={async (values, { resetForm }) => {
                 this.setState({ loading: true });
