@@ -158,7 +158,7 @@ class Home extends React.Component {
             <Link to={this.props.match.url + "/productsReport"} onClick={() => this.setState({ headerTitle: 'ตรวจสอบสินค้า' })} />
             </MenuItem>
             <MenuItem suffix={<GiBuyCard style={{marginRight:2}}  size={18} />} >รายการซื้อสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการซื้อสินค้า' })} /></MenuItem>
-            <MenuItem>รายการขายสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการขายสินค้า' })} /></MenuItem>
+            <MenuItem>รายการขายสินค้า<Link to={this.props.match.url + "/sell"} onClick={() => this.setState({ headerTitle: 'รายการขายสินค้า' })} /></MenuItem>
           </SubMenu>,
           <SubMenu key='6' title="คลังสินค้า" icon={<FaWarehouse />}>
             <MenuItem >

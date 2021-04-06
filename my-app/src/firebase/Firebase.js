@@ -108,8 +108,8 @@ class Firebase {
       })
   }
 
-  getAllProductType = (success, reject) =>{
-    firebase.firestore().collection('ProductType')
+  getAllSell = (success, reject) => {
+    firebase.firestore().collection('Sell')
       .get()
       .then(querySnapshot => {
         success(querySnapshot);
@@ -118,19 +118,6 @@ class Firebase {
         reject(error);
       })
   }
-
-  getAllPartnerCompany = (success, reject) =>{
-    firebase.firestore().collection('partnerCompany')
-      .get()
-      .then(querySnapshot => {
-        success(querySnapshot);
-      })
-      .catch((error) => {
-        reject(error);
-      })
-    
-  }
-
   getStateChangedUser = (success, reject) => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
