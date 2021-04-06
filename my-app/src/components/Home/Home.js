@@ -67,7 +67,7 @@ import ListEmployee from '../Employees/ListEmployee';
 import AddEmployee from '../Employees/AddEmployee';
 
 
-import So from '../Sell/So';
+
 import AddProduct from '../Product/AddProduct';
 import HistoryInOut from '../HistoryInOut/HistoryInOut'
 import SalesReport from '../SalesReport/SalesReport'
@@ -76,6 +76,9 @@ import ProductDetail from '../ProductDetail/ProductDetail'
 import PartnerList from '../Company/PartnerList'
 
 import Sell from '../Sell/Sell';
+import So from '../Sell/So';
+import Buy from '../Buy/Buy';
+import Po from '../Buy/Po';
 
 class Home extends React.Component {
   constructor(props) {
@@ -160,7 +163,7 @@ class Home extends React.Component {
               รายการสินค้า
             <Link to={this.props.match.url + "/productsReport"} onClick={() => this.setState({ headerTitle: 'ตรวจสอบสินค้า' })} />
             </MenuItem>
-            <MenuItem suffix={<GiBuyCard style={{marginRight:2}}  size={18} />} >รายการซื้อสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการซื้อสินค้า' })} /></MenuItem>
+            <MenuItem suffix={<GiBuyCard style={{marginRight:2}}  size={18} />} >รายการซื้อสินค้า<Link to={this.props.match.url + "/buy"} onClick={() => this.setState({ headerTitle: 'รายการซื้อสินค้า' })} /></MenuItem>
             <MenuItem>รายการขายสินค้า<Link to={this.props.match.url + "/sell"} onClick={() => this.setState({ headerTitle: 'รายการขายสินค้า' })} /></MenuItem>
           </SubMenu>,
           <SubMenu key='6' title="คลังสินค้า" icon={<FaWarehouse />}>
@@ -246,6 +249,8 @@ console.log(formattedNumber);
                 <Route exact path={this.props.match.path + "/add_product"} component={AddProduct} />
                 <Route exact path={this.props.match.path + "/sell"} component={Sell} />
                 <Route exact path={this.props.match.path + "/sell/so"} component={So} />
+                <Route exact path={this.props.match.path + "/buy"} component={Buy} />
+                <Route exact path={this.props.match.path + "/buy/po"} component={Po} />
                 <Route exact path={this.props.match.path + "/PartnerList"} component={PartnerList} />
               </Switch>
             </Container>

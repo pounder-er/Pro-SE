@@ -2,24 +2,13 @@ import React from 'react';
 
 import fire_base from '../../firebase/Firebase';
 import {
-    Switch,
-    Route,
     Link,
-    NavLink,
-    withRouter
 } from 'react-router-dom';
 
 import {
     Button,
-    InputGroup,
-    InputGroupAddon,
-    InputGroupText,
-    Input,
-    Table,
-    Pagination,
-    Row, Col, Container,
-    PaginationItem,
-    PaginationLink
+    Row,
+    Container,
 } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -103,7 +92,7 @@ class Sell extends React.Component {
             <Container fluid={true} style={{ backgroundColor: 'while' }} >
 
                 <Link to={this.props.match.url + "/so"}>
-                    <Button color="info" style={{ width: 150 }}>เพิ่มรายการสั่งซื้อ</Button>
+                    <Button color="info" style={{ width: 150 }}>เพิ่มรายการขาย</Button>
                 </Link>
                 <Row style={{ marginTop: '20px' }}>
                     <ReactDataGrid

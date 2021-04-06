@@ -118,6 +118,16 @@ class Firebase {
         reject(error);
       })
   }
+  getAllBuy = (success, reject) => {
+    firebase.firestore().collection('Buy')
+      .get()
+      .then(querySnapshot => {
+        success(querySnapshot);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  }
   getStateChangedUser = (success, reject) => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
