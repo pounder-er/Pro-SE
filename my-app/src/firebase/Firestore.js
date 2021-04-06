@@ -54,6 +54,28 @@ class Firestore {
 
     }
 
+    listeningBranch = (success,reject) =>{
+        firebase.firestore().collection('Branch')
+        .onSnapshot(function (querySnapshot) {
+          console.log("hi from listen brh")  
+          success(querySnapshot);
+        }, function (error) {
+          reject(error);
+        });
+    }
+
+    updateBranch=(id, data, success, reject)=>{
+        firebase.firestore().collection('Branch')
+        .doc(id)
+        .update(data)
+        .then(function(){
+            success()
+        })
+        .catch(function(error){
+            reject(error)
+        });
+    }
+
     getAllUserProfile = (success,reject)=>{
       firebase.firestore().collection('UserProfiles')
       .get()
