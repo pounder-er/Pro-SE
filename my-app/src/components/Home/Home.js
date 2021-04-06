@@ -170,7 +170,7 @@ class Home extends React.Component {
           </SubMenu>,
 
           <SubMenu key='7' title="ผู้ติดต่อ" icon={<BsBriefcaseFill />}>
-            <MenuItem>บริษัท<Link to={this.props.match.url + "/PartnerList"} onClick={() => this.setState({ headerTitle: 'บริษัทคู่ค้า' })} /></MenuItem>
+            <MenuItem>บริษัทคู่ค้า<Link to={this.props.match.url + "/PartnerList"} onClick={() => this.setState({ headerTitle: 'บริษัทคู่ค้า' })} /></MenuItem>
             <MenuItem>สาขา<Link onClick={() => this.setState({ headerTitle: 'สาขา' })} /></MenuItem>
           </SubMenu>
         ]
