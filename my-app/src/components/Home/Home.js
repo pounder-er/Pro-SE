@@ -66,13 +66,10 @@ import { addSession, addUserProfile } from '../../redux/actions';
 import ListEmployee from '../Employees/ListEmployee';
 import AddEmployee from '../Employees/AddEmployee';
 
-import HistoryInOut from '../HistoryInOut/HistoryInOut';
-import SalesReport from '../SalesReport/SalesReport';
-
-import AddProduct from '../Product/AddProduct';
-
-import ProductsReport from '../ProductsReport/ProductReport';
-import ProductDetail from '../ProductDetail/ProductDetail';
+import HistoryInOut from '../HistoryInOut/HistoryInOut'
+import SalesReport from '../SalesReport/SalesReport'
+import ProductsReport from '../ProductsReport/ProductReport'
+import ProductDetail from '../ProductDetail/ProductDetail'
 
 class Home extends React.Component {
   constructor(props) {
@@ -237,7 +234,6 @@ class Home extends React.Component {
                 <Route exact path={this.props.match.path + "/productsReport/productDetail"} component={ProductDetail} />
                 <Route exact path={this.props.match.path + "/list_employee"} component={ListEmployee} />
                 <Route exact path={this.props.match.path + "/add_employee"} component={AddEmployee} />
-                <Route exact path={this.props.match.path + "/add_product"} component={AddProduct} />
               </Switch>
             </Container>
           </Body>
