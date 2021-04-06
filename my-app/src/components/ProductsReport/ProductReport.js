@@ -22,6 +22,7 @@ import '@inovua/reactdatagrid-community/theme/default-light.css'
 import 'react-pro-sidebar/dist/css/styles.css';
 import { AiFillFileText } from "react-icons/ai";
 
+import { i18n } from '../i18n';
 import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
 import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons/md";
 import { IoMdTrash } from "react-icons/io";
@@ -35,11 +36,11 @@ const filterValue = [
     { name: 'productID', operator: 'startsWith', type: 'string', value: '' },
     { name: 'productName', operator: 'startsWith', type: 'string', value: '' },
     { name: 'productType', operator: 'startsWith', type: 'string', value: '' },
-    { name: 'productWeight', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'productWeight', operator: "gte", type: 'number',  },
     { name: 'newOld', operator: 'startsWith', type: 'string', value: '' },
     { name: 'productPrice', operator: 'startsWith', type: 'string', value: '' },
     { name: 'productStatus', operator: 'startsWith', type: 'string', value: '' },
-    { name: 'productTotal', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'productTotal', operator: "gte", type: 'number',  },
 ];
 const columns = [
     { name: 'id', header: 'Id', defaultVisible: false, type: 'number', maxWidth: 40 },
@@ -50,32 +51,12 @@ const columns = [
     { name: 'newOld', groupBy: false, defaultFlex: 1, header: 'เก่า/ใหม่' },
     { name: 'productPrice', groupBy: false, defaultFlex: 1.2, header: 'ราคาต่อหน่วย' },
     { name: 'productStatus', groupBy: false, defaultFlex: 0.7, header: 'สถานะ' },
-    { name: 'productTotal', groupBy: false, defaultFlex: 1, header: 'ยอดคงเหลือ' },
+    { name: 'productTotal', groupBy: false, defaultFlex: 1, header: 'ยอดคงเหลือ'  },
     { name: 'detail', header: 'รายละเอียด', maxWidth: 109, render: ({ data }) => <button style={{ display: 'contents' }}><AiFillFileText color='#00A3FF' size={30} /></button> },
 
 ]
 
-const dataSource = [{ id: '1150', firstName: 'chainan', lastName: 'punsri', email: 'chain@hhh.com' }, { id: '1151', firstName: 'ahainun', lastName: 'vansri', email: 'cain@hhh.com' }]
-const i18n = Object.assign({}, ReactDataGrid.defaultProps.i18n, {
-    sortAsc: 'เรียงน้อยไปมาก',
-    sortDesc: 'เรียงมากไปน้อย',
-    clear: 'ลบ',
-    clearAll: 'ลบทั้งหมด',
-    contains: 'ประกอบด้วย',
-    startsWith: 'เริ่มด้วย',
-    endsWith: 'จบด้วย',
-    neq: 'ไม่เท่ากับ',
-    eq: 'เท่ากับ',
-    notEmpty: 'ไม่ว่าง',
-    empty: 'ว่าง',
-    notContains: 'ไม่ได้ประกอบด้วย',
-    disable: 'ปิดตัวกรอง',
-    enable: 'เปิดตัวกรอง',
-    pageText: 'หน้า ',
-    ofText: ' จาก ',
-    perPageText: 'แสดงรายการทีละ',
-    showingText: 'กำลังแสดงรายการ '
-})
+
 
 
 class ProductReport extends React.Component {
@@ -90,16 +71,45 @@ class ProductReport extends React.Component {
     setDataGridRef = (ref) => (this.dataGrid = ref)
 
     async componentDidMount() {
-        await fire_base.getAllHistoryInOut(this.getAllProductSuccess, this.unSuccess);
+        await fire_base.getAllProduct(this.getAllProductSuccess, this.unSuccess);
     }
 
-    getAllProductSuccess = (querySnapshot) => {
+    getAllProductSuccess = async (querySnapshot) => {
         let data = []
-        querySnapshot.forEach(doc => {
-            data.push(doc.data());
-            console.log(doc.id, " => ", doc.data());
+        await querySnapshot.forEach(async(doc) => {
+            if (doc.id != 'state') {
+
+                let d = doc.data();
+                d.InID = doc.id;
+                
+                let type = d.productID;
+                let b = await d.vender.get()
+                            .then(doc => {
+                                d.vender = doc.id;
+                            })
+                let a = await d.productType.get()
+                    .then(doc => {
+                        d.productType = doc.data().name
+                        d.productID = doc.id;
+                        if (d.newOld == 'ใหม่') {
+                            d.productID += '1';
+                        }
+                        else {
+                            d.productID += '0';
+                        }
+                        d.productID += d.vender;
+                        if (type < 10) {
+                            d.productID += '0'
+                            d.productID += type ;
+                        } else {
+                            d.productID += type ;
+                        }
+                        
+                        this.setState({ dataSource: this.state.dataSource.concat(d) });
+                    })
+            }
         });
-        this.setState({ dataSource: data });
+
     }
 
     unSuccess(error) {
@@ -133,7 +143,7 @@ class ProductReport extends React.Component {
                         defaultFilterValue={filterValue}
                         showColumnMenuTool={true}
                         emptyText="ไม่มีรายการ"
-                        style={{minHeight: 550}}
+                        style={{ minHeight: 550 }}
                     />
                 </Row>
 

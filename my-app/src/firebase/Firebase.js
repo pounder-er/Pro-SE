@@ -97,16 +97,7 @@ class Firebase {
         reject(error);
       })
   }
-  getAllHistoryInOut = (success, reject) => {
-    firebase.firestore().collection('HistoryInOut')
-      .get()
-      .then(querySnapshot => {
-        success(querySnapshot);
-      })
-      .catch((error) => {
-        reject(error);
-      })
-  }
+
 
   getAllSell = (success, reject) => {
     firebase.firestore().collection('Sell')
