@@ -37,22 +37,22 @@ import { IoMdTrash } from "react-icons/io";
 import { getTypeParameterOwner } from 'typescript';
 
 const filterValue = [
-    { name: 'InID', operator: 'startsWith', type: 'string',  },
-    { name: 'branchID', operator: 'startsWith', type: 'string',  },
-    { name: 'dateCreate', operator: 'startsWith', type: 'string',  },
-    { name: 'dateIn', operator: 'startsWith', type: 'string',  },
-    { name: 'Res', operator: 'startsWith', type: 'string',  },
-    { name: 'status', operator: 'startsWith', type: 'string',  },
+    //{ name: 'InID', operator: 'startsWith', type: 'string', },
+    { name: 'branchID', operator: 'startsWith', type: 'string', },
+    // { name: 'dateCreate', operator: 'startsWith', type: 'string',  },
+    // { name: 'dateIn', operator: 'startsWith', type: 'string',  },
+    // { name: 'Res', operator: 'startsWith', type: 'string',  },
+    // { name: 'status', operator: 'startsWith', type: 'string',  },
     
 ];
 
 const columns = [
-    { name: 'InID', header: 'หมายเลขใบแจ้งหนี้', defaultVisible: true ,groupBy:false },
-    { name: 'branchID', groupBy: false, defaultFlex: 1, header: 'สาขา' },
-    { name: 'dateCreate', groupBy: false, defaultFlex: 1, header: 'วันที่สร้าง' },
-    { name: 'dateIn', groupBy: false, defaultFlex: 1, header: 'วันที่สำเร็จการขาย' },
-    { name: 'Res', groupBy: false, defaultFlex: 1, header: 'ผู้รับผิดชอบ' },
-    { name: 'status', groupBy: false, defaultFlex: 1, header: 'สถานะ' },
+    //{ name: 'InID',defaultFlex: 1, header: 'หมายเลขใบแจ้งหนี้' ,groupBy:false },
+     { name: 'branchID', groupBy: false, defaultFlex: 1, header: 'สาขา' },
+    //  { name: 'dateCreate', groupBy: false, defaultFlex: 1, header: 'วันที่สร้าง' },
+    //  { name: 'dateIn', groupBy: false, defaultFlex: 1, header: 'วันที่สำเร็จการขาย' },
+    //  { name: 'Res', groupBy: false, defaultFlex: 1, header: 'ผู้รับผิดชอบ' },
+    // { name: 'status', groupBy: false, defaultFlex: 1, header: 'สถานะ' },
 
 ]
 
@@ -70,24 +70,44 @@ class Sell extends React.Component {
         await fire_base.getAllSell(this.getAllSellSuccess, this.unSuccess);
     }
 
-    getAllSellSuccess = async(querySnapshot) => {
+    getDataWithPath=async(ref)=>{
+        let d;
+        await ref.get().then((doc)=>{
+            console.log(doc.data())
+            if (doc.exists) {
+                d = doc.data().branchName
+
+            } else {
+                console.log("No such document!");
+            }       
+        }
+        );
+        return await d;
+    }   
+
+    getAllSellSuccess = (querySnapshot) => {
         let data = []
-        await querySnapshot.forEach((doc) => {
+        querySnapshot.forEach(async(doc) => {
            
            let d = doc.data();
             let log = doc.data().log;
             delete d.log;
-            // delete d.branchID;
-           
-            d.branchID.get().then((z)=>{
-                d.branchID = z.data().branchName;
-                
-            })
+            
             d.dateCreate = d.dateCreate.toDate().getDate()+"/"+(d.dateCreate.toDate().getMonth()+1)+"/"+d.dateCreate.toDate().getFullYear()
             d.dateIn = d.dateIn.toDate().getDate()+"/"+(d.dateIn.toDate().getMonth()+1)+"/"+d.dateIn.toDate().getFullYear()
             d.datePay = d.datePay.toDate().getDate()+"/"+(d.datePay.toDate().getMonth()+1)+"/"+d.datePay.toDate().getFullYear()
+           
+
+            d.branchID = await this.getDataWithPath(d.branchID);
+            // d.dateCreate = d.dateCreate.toDate().getDate()+"/"+(d.dateCreate.toDate().getMonth()+1)+"/"+d.dateCreate.toDate().getFullYear()
+            //     d.dateIn = d.dateIn.toDate().getDate()+"/"+(d.dateIn.toDate().getMonth()+1)+"/"+d.dateIn.toDate().getFullYear()
+            //     d.datePay = d.datePay.toDate().getDate()+"/"+(d.datePay.toDate().getMonth()+1)+"/"+d.datePay.toDate().getFullYear()
                 
-            data.push(d);
+            
+            
+            await console.log(d.branchID);
+            await data.push(d);
+           
             // await delete d.branchID;
             
             
@@ -100,11 +120,10 @@ class Sell extends React.Component {
             //     tempData.productID = x.productID
             //     data.push(tempData);
             // }
-            console.log(doc.id, " => ", data);
+           // console.log(doc.id, " => ", data);
         });
-        await this.setState({dataSource: data });
-        await console.log(" => ", data);
-        await this.setState({dataSource: data });
+        this.setState({dataSource: data });
+        console.log(" => ", data);
     }
 
     unSuccess(error) {
