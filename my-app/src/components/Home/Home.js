@@ -66,6 +66,9 @@ import { addSession, addUserProfile } from '../../redux/actions';
 import ListEmployee from '../Employees/ListEmployee';
 import AddEmployee from '../Employees/AddEmployee';
 
+import Sell from '../Sell/Sell';
+import So from '../Sell/So';
+
 import HistoryInOut from '../HistoryInOut/HistoryInOut'
 import SalesReport from '../SalesReport/SalesReport'
 import ProductsReport from '../ProductsReport/ProductReport'
@@ -81,17 +84,17 @@ class Home extends React.Component {
     }
   }
 
-  componentDidMount(){
-    this.props.userProfile.test.get().then(doc=>{
-      if (doc.exists) {
-        console.log(doc.data());
-      } else {
-        console.log("No such document!");
-      }
-      console.log(doc.data());
-    })
+  // componentDidMount(){
+  //   this.props.userProfile.test.get().then(doc=>{
+  //     if (doc.exists) {
+  //       console.log(doc.data());
+  //     } else {
+  //       console.log("No such document!");
+  //     }
+  //     console.log(doc.data());
+  //   })
     
-  }
+  // }
 
   toggleProfile = () => {
     this.setState({ isOpen: !this.state.isOpen });
@@ -154,12 +157,12 @@ class Home extends React.Component {
             <Link to={this.props.match.url + "/productsReport"} onClick={() => this.setState({ headerTitle: 'ตรวจสอบสินค้า' })} />
             </MenuItem>
             <MenuItem suffix={<GiBuyCard style={{marginRight:2}}  size={18} />} >รายการซื้อสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการซื้อสินค้า' })} /></MenuItem>
-            <MenuItem>รายการขายสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการขายสินค้า' })} /></MenuItem>
+            <MenuItem>รายการขายสินค้า<Link to={this.props.match.url + "/sell"} onClick={() => this.setState({ headerTitle: 'รายการขายสินค้า' })} /></MenuItem>
           </SubMenu>,
           <SubMenu title="คลังสินค้า" icon={<FaWarehouse />}>
             <MenuItem >
               ประวัติสินค้าเข้า/ออกคลัง
-            <Link to={this.props.match.url + "/historyInOut"} onClick={() => this.setState({ headerTitle: 'ระวัติสินค้าเข้า/ออกคลัง' })} />
+            <Link to={this.props.match.url + "/historyInOut"} onClick={() => this.setState({ headerTitle: 'ประวัติสินค้าเข้า/ออกคลัง' })} />
             </MenuItem>
             <MenuItem >ผลการเช็คสต๊อกสินค้า<Link onClick={() => this.setState({ headerTitle: 'ผลการเช็คสต๊อกสินค้า' })} /></MenuItem>
           </SubMenu>,
@@ -234,6 +237,8 @@ class Home extends React.Component {
                 <Route exact path={this.props.match.path + "/productsReport/productDetail"} component={ProductDetail} />
                 <Route exact path={this.props.match.path + "/list_employee"} component={ListEmployee} />
                 <Route exact path={this.props.match.path + "/add_employee"} component={AddEmployee} />
+                <Route exact path={this.props.match.path + "/sell"} component={Sell} />
+                <Route exact path={this.props.match.path + "/sell/so"} component={So} />
               </Switch>
             </Container>
           </Body>
