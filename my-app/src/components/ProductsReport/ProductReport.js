@@ -33,18 +33,18 @@ import { Link } from 'react-router-dom';
 
 const filterValue = [
     { name: 'ID', operator: 'startsWith', type: 'string', value: '' },
-    { name: 'productID', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'idp', operator: 'startsWith', type: 'string', value: '' },
     { name: 'productName', operator: 'startsWith', type: 'string', value: '' },
     { name: 'productType', operator: 'startsWith', type: 'string', value: '' },
     { name: 'productWeight', operator: "gte", type: 'number',  },
     { name: 'newOld', operator: 'startsWith', type: 'string', value: '' },
-    { name: 'productPrice', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'productPrice', operator: 'gte', type: 'number' },
     { name: 'productStatus', operator: 'startsWith', type: 'string', value: '' },
     { name: 'productTotal', operator: "gte", type: 'number',  },
 ];
 const columns = [
     { name: 'id', header: 'Id', defaultVisible: false, type: 'number', maxWidth: 40 },
-    { name: 'productID', groupBy: false, defaultFlex: 1, header: 'รหัสสินค้า' },
+    { name: 'idp', groupBy: false, defaultFlex: 1, header: 'รหัสสินค้า' },
     { name: 'productName', groupBy: false, defaultFlex: 2, header: 'รายการสินค้า' },
     { name: 'productType', groupBy: false, defaultFlex: 1, header: 'ชนิด' },
     { name: 'productWeight', groupBy: false, defaultFlex: 0.7, header: 'น้ำหนัก' },
@@ -80,30 +80,12 @@ class ProductReport extends React.Component {
             if (doc.id != 'state') {
 
                 let d = doc.data();
-                d.InID = doc.id;
+
+                d.idp = doc.id;
                 
-                let type = d.productID;
-                let b = await d.vender.get()
-                            .then(doc => {
-                                d.vender = doc.id;
-                            })
                 let a = await d.productType.get()
                     .then(doc => {
                         d.productType = doc.data().name
-                        d.productID = doc.id;
-                        if (d.newOld == 'ใหม่') {
-                            d.productID += '1';
-                        }
-                        else {
-                            d.productID += '0';
-                        }
-                        d.productID += d.vender;
-                        if (type < 10) {
-                            d.productID += '0'
-                            d.productID += type ;
-                        } else {
-                            d.productID += type ;
-                        }
                         
                         this.setState({ dataSource: this.state.dataSource.concat(d) });
                     })

@@ -38,9 +38,9 @@ const filterValue = [
 const columns = [
     { name: 'id', header: 'Id', defaultVisible: false, type: 'number', maxWidth: 40 },
     { name: 'productID', groupBy: false, defaultFlex: 1, header: 'รหัสสินค้า' },
-    { name: 'productType', groupBy: false, defaultFlex: 1, header: 'ชนิด' },
+    { name: 'productT', groupBy: false, defaultFlex: 1, header: 'ชนิด' },
     { name: 'productName', groupBy: false, defaultFlex: 1, header: 'รายการสินค้า' },
-    { name: 'calculate', groupBy: false, defaultFlex: 1, header: 'EOQ(ถุง)' },
+    { name: 'sum', groupBy: false, defaultFlex: 1, header: 'EOQ(ถุง)' },
     { name: 'volume', groupBy: false, defaultFlex: 1, header: 'แก้ไขสูตร' },
     
 ]
@@ -52,6 +52,7 @@ class Calculate extends React.Component {
         this.state = {
             searchText: '',
             dataSource: [],
+            dataSourceProduct: [],
 
         }
     }
@@ -63,18 +64,29 @@ class Calculate extends React.Component {
     }
     getAllCalculateSuccess = (querySnapshot) => {
         let data = []
-        querySnapshot.forEach(doc => {
-            let data = []
-            querySnapshot.forEach(doc => {
-                data.push(doc.data());
-                console.log(doc.id, " => ", doc.data());
-            });
-            this.setState({ dataSource: data });
-           
-        });
-        this.setState({ dataSource: data });
-    }
+        querySnapshot.forEach(async(doc) => {
+            if (doc.id != 'state') {
 
+                let d = doc.data();
+                d.idp = doc.id;
+                d.sum =  Math.round(Math.sqrt((2*d.O*d.D)/(d.U*d.C)));
+                await d.productID.get()
+                    .then(async(doc) => {
+                        d.productID = doc.id
+                        d.productName = doc.data().productName
+                        await doc.data().productType.get().then(doc =>{
+                            d.productT = doc.data().name
+                            console.log( doc.data().name)
+                        })
+                        
+                        this.setState({ dataSource: this.state.dataSource.concat(d) });
+                    })
+                    console.log( "=>>",d)
+            }
+            
+        });
+    }
+  
     unSuccess(error) {
         console.log(error);
     }
@@ -82,14 +94,7 @@ class Calculate extends React.Component {
     render() {
         return (
             <Container fluid={true} style={{ backgroundColor: 'wheat' }} >
-                <Row >
-                    <h1 style={{
-                        marginTop: 20,
-                        marginBottom: 20,
-                        width: '100%',
-                        alignSelf: 'center'
-                    }}>คำนวณจุดสั่งซื้อ</h1>
-                </Row>
+              
                 <Row style={{ marginTop: '20px' }}>
                     <ReactDataGrid
                         onReady={this.setDataGridRef}
