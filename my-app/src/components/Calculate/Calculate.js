@@ -59,9 +59,9 @@ class Calculate extends React.Component {
     setDataGridRef = (ref) => (this.dataGrid = ref)
 
     async componentDidMount() {
-        await fire_base.getAllHistoryInOut(this.getAllSaleReportSuccess, this.unSuccess);
+        await fire_base.getAllCalculate(this.getAllCalculateSuccess, this.unSuccess);
     }
-    getAllSaleReportSuccess = (querySnapshot) => {
+    getAllCalculateSuccess = (querySnapshot) => {
         let data = []
         querySnapshot.forEach(doc => {
             let data = []

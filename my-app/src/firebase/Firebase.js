@@ -98,7 +98,16 @@ class Firebase {
       })
   }
 
-
+  getAllCalculate = (success, reject) => {
+    firebase.firestore().collection('Calculate')
+      .get()
+      .then(querySnapshot => {
+        success(querySnapshot);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  }
   getAllSell = (success, reject) => {
     firebase.firestore().collection('Sell')
       .get()
