@@ -83,14 +83,14 @@ class ProductReport extends React.Component {
         super(props);
         this.state = {
             searchText: '',
-            dataSource: dataSource
+            dataSource: []
         }
     }
 
     setDataGridRef = (ref) => (this.dataGrid = ref)
 
     async componentDidMount() {
-        await fire_base.getAllProduct(this.getAllProductSuccess, this.unSuccess);
+        await fire_base.getAllHistoryInOut(this.getAllProductSuccess, this.unSuccess);
     }
 
     getAllProductSuccess = (querySnapshot) => {

@@ -70,6 +70,7 @@ import HistoryInOut from '../HistoryInOut/HistoryInOut'
 import SalesReport from '../SalesReport/SalesReport'
 import ProductsReport from '../ProductsReport/ProductReport'
 import ProductDetail from '../ProductDetail/ProductDetail'
+import Calculate from '../Calculate/Calculate'
 
 class Home extends React.Component {
   constructor(props) {
@@ -137,7 +138,10 @@ class Home extends React.Component {
         </MenuItem>,
 
         <SubMenu title="ตั้งค่า" icon={<IoMdSettings size={18} />}>
-          <MenuItem suffix={<IoMdCalculator size={18} />} >คำนวนการสั่งซื้อสินค้า</MenuItem>
+          <MenuItem suffix={<IoMdCalculator size={18} />} >
+            คำนวนการสั่งซื้อสินค้า
+            <Link to={this.props.match.url + "/calculate"} onClick={() => this.setState({ headerTitle: 'คำนวนจุดสั่งซื้อ' })} />
+            </MenuItem>
           <MenuItem suffix={<IoAlarmSharp size={18} />} >ตั้งเวลาเช็คสต็อก</MenuItem>
         </SubMenu>
       ])
@@ -235,6 +239,7 @@ class Home extends React.Component {
                 <Route exact path={this.props.match.path + "/productsReport/productDetail"} component={ProductDetail} />
                 <Route exact path={this.props.match.path + "/list_employee"} component={ListEmployee} />
                 <Route exact path={this.props.match.path + "/add_employee"} component={AddEmployee} />
+                <Route exact path={this.props.match.path + "/calculate"} component={Calculate} />
               </Switch>
             </Container>
             <Button onClick={()=>{fire_base.addTest();}} >kuy</Button>

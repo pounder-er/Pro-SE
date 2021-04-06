@@ -33,20 +33,20 @@ const filterValue = [
     { name: 'date', operator: 'startsWith', type: 'string', value: '' },
     { name: 'productID', operator: 'startsWith', type: 'string', value: '' },
     { name: 'total', operator: 'startsWith', type: 'string', value: '' },
-    { name: 'volume', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'calculate', operator: 'startsWith', type: 'string', value: '' },
 ];
 const columns = [
     { name: 'id', header: 'Id', defaultVisible: false, type: 'number', maxWidth: 40 },
     { name: 'productID', groupBy: false, defaultFlex: 1, header: 'รหัสสินค้า' },
     { name: 'productType', groupBy: false, defaultFlex: 1, header: 'ชนิด' },
     { name: 'productName', groupBy: false, defaultFlex: 1, header: 'รายการสินค้า' },
-    { name: 'total', groupBy: false, defaultFlex: 1, header: 'ปริมาณ' },
-    { name: 'volume', groupBy: false, defaultFlex: 1, header: 'มูลค่าการขาย(บาท)' },
-    { name: 'address', groupBy: false, defaultFlex: 1, header: '123(บาท)' },
+    { name: 'calculate', groupBy: false, defaultFlex: 1, header: 'EOQ(ถุง)' },
+    { name: 'volume', groupBy: false, defaultFlex: 1, header: 'แก้ไขสูตร' },
+    
 ]
 const dataSource = [{ id: '1150', firstName: 'chainan', lastName: 'punsri', email: 'chain@hhh.com' }, { id: '1151', firstName: 'ahainun', lastName: 'vansri', email: 'cain@hhh.com' }]
 
-class SalesReport extends React.Component {
+class Calculate extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -88,46 +88,8 @@ class SalesReport extends React.Component {
                         marginBottom: 20,
                         width: '100%',
                         alignSelf: 'center'
-                    }}>ยอดขายสินค้า</h1>
+                    }}>คำนวณจุดสั่งซื้อ</h1>
                 </Row>
-                <Row >
-                    <Col sm="1">
-                        Date
-                                </Col>
-                    <Col >
-                        <Input
-                            type="date"
-                            name="date"
-                            id="exampleDate"
-                            placeholder="date placeholder"
-                        />
-                    </Col>
-
-
-                    <Col sm="1">
-                        To Date
-                                </Col>
-                    <Col >
-                        <Input
-                            type="date"
-                            name="date"
-                            id="exampleDate"
-                            placeholder="date placeholder"
-                        />
-                    </Col>
-                    <Col>
-                        <InputGroup >
-                            <Input placeholder="รหัสสินค้า" />
-                            <InputGroupAddon addonType="append">
-                                <InputGroupText><MdSearch color="#1F1F1F" size={22} /></InputGroupText>
-                            </InputGroupAddon>
-                        </InputGroup>
-
-                    </Col>
-                    <Col md="auto">
-                        <Button color="info" style={{ width: 200 }}>fillter</Button>
-                    </Col>
-                </Row >
                 <Row style={{ marginTop: '20px' }}>
                     <ReactDataGrid
                         onReady={this.setDataGridRef}
@@ -151,4 +113,4 @@ class SalesReport extends React.Component {
 }
 
 
-export default SalesReport;
+export default Calculate;
