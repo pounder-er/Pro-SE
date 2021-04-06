@@ -37,14 +37,13 @@ const filterValue = [
 ];
 const columns = [
     { name: 'id', header: 'Id', defaultVisible: false, type: 'number', maxWidth: 40 },
-    { name: 'productID', groupBy: false, defaultFlex: 1, header: 'รหัสสินค้า' },
+    { name: 'idp', groupBy: false, defaultFlex: 1, header: 'รหัสสินค้า' },
     { name: 'productType', groupBy: false, defaultFlex: 1, header: 'ชนิด' },
     { name: 'productName', groupBy: false, defaultFlex: 1, header: 'รายการสินค้า' },
     { name: 'total', groupBy: false, defaultFlex: 1, header: 'ปริมาณ' },
     { name: 'volume', groupBy: false, defaultFlex: 1, header: 'มูลค่าการขาย(บาท)' },
     { name: 'address', groupBy: false, defaultFlex: 1, header: '123(บาท)' },
 ]
-const dataSource = [{ id: '1150', firstName: 'chainan', lastName: 'punsri', email: 'chain@hhh.com' }, { id: '1151', firstName: 'ahainun', lastName: 'vansri', email: 'cain@hhh.com' }]
 
 class SalesReport extends React.Component {
     constructor(props) {
@@ -59,21 +58,53 @@ class SalesReport extends React.Component {
     setDataGridRef = (ref) => (this.dataGrid = ref)
 
     async componentDidMount() {
-        await fire_base.getAllHistoryInOut(this.getAllSaleReportSuccess, this.unSuccess);
+        await fire_base.getAllSaleReport(this.getAllSaleReportSuccess, this.unSuccess);
+        await fire_base.getAllProduct(this.getAllProductSuccess, this.unSuccess);
     }
-    getAllSaleReportSuccess = (querySnapshot) => {
-        let data = []
-        querySnapshot.forEach(doc => {
-            let data = []
-            querySnapshot.forEach(doc => {
-                data.push(doc.data());
-                console.log(doc.id, " => ", doc.data());
-            });
-            this.setState({ dataSource: data });
+    // getAllSaleReportSuccess = (querySnapshot) => {
+    //     let data = []
+    //     querySnapshot.forEach(doc => {
+    //         if (doc.id != 'state') {
+
+    //             let d = doc.data();
+    //             // d.productName = doc.data().log
+                
+    //             d.productID.get()
+    //                 .then(async(doc) => {
+    //                     d.productID = doc.id;
+    //                     d.productN = doc.data().productName;    
+    //                     await doc.data().productType.get().then(doc =>{
+    //                         d.productT = doc.data().name
+                           
+    //                     })
+    //                     console.log(d);
+    //                     await this.setState({ dataSource: this.state.dataSource.concat(d) });
+    //                 })
+                
+    //         }
            
+    //     });
+    // }
+    getAllProductSuccess = async (querySnapshot) => {
+        let data = []
+        await querySnapshot.forEach(async(doc) => {
+            if (doc.id != 'state') {
+
+                let d = doc.data();
+
+                d.idp = doc.id;
+                
+                await d.productType.get()
+                    .then(doc => {
+                        d.productType = doc.data().name
+                        console.log(d);
+                        this.setState({ dataSource: this.state.dataSource.concat(d) });
+                    })
+            }
         });
-        this.setState({ dataSource: data });
+
     }
+
 
     unSuccess(error) {
         console.log(error);
@@ -142,6 +173,7 @@ class SalesReport extends React.Component {
                         defaultFilterValue={filterValue}
                         showColumnMenuTool={true}
                         emptyText="ไม่มีรายการ"
+                        style={{ minHeight: 550 }}
                     />
                 </Row>
 
