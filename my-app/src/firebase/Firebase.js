@@ -107,6 +107,30 @@ class Firebase {
         reject(error);
       })
   }
+
+  getAllProductType = (success, reject) =>{
+    firebase.firestore().collection('ProductType')
+      .get()
+      .then(querySnapshot => {
+        success(querySnapshot);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  }
+
+  getAllPartnerCompany = (success, reject) =>{
+    firebase.firestore().collection('partnerCompany')
+      .get()
+      .then(querySnapshot => {
+        success(querySnapshot);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+    
+  }
+
   getStateChangedUser = (success, reject) => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
