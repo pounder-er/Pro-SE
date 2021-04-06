@@ -73,6 +73,7 @@ import HistoryInOut from '../HistoryInOut/HistoryInOut'
 import SalesReport from '../SalesReport/SalesReport'
 import ProductsReport from '../ProductsReport/ProductReport'
 import ProductDetail from '../ProductDetail/ProductDetail'
+import PartnerList from '../Company/PartnerList'
 
 class Home extends React.Component {
   constructor(props) {
@@ -169,7 +170,7 @@ class Home extends React.Component {
           </SubMenu>,
 
           <SubMenu key='7' title="ผู้ติดต่อ" icon={<BsBriefcaseFill />}>
-            <MenuItem>บริษัท<Link onClick={() => this.setState({ headerTitle: 'บริษัท' })} /></MenuItem>
+            <MenuItem>บริษัท<Link to={this.props.match.url + "/PartnerList"} onClick={() => this.setState({ headerTitle: 'บริษัทคู่ค้า' })} /></MenuItem>
             <MenuItem>สาขา<Link onClick={() => this.setState({ headerTitle: 'สาขา' })} /></MenuItem>
           </SubMenu>
         ]
@@ -232,7 +233,7 @@ console.log(formattedNumber);
 
           </Header>
           <Body>
-            <Container style={{ backgroundColor: 'white', borderRadius: 5, padding: 10 }}>
+            <Container fluid style={{ backgroundColor: 'white', borderRadius: 5, padding: 10 }}>
               <Switch>
                 <Route exact path={this.props.match.path + "/historyInOut"} component={HistoryInOut} />
                 <Route exact path={this.props.match.path + "/salesReport"} component={SalesReport} />
@@ -243,6 +244,7 @@ console.log(formattedNumber);
                 <Route exact path={this.props.match.path + "/add_product"} component={AddProduct} />
                 <Route exact path={this.props.match.path + "/sell"} component={Sell} />
                 <Route exact path={this.props.match.path + "/sell/so"} component={So} />
+                <Route exact path={this.props.match.path + "/PartnerList"} component={PartnerList} />
               </Switch>
             </Container>
             {/* <Button onClick={()=>{fire_base.addTest();}} >kuy</Button> */}
