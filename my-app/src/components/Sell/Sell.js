@@ -31,10 +31,7 @@ import '@inovua/reactdatagrid-community/base.css'
 import '@inovua/reactdatagrid-community/theme/default-light.css'
 
 import {i18n} from '../i18n';
-import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
-import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons/md";
-import { IoMdTrash } from "react-icons/io";
-import { getTypeParameterOwner } from 'typescript';
+
 
 const filterValue = [
     { name: 'InID', operator: 'startsWith', type: 'string',  },
@@ -72,40 +69,31 @@ class Sell extends React.Component {
     }
 
     getAllSellSuccess = async(querySnapshot) => {
+        
         let data = []
-        await querySnapshot.forEach((doc) => {
-           
-           let d = doc.data();
+        await querySnapshot.forEach((doc) => { 
+            if(doc.id != 'state')
+            {
+            let d = doc.data();
             let log = doc.data().log;
-            delete d.log;
-            // delete d.branchID;
-           
-            d.branchID.get().then((z)=>{
-                d.branchID = z.data().branchName;
-                
-            })
-            d.id = doc.id;
+            d.InID = doc.id;
             d.dateCreate = d.dateCreate.toDate().getDate()+"/"+(d.dateCreate.toDate().getMonth()+1)+"/"+d.dateCreate.toDate().getFullYear()
             d.dateIn = d.dateIn.toDate().getDate()+"/"+(d.dateIn.toDate().getMonth()+1)+"/"+d.dateIn.toDate().getFullYear()
             d.datePay = d.datePay.toDate().getDate()+"/"+(d.datePay.toDate().getMonth()+1)+"/"+d.datePay.toDate().getFullYear()
-                
-            data.push(d);
-            // await delete d.branchID;
-            
-            
-            // let tempData = {
-            //     productID : '',
-            //     dateCreate : date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()
-            // }
-            // for(let x of log){
-            //     console.log("from forloop" + x)
-            //     tempData.productID = x.productID
-            //     data.push(tempData);
-            // }
-            console.log(doc.id, " => ", data);
+
+            let a = d.branchID.get()
+            .then(doc=>{
+                d.branchID = doc.data().branchName
+                return d;
+            })
+            a.then(doc=>{
+                console.log(doc)
+                this.setState({dataSource:this.state.dataSource.concat(doc)});
+            })
+            }
         });
-        // await this.setState({dataSource: data });
-        // await console.log(" => ", data);
+         await this.setState({dataSource: data });
+        
         
     }
 
