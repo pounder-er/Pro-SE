@@ -107,6 +107,30 @@ class Firebase {
         reject(error);
       })
   }
+
+  getAllProductType = (success, reject) =>{
+    firebase.firestore().collection('ProductType')
+      .get()
+      .then(querySnapshot => {
+        success(querySnapshot);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  }
+
+  getAllPartnerCompany = (success, reject) =>{
+    firebase.firestore().collection('partnerCompany')
+      .get()
+      .then(querySnapshot => {
+        success(querySnapshot);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+    
+  }
+
   getStateChangedUser = (success, reject) => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
@@ -167,32 +191,6 @@ class Firebase {
       }, function (error) {
         reject(error);
       });
-  }
-
-  addTest = ()=>{
-    const ref = firebase.firestore().collection('test').doc('state');
-    // const incremant = firebase.firestore.FieldValue.increment(1);
-
-    return firebase.firestore().runTransaction((transaction)=>{
-      return transaction.get(ref).then((doc)=>{
-        if(doc.exists){
-          let count = doc.data().count + 1
-          transaction.update(ref,{count});
-
-          transaction.set(firebase.firestore().collection('test').doc('1101'+count.toString()),{test:'hello'});
-        }else{
-          
-        }
-        
-      })
-    })
-    .then(success=>{
-      console.log(success)
-
-    }).catch(err=>{
-      console.log(err)
-    });
-
   }
 
 }
