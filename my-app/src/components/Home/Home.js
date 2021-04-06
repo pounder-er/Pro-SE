@@ -66,12 +66,9 @@ import { addSession, addUserProfile } from '../../redux/actions';
 import ListEmployee from '../Employees/ListEmployee';
 import AddEmployee from '../Employees/AddEmployee';
 
-<<<<<<< HEAD
 import Sell from '../Sell/Sell';
 import So from '../Sell/So';
 import AddProduct from '../Product/AddProduct';
-=======
->>>>>>> parent of a4a4b3f8 (update)
 import HistoryInOut from '../HistoryInOut/HistoryInOut'
 import SalesReport from '../SalesReport/SalesReport'
 import ProductsReport from '../ProductsReport/ProductReport'
@@ -87,17 +84,17 @@ class Home extends React.Component {
     }
   }
 
- // componentDidMount(){
-    // this.props.userProfile.test.get().then(doc=>{
-    //   if (doc.exists) {
-    //     console.log(doc.data());
-    //   } else {
-    //     console.log("No such document!");
-    //   }
-    //   console.log(doc.data());
-    // })
+  componentDidMount(){
+    this.props.userProfile.test.get().then(doc=>{
+      if (doc.exists) {
+        console.log(doc.data());
+      } else {
+        console.log("No such document!");
+      }
+      console.log(doc.data());
+    })
     
-  // }
+  }
 
   toggleProfile = () => {
     this.setState({ isOpen: !this.state.isOpen });
@@ -122,7 +119,6 @@ class Home extends React.Component {
     if (this.props.userProfile.jobTitle == 'ผู้จัดการ' || this.props.userProfile.jobTitle == 'ผู้ดูแลระบบ') {
       menu = menu.concat([
         <MenuItem icon={<BsFillGrid1X2Fill />}>
-         
           Dashboard
           <Link onClick={() => this.setState({ headerTitle: 'Dashboard' })} />
         </MenuItem>,
@@ -241,15 +237,11 @@ class Home extends React.Component {
                 <Route exact path={this.props.match.path + "/productsReport/productDetail"} component={ProductDetail} />
                 <Route exact path={this.props.match.path + "/list_employee"} component={ListEmployee} />
                 <Route exact path={this.props.match.path + "/add_employee"} component={AddEmployee} />
-<<<<<<< HEAD
                 <Route exact path={this.props.match.path + "/add_product"} component={AddProduct} />
                 <Route exact path={this.props.match.path + "/sell"} component={Sell} />
                 <Route exact path={this.props.match.path + "/sell/so"} component={So} />
-=======
->>>>>>> parent of a4a4b3f8 (update)
               </Switch>
             </Container>
-            <Button onClick={()=>{fire_base.addTest();}} >kuy</Button>
           </Body>
         </Content>
       </ContainerHome>
