@@ -66,13 +66,13 @@ import { addSession, addUserProfile } from '../../redux/actions';
 import ListEmployee from '../Employees/ListEmployee';
 import AddEmployee from '../Employees/AddEmployee';
 
-import Sell from '../Sell/Sell';
-import So from '../Sell/So';
+import HistoryInOut from '../HistoryInOut/HistoryInOut';
+import SalesReport from '../SalesReport/SalesReport';
+
 import AddProduct from '../Product/AddProduct';
-import HistoryInOut from '../HistoryInOut/HistoryInOut'
-import SalesReport from '../SalesReport/SalesReport'
-import ProductsReport from '../ProductsReport/ProductReport'
-import ProductDetail from '../ProductDetail/ProductDetail'
+
+import ProductsReport from '../ProductsReport/ProductReport';
+import ProductDetail from '../ProductDetail/ProductDetail';
 
 class Home extends React.Component {
   constructor(props) {
@@ -241,8 +241,6 @@ console.log(formattedNumber);
                 <Route exact path={this.props.match.path + "/list_employee"} component={ListEmployee} />
                 <Route exact path={this.props.match.path + "/add_employee"} component={AddEmployee} />
                 <Route exact path={this.props.match.path + "/add_product"} component={AddProduct} />
-                <Route exact path={this.props.match.path + "/sell"} component={Sell} />
-                <Route exact path={this.props.match.path + "/sell/so"} component={So} />
               </Switch>
             </Container>
             {/* <Button onClick={()=>{fire_base.addTest();}} >kuy</Button> */}
