@@ -102,9 +102,9 @@ class Sell extends React.Component {
             // }
             console.log(doc.id, " => ", data);
         });
-        await this.setState({dataSource: data });
-        await console.log(" => ", data);
-        await this.setState({dataSource: data });
+        // await this.setState({dataSource: data });
+        // await console.log(" => ", data);
+        
     }
 
     unSuccess(error) {

@@ -71,6 +71,8 @@ import SalesReport from '../SalesReport/SalesReport'
 import ProductsReport from '../ProductsReport/ProductReport'
 import ProductDetail from '../ProductDetail/ProductDetail'
 
+import Sell from '../Sell/Sell';
+
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -154,7 +156,7 @@ class Home extends React.Component {
             <Link to={this.props.match.url + "/productsReport"} onClick={() => this.setState({ headerTitle: 'ตรวจสอบสินค้า' })} />
             </MenuItem>
             <MenuItem suffix={<GiBuyCard style={{marginRight:2}}  size={18} />} >รายการซื้อสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการซื้อสินค้า' })} /></MenuItem>
-            <MenuItem>รายการขายสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการขายสินค้า' })} /></MenuItem>
+            <MenuItem>รายการขายสินค้า<Link to={this.props.match.url + "/sell"} onClick={() => this.setState({ headerTitle: 'รายการขายสินค้า' })} /></MenuItem>
           </SubMenu>,
           <SubMenu title="คลังสินค้า" icon={<FaWarehouse />}>
             <MenuItem >
@@ -234,6 +236,8 @@ class Home extends React.Component {
                 <Route exact path={this.props.match.path + "/productsReport/productDetail"} component={ProductDetail} />
                 <Route exact path={this.props.match.path + "/list_employee"} component={ListEmployee} />
                 <Route exact path={this.props.match.path + "/add_employee"} component={AddEmployee} />
+                <Route exact path={this.props.match.path + "/sell"} component={Sell} />
+
               </Switch>
             </Container>
           </Body>
