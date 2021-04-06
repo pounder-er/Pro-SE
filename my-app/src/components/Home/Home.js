@@ -66,9 +66,6 @@ import { addSession, addUserProfile } from '../../redux/actions';
 import ListEmployee from '../Employees/ListEmployee';
 import AddEmployee from '../Employees/AddEmployee';
 
-import Sell from '../Sell/Sell';
-import So from '../Sell/So';
-import AddProduct from '../Product/AddProduct';
 import HistoryInOut from '../HistoryInOut/HistoryInOut'
 import SalesReport from '../SalesReport/SalesReport'
 import ProductsReport from '../ProductsReport/ProductReport'
@@ -118,12 +115,11 @@ class Home extends React.Component {
     let menu = []
     if (this.props.userProfile.jobTitle == 'ผู้จัดการ' || this.props.userProfile.jobTitle == 'ผู้ดูแลระบบ') {
       menu = menu.concat([
-        <MenuItem key='1' icon={<BsFillGrid1X2Fill />}>
-         
+        <MenuItem icon={<BsFillGrid1X2Fill />}>
           Dashboard
           <Link onClick={() => this.setState({ headerTitle: 'Dashboard' })} />
         </MenuItem>,
-        <SubMenu key='2' title="จัดการพนักงาน" icon={<BsFillPeopleFill />}>
+        <SubMenu title="จัดการพนักงาน" icon={<BsFillPeopleFill />}>
           <MenuItem suffix={<FaUserPlus size={18} />} >
             เพิ่มพนักงาน
           <Link to={this.props.match.url + "/add_employee"} onClick={() => this.setState({ headerTitle: 'เพิ่มพนักงาน' })} />
@@ -134,12 +130,12 @@ class Home extends React.Component {
           </MenuItem>
         </SubMenu>,
 
-        <MenuItem key='3' icon={<RiBarChart2Fill size={18} />} >
+        <MenuItem icon={<RiBarChart2Fill size={18} />} >
           ยอดขายสินค้า
           <Link to={this.props.match.url + "/salesReport"} onClick={() => this.setState({ headerTitle: 'ยอดขายสินค้า' })} />
         </MenuItem>,
 
-        <SubMenu key='4' title="ตั้งค่า" icon={<IoMdSettings size={18} />}>
+        <SubMenu title="ตั้งค่า" icon={<IoMdSettings size={18} />}>
           <MenuItem suffix={<IoMdCalculator size={18} />} >คำนวนการสั่งซื้อสินค้า</MenuItem>
           <MenuItem suffix={<IoAlarmSharp size={18} />} >ตั้งเวลาเช็คสต็อก</MenuItem>
         </SubMenu>
@@ -151,8 +147,8 @@ class Home extends React.Component {
       menu = menu.concat(
         [
 
-          <SubMenu key='5' title="จัดการสินค้า" icon={<BsFillArchiveFill />}>
-            <MenuItem suffix={<HiViewGridAdd size={20} />} >เพิ่มสินค้า<Link to={this.props.match.url + "/add_product"} onClick={() => this.setState({ headerTitle: 'เพิ่มสินค้าใหม่' })} /></MenuItem>
+          <SubMenu title="จัดการสินค้า" icon={<BsFillArchiveFill />}>
+            <MenuItem suffix={<HiViewGridAdd size={20} />} >เพิ่มสินค้า<Link onClick={() => this.setState({ headerTitle: 'เพิ่มสินค้าใหม่' })} /></MenuItem>
             <MenuItem suffix={<FaThList style={{marginRight:2}}  size={15} />} >
               รายการสินค้า
             <Link to={this.props.match.url + "/productsReport"} onClick={() => this.setState({ headerTitle: 'ตรวจสอบสินค้า' })} />
@@ -160,7 +156,7 @@ class Home extends React.Component {
             <MenuItem suffix={<GiBuyCard style={{marginRight:2}}  size={18} />} >รายการซื้อสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการซื้อสินค้า' })} /></MenuItem>
             <MenuItem>รายการขายสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการขายสินค้า' })} /></MenuItem>
           </SubMenu>,
-          <SubMenu key='6' title="คลังสินค้า" icon={<FaWarehouse />}>
+          <SubMenu title="คลังสินค้า" icon={<FaWarehouse />}>
             <MenuItem >
               ประวัติสินค้าเข้า/ออกคลัง
             <Link to={this.props.match.url + "/historyInOut"} onClick={() => this.setState({ headerTitle: 'ระวัติสินค้าเข้า/ออกคลัง' })} />
@@ -168,7 +164,7 @@ class Home extends React.Component {
             <MenuItem >ผลการเช็คสต๊อกสินค้า<Link onClick={() => this.setState({ headerTitle: 'ผลการเช็คสต๊อกสินค้า' })} /></MenuItem>
           </SubMenu>,
 
-          <SubMenu key='7' title="ผู้ติดต่อ" icon={<BsBriefcaseFill />}>
+          <SubMenu title="ผู้ติดต่อ" icon={<BsBriefcaseFill />}>
             <MenuItem>บริษัท<Link onClick={() => this.setState({ headerTitle: 'บริษัท' })} /></MenuItem>
             <MenuItem>สาขา<Link onClick={() => this.setState({ headerTitle: 'สาขา' })} /></MenuItem>
           </SubMenu>
@@ -178,18 +174,16 @@ class Home extends React.Component {
     if (this.props.userProfile.jobTitle == 'พนักงานคลัง') {
       menu = menu.concat(
         [
-          <MenuItem key='8' >เช็คสต๊อกสินค้า<Link onClick={() => this.setState({ headerTitle: 'เช็คสต๊อกสินค้า' })} /></MenuItem>,
-          <MenuItem key='9' >นำสินค้าออกจากคลัง<Link onClick={() => this.setState({ headerTitle: 'นำสินค้าออกจากคลัง' })} /></MenuItem>,
-          <MenuItem key='10' >นำสินค้าเข้าคลัง<Link onClick={() => this.setState({ headerTitle: 'นำสินค้าเข้าคลัง' })} /></MenuItem>,
+          <MenuItem >เช็คสต๊อกสินค้า<Link onClick={() => this.setState({ headerTitle: 'เช็คสต๊อกสินค้า' })} /></MenuItem>,
+          <MenuItem >นำสินค้าออกจากคลัง<Link onClick={() => this.setState({ headerTitle: 'นำสินค้าออกจากคลัง' })} /></MenuItem>,
+          <MenuItem >นำสินค้าเข้าคลัง<Link onClick={() => this.setState({ headerTitle: 'นำสินค้าเข้าคลัง' })} /></MenuItem>,
         ])
     }
     return menu;
   }
 
   render() {
-    var myNumber = 15;
-var formattedNumber = ("0" + myNumber).slice(-2);
-console.log(formattedNumber);
+
     return (
       <ContainerHome>
         <Sidebar>
@@ -240,12 +234,8 @@ console.log(formattedNumber);
                 <Route exact path={this.props.match.path + "/productsReport/productDetail"} component={ProductDetail} />
                 <Route exact path={this.props.match.path + "/list_employee"} component={ListEmployee} />
                 <Route exact path={this.props.match.path + "/add_employee"} component={AddEmployee} />
-                <Route exact path={this.props.match.path + "/add_product"} component={AddProduct} />
-                <Route exact path={this.props.match.path + "/sell"} component={Sell} />
-                <Route exact path={this.props.match.path + "/sell/so"} component={So} />
               </Switch>
             </Container>
-            {/* <Button onClick={()=>{fire_base.addTest();}} >kuy</Button> */}
           </Body>
         </Content>
       </ContainerHome>
