@@ -84,15 +84,15 @@ class Home extends React.Component {
     }
   }
 
-  // componentDidMount(){
-  //   this.props.userProfile.test.get().then(doc=>{
-  //     if (doc.exists) {
-  //       console.log(doc.data());
-  //     } else {
-  //       console.log("No such document!");
-  //     }
-  //     console.log(doc.data());
-  //   })
+ // componentDidMount(){
+    // this.props.userProfile.test.get().then(doc=>{
+    //   if (doc.exists) {
+    //     console.log(doc.data());
+    //   } else {
+    //     console.log("No such document!");
+    //   }
+    //   console.log(doc.data());
+    // })
     
   // }
 
@@ -119,6 +119,7 @@ class Home extends React.Component {
     if (this.props.userProfile.jobTitle == 'ผู้จัดการ' || this.props.userProfile.jobTitle == 'ผู้ดูแลระบบ') {
       menu = menu.concat([
         <MenuItem icon={<BsFillGrid1X2Fill />}>
+         
           Dashboard
           <Link onClick={() => this.setState({ headerTitle: 'Dashboard' })} />
         </MenuItem>,
@@ -241,6 +242,7 @@ class Home extends React.Component {
                 <Route exact path={this.props.match.path + "/sell/so"} component={So} />
               </Switch>
             </Container>
+            <Button onClick={()=>{fire_base.addTest();}} >kuy</Button>
           </Body>
         </Content>
       </ContainerHome>
