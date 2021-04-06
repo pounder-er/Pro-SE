@@ -47,7 +47,7 @@ class Stock extends React.Component {
             array.report = ''
 
             // console.log(array)
-            
+
             this.setState({ checkList: this.state.checkList.concat(array) })
         })
         // console.log(this.state.checkList);
@@ -98,29 +98,30 @@ class Stock extends React.Component {
         let i = 0
         const listItems = this.state.checkList.map((data) => {
             i++
-            return(<tr>
-                <th scope="row">{i}</th>
-                <td>{data.productID}</td>
-                <td>{data.productName}</td>
+            return (
+                <tr>
+                    <th scope="row">{i}</th>
+                    <td>{data.productID}</td>
+                    <td>{data.productName}</td>
 
-                <td>
-                    <InputGroup>
-                        <Input onChange={text => this.handleChangeText(text, data.productID, "balance")} />
-                    </InputGroup>
-                </td>
+                    <td>
+                        <InputGroup>
+                            <Input onChange={text => this.handleChangeText(text, data.productID, "balance")} />
+                        </InputGroup>
+                    </td>
 
-                <td>
-                    <InputGroup>
-                        <Input onChange={text => this.handleChangeText(text, data.productID, "damage")} />
-                    </InputGroup>
-                </td>
+                    <td>
+                        <InputGroup>
+                            <Input onChange={text => this.handleChangeText(text, data.productID, "damage")} />
+                        </InputGroup>
+                    </td>
 
-                <td>
-                    <InputGroup>
-                        <Input onChange={text => this.handleChangeText(text, data.productID, "report")} />
-                    </InputGroup>
-                </td>
-            </tr>
+                    <td>
+                        <InputGroup>
+                            <Input onChange={text => this.handleChangeText(text, data.productID, "report")} />
+                        </InputGroup>
+                    </td>
+                </tr>
             )
         }
         );
@@ -129,7 +130,7 @@ class Stock extends React.Component {
         return (
             <div className="ContainerStocking">
 
-                <body className="ContentStocking" style = {{border: '2px solid gray'}}>
+                <body className="ContentStocking" style={{ border: '2px solid gray' }}>
 
                     <h1 style={{ width: '95%', alignSelf: 'center', marginTop: 60, marginBottom: 20 }}>รายการที่ต้องเช็ค</h1>
                     <h3 style={{ width: '95%', alignSelf: 'center', marginTop: 10, marginBottom: 20 }}>วันที่ : {this.state.date}  เวลา : {this.state.time} Test: {this.state.input}</h3>
@@ -140,7 +141,7 @@ class Stock extends React.Component {
                             <thead>
                                 <tr style={{ textAlign: 'center' }}>
                                     <th>ลำดับ</th>
-                                    <th style = {{width:100}}>รหัสสินค้า</th>
+                                    <th style={{ width: 100 }}>รหัสสินค้า</th>
                                     <th>รายการสินค้า</th>
                                     <th>ยอด</th>
                                     <th>ชำรุด</th>
@@ -155,13 +156,14 @@ class Stock extends React.Component {
                             </tbody>
 
                         </Table>
+
                         {/* <PaginationtTable></PaginationtTable> */}
 
                     </div>
 
 
                     <div className="ButtonStocking">
-                        <Button style={{ height: 40, width: 80, background: "#00B046"}}>บันทึก</Button>
+                        <Button style={{ height: 40, width: 80, background: "#00B046" }}>บันทึก</Button>
                     </div>
 
                 </body>

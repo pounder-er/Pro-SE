@@ -221,7 +221,7 @@ class Home extends React.Component {
 
           </Header>
           <Body>
-            <Container style={{ backgroundColor: 'white', borderRadius: 5, padding: 10 }}>
+            <Container style={{ backgroundColor: 'white', borderRadius: 5, padding: 10}}>
               <Switch>
                 <Route exact path={this.props.match.path + "/historyInOut"} component={HistoryInOut} />
                 <Route exact path={this.props.match.path + "/salesReport"} component={SalesReport} />

@@ -99,7 +99,7 @@ class ExportTable extends React.Component{
                     </body> */}
 
                     <body className = "ButtonTable">
-                        <Button style = {{height:40, width:80, background:"#FF0000"}}>กลับ</Button>
+                        <Button style = {{height:40, width:80, background:"#FF0000"}} onClick = {()=> this.props.history.goBack()}>กลับ</Button>
                         <Button style = {{height:40, width:80, background:"#00B046", marginRight: 20}}>บันทึก</Button>
                     </body>
 

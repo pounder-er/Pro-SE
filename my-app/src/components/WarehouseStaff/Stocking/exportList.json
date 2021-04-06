@@ -1,0 +1,29 @@
+[
+    {
+        "lot" : "100100",
+        "channel" : "A",
+        "detail":[
+            {"productID" : "11323", "oldNew" : "ใหม่", "comName" : "สส.จำกัด", "productName" : "ข้าวหอมมะลิ ตราสส", "productWeight" : 5, "total" : 20},
+            {"productID" : "11323", "oldNew" : "ใหม่", "comName" : "สส.จำกัด", "productName" : "ข้าวหอมมะลิ ตราสส", "productWeight" : 5, "total" : 20},
+            {"productID" : "11323", "oldNew" : "ใหม่", "comName" : "สส.จำกัด", "productName" : "ข้าวหอมมะลิ ตราสส", "productWeight" : 5, "total" : 20}
+        ]
+    },
+    {
+        "lot" : "100100",
+        "channel" : "A",
+        "detail":[
+            {"productID" : "11323", "oldNew" : "ใหม่", "comName" : "สส.จำกัด", "productName" : "ข้าวหอมมะลิ ตราสส", "productWeight" : 5, "total" : 20},
+            {"productID" : "11323", "oldNew" : "ใหม่", "comName" : "สส.จำกัด", "productName" : "ข้าวหอมมะลิ ตราสส", "productWeight" : 5, "total" : 20},
+            {"productID" : "11323", "oldNew" : "ใหม่", "comName" : "สส.จำกัด", "productName" : "ข้าวหอมมะลิ ตราสส", "productWeight" : 5, "total" : 20}
+        ]
+    },
+    {
+        "lot" : "100100",
+        "channel" : "A",
+        "detail":[
+            {"productID" : "11323", "oldNew" : "ใหม่", "comName" : "สส.จำกัด", "productName" : "ข้าวหอมมะลิ ตราสส", "productWeight" : 5, "total" : 20},
+            {"productID" : "11323", "oldNew" : "ใหม่", "comName" : "สส.จำกัด", "productName" : "ข้าวหอมมะลิ ตราสส", "productWeight" : 5, "total" : 20},
+            {"productID" : "11323", "oldNew" : "ใหม่", "comName" : "สส.จำกัด", "productName" : "ข้าวหอมมะลิ ตราสส", "productWeight" : 5, "total" : 20}
+        ]
+    }
+]
