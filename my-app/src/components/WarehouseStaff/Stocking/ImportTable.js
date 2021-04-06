@@ -86,32 +86,6 @@ class ImportTable extends React.Component{
                             </tbody>
                     </Table>
 
-                    {/* <body className = 'PaginationTable'>
-                        <Pagination aria-label="Page navigation example" style={{justifyContent:'center', marginTop:10}}>
-                            <PaginationItem>
-                                <PaginationLink first href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                 <PaginationLink previous href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">1</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">2</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">3</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink next href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink last href="#" />
-                            </PaginationItem>
-                        </Pagination>
-                    </body> */}
-
                     <body className = "ButtonTable">
                         <Button style = {{height:40, width:80, background:"#FF0000"}} onClick = {()=> this.props.history.goBack()}>กลับ</Button>
                         <Button style = {{height:40, width:80, background:"#00B046", marginRight: 20}}>บันทึก</Button>

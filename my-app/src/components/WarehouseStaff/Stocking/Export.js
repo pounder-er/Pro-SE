@@ -25,7 +25,8 @@ class Export extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            checkList: exportList
+            checkList: exportList,
+            test:"ad1345135135hn123523jnawdab"
         }
     }
 
@@ -38,7 +39,12 @@ class Export extends React.Component {
                     <th scope="row">{i}</th>
                     <td>{data.lot}</td>
                     <td>{data.channel}</td>
-                    <td onClick={() => this.props.history.push(this.props.match.url + "/export_product_tb")}>
+                    <td onClick={() => this.props.history.push({
+                        pathname : this.props.match.url + "/export_product_tb",
+                        lot: data.lot,
+                        channel: data.channel,
+                        data : data.detail
+                    })}>
                         <FiFileText style={{ color: "#00A3FF" }} />
                     </td>
                 </tr>
@@ -84,3 +90,4 @@ class Export extends React.Component {
 }
 
 export default Export
+
