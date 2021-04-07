@@ -134,6 +134,7 @@ class Firebase {
 
   getAllSell = (success, reject) => {
     firebase.firestore().collection('Sell')
+    .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
       .get()
       .then(querySnapshot => {
         success(querySnapshot);
@@ -144,6 +145,7 @@ class Firebase {
   }
   getAllBuy = (success, reject) => {
     firebase.firestore().collection('Buy')
+    .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
       .get()
       .then(querySnapshot => {
         success(querySnapshot);
