@@ -25,8 +25,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import ReactDataGrid from '@inovua/reactdatagrid-community'
 import 'react-pro-sidebar/dist/css/styles.css';
-import '@inovua/reactdatagrid-community/base.css'
-import '@inovua/reactdatagrid-community/theme/default-light.css'
+import '@inovua/reactdatagrid-community/base.css';
+import '@inovua/reactdatagrid-community/theme/default-light.css';
+import DateFilter from '@inovua/reactdatagrid-community/DateFilter'
+import SelectFilter from '@inovua/reactdatagrid-community/SelectFilter'
+
+import moment from 'moment'
 
 import { i18n } from '../i18n';
 import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
@@ -36,8 +40,18 @@ import { IoMdTrash } from "react-icons/io";
 const filterValue = [
     { name: 'InID', operator: 'startsWith', type: 'string', },
     { name: 'branchID', operator: 'startsWith', type: 'string', },
-    { name: 'dateCreate', operator: 'startsWith', type: 'string', },
-    { name: 'dateIn', operator: 'startsWith', type: 'string', },
+    {
+        name: 'dateCreate',
+        operator: 'before',
+        type: 'date',
+        value: ''
+      },
+    //   {
+    //     name: 'dateIn',
+    //     operator: 'before',
+    //     type: 'date',
+
+    //   },
     { name: 'Res', operator: 'startsWith', type: 'string', },
     { name: 'status', operator: 'startsWith', type: 'string', },
 
@@ -47,8 +61,21 @@ const columns = [
     { name: 'id', header: 'id', defaultVisible: false, },
     { name: 'InID', header: 'หมายเลขใบแจ้งหนี้', defaultVisible: true, groupBy: false },
     { name: 'branchID', groupBy: false, defaultFlex: 1, header: 'สาขา' },
-    { name: 'dateCreate', groupBy: false, defaultFlex: 1, header: 'วันที่สร้าง' },
-    { name: 'dateIn', groupBy: false, defaultFlex: 1, header: 'วันที่สำเร็จการขาย' },
+    {
+        name: 'dateCreate', 
+        defaultFlex: 1, 
+        dateFormat: 'DD/MM/YYYY',
+        filterEditor: DateFilter,
+        filterEditorProps: (props, { index }) => {
+            // for range and notinrange operators, the index is 1 for the after field
+            return {
+                dateFormat: 'MM-DD-YYYY',
+                placeholder: index == 1 ? 'Created date is before...' : 'Created date is after...'
+            }
+        },
+     },
+    // { name: 'dateCreate', groupBy: false, defaultFlex: 1, header: 'วันที่สร้าง' },
+    // { name: 'dateIn', groupBy: false, defaultFlex: 1, header: 'วันที่สำเร็จการขาย' },
     { name: 'Res', groupBy: false, defaultFlex: 1, header: 'ผู้รับผิดชอบ' },
     { name: 'status', groupBy: false, defaultFlex: 1, header: 'สถานะ' },
 
@@ -76,9 +103,10 @@ class Sell extends React.Component {
                 let d = doc.data();
                 d.InID = doc.id;
                 console.log(d)
-                d.dateCreate = d.dateCreate.toDate().getDate() + "/" + (d.dateCreate.toDate().getMonth() + 1) + "/" + d.dateCreate.toDate().getFullYear()
-                d.dateIn = d.dateIn.toDate().getDate() + "/" + (d.dateIn.toDate().getMonth() + 1) + "/" + d.dateIn.toDate().getFullYear()
-                d.datePay = d.datePay.toDate().getDate() + "/" + (d.datePay.toDate().getMonth() + 1) + "/" + d.datePay.toDate().getFullYear()
+                d.dateCreate =   moment(d.dateCreate.toDate()).format('DD/MM/YYYY')
+                console.log(d.dateCreate);
+                // d.dateIn = d.dateIn.toDate().getDate() + "/" + (d.dateIn.toDate().getMonth() + 1) + "/" + d.dateIn.toDate().getFullYear()
+                // d.datePay = d.datePay.toDate().getDate() + "/" + (d.datePay.toDate().getMonth() + 1) + "/" + d.datePay.toDate().getFullYear()
 
                 let a = d.branchID.get()
                     .then(doc => {
