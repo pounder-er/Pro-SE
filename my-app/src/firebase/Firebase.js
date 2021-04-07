@@ -152,6 +152,7 @@ class Firebase {
         reject(error);
       })
   }
+
   getAllBuy = (success, reject) => {
     firebase.firestore().collection('Buy')
     .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
@@ -163,6 +164,32 @@ class Firebase {
         reject(error);
       })
   }
+
+  getProductCheckStock=(success, reject)=>{
+    firebase.firestore().collection('Product')
+    .where('productTotal', '>', 0)
+    .get()
+    .then(querySnapshot => {
+      success(querySnapshot);
+    })
+    .catch((error) => {
+      reject(error);
+    })
+  }
+
+  getUesrCheckStock = (success, reject) =>{
+    firebase.firestore().collection('UserProfiles')
+    .where('status', '==', 'ปกติ')
+    .where('jobTitle', '==', 'พนักงานคลัง')
+    .get()
+    .then(querySnapshot => {
+      success(querySnapshot);
+    })
+    .catch((error) => {
+      reject(error);
+    })
+  }
+
   getStateChangedUser = (success, reject) => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
