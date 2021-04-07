@@ -97,6 +97,30 @@ class Firebase {
         reject(error);
       })
   }
+
+  getAllProductType = (success, reject) => {
+    firebase.firestore().collection('ProductType')
+      .get()
+      .then(querySnapshot => {
+        success(querySnapshot);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  }
+
+  getAllCompany = (success, reject) => {
+    firebase.firestore().collection('Company')
+    .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
+      .get()
+      .then(querySnapshot => {
+        success(querySnapshot);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  }
+
   getAllHistoryInOut = (success, reject) => {
     firebase.firestore().collection('HistoryInOut')
       .get()
@@ -108,8 +132,8 @@ class Firebase {
       })
   }
 
-  getAllProductType = (success, reject) =>{
-    firebase.firestore().collection('ProductType')
+  getAllSell = (success, reject) => {
+    firebase.firestore().collection('Sell')
       .get()
       .then(querySnapshot => {
         success(querySnapshot);
@@ -118,19 +142,6 @@ class Firebase {
         reject(error);
       })
   }
-
-  getAllPartnerCompany = (success, reject) =>{
-    firebase.firestore().collection('partnerCompany')
-      .get()
-      .then(querySnapshot => {
-        success(querySnapshot);
-      })
-      .catch((error) => {
-        reject(error);
-      })
-    
-  }
-
   getStateChangedUser = (success, reject) => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
@@ -167,7 +178,7 @@ class Firebase {
   }
 
   uploadImageProfile = async (uid, image, success, reject) => {
-    var ref = await firebase
+    let ref = await firebase
       .storage()
       .ref()
       .child('profile/' + uid);
@@ -183,6 +194,24 @@ class Firebase {
       });
   }
 
+  uploadImage= async(path,image,success,reject)=>{
+    let ref = await firebase
+      .storage()
+      .ref()
+      .child(path);
+    ref
+      .put(image)
+      .then(async (snapshot) => {
+        await snapshot.ref.getDownloadURL().then((url) => {
+          success(url);
+        });
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  }
+
+
   listeningProfile = (success, reject) => {
     firebase.firestore().collection('UserProfiles')
       .where('firstName', '!=', 'แอดมิน')
@@ -192,7 +221,25 @@ class Firebase {
         reject(error);
       });
   }
+  
+  addProduct = (product) =>{
+    let db = firebase.firestore();
+    product.productType = db.collection('ProductType').doc(product.productType);
+    product.companyID = db.collection('Company').doc(product.companyID);
+    
+    db.runTransaction((transaction)=>{
+      return transaction
+      .get(db.collection('Product').doc('state'))
+      .then(doc=>{
+        if (!doc.exists) {
+          throw "Document does not exist!";
+        }
+        let count = doc.data().count
 
+      })
+    })
+
+  }
 }
 const fire_base = new Firebase();
 export default fire_base;

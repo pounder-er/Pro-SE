@@ -225,8 +225,6 @@ class AddEmployee extends React.Component {
   render() {
     // console.log(new Date().toLocaleDateString());
     return (
-      <Card>
-        <CardBody>
           <Formik
             validationSchema={formEmployeeSchema}
             onSubmit={async (values,{resetForm}) => {
@@ -706,8 +704,6 @@ class AddEmployee extends React.Component {
           )}
 
           </Formik>
-          </CardBody>
-      </Card>
     );
   }
 }

@@ -66,7 +66,7 @@ import { addSession, addUserProfile } from '../../redux/actions';
 import ListEmployee from '../Employees/ListEmployee';
 import AddEmployee from '../Employees/AddEmployee';
 
-import Sell from '../Sell/Sell';
+
 import So from '../Sell/So';
 import AddProduct from '../Product/AddProduct';
 import HistoryInOut from '../HistoryInOut/HistoryInOut'
@@ -75,6 +75,8 @@ import ProductsReport from '../ProductsReport/ProductReport'
 import ProductDetail from '../ProductDetail/ProductDetail'
 import PartnerList from '../Company/PartnerList'
 import BranchList from '../Branch/BranchList'
+
+import Sell from '../Sell/Sell';
 
 class Home extends React.Component {
   constructor(props) {
@@ -160,7 +162,7 @@ class Home extends React.Component {
             <Link to={this.props.match.url + "/productsReport"} onClick={() => this.setState({ headerTitle: 'ตรวจสอบสินค้า' })} />
             </MenuItem>
             <MenuItem suffix={<GiBuyCard style={{marginRight:2}}  size={18} />} >รายการซื้อสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการซื้อสินค้า' })} /></MenuItem>
-            <MenuItem>รายการขายสินค้า<Link onClick={() => this.setState({ headerTitle: 'รายการขายสินค้า' })} /></MenuItem>
+            <MenuItem>รายการขายสินค้า<Link to={this.props.match.url + "/sell"} onClick={() => this.setState({ headerTitle: 'รายการขายสินค้า' })} /></MenuItem>
           </SubMenu>,
           <SubMenu key='6' title="คลังสินค้า" icon={<FaWarehouse />}>
             <MenuItem >
@@ -234,7 +236,7 @@ console.log(formattedNumber);
 
           </Header>
           <Body>
-            <Container fluid style={{ backgroundColor: 'white', borderRadius: 5, padding: 10 }}>
+            <Container fluid style={{ backgroundColor: 'white', borderRadius: 5, padding: 20 }}>
               <Switch>
                 <Route exact path={this.props.match.path + "/historyInOut"} component={HistoryInOut} />
                 <Route exact path={this.props.match.path + "/salesReport"} component={SalesReport} />
@@ -291,7 +293,7 @@ const Header = styled.div`
 const Body = styled.div`
     display: flex;
     flex-direction: column;
-      padding: 2vh;
+    padding: 3vh;
     flex-grow: 1;
     overflow-y: scroll;
     background-color: lightgrey;
