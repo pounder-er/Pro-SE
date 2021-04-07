@@ -75,6 +75,7 @@ import ProductsReport from '../ProductsReport/ProductReport'
 import ProductDetail from '../ProductDetail/ProductDetail'
 import PartnerList from '../Company/PartnerList'
 import BranchList from '../Branch/BranchList'
+import DashBoard from '../DashBoard/DashBoard'
 
 import Sell from '../Sell/Sell';
 
@@ -125,7 +126,7 @@ class Home extends React.Component {
         <MenuItem key='1' icon={<BsFillGrid1X2Fill />}>
          
           Dashboard
-          <Link onClick={() => this.setState({ headerTitle: 'Dashboard' })} />
+          <Link to={this.props.match.url + "/DashBoard"} onClick={() => this.setState({ headerTitle: 'Dashboard' })} />
         </MenuItem>,
         <SubMenu key='2' title="จัดการพนักงาน" icon={<BsFillPeopleFill />}>
           <MenuItem suffix={<FaUserPlus size={18} />} >
@@ -249,6 +250,7 @@ console.log(formattedNumber);
                 <Route exact path={this.props.match.path + "/sell/so"} component={So} />
                 <Route exact path={this.props.match.path + "/PartnerList"} component={PartnerList} />
                 <Route exact path={this.props.match.path + "/BranchList"} component={BranchList} />
+                <Route exact path={this.props.match.path + "/DashBoard"} component={DashBoard} />
 
               </Switch>
             </Container>
