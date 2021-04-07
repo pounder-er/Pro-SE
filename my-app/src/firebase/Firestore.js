@@ -150,6 +150,41 @@ class Firestore {
         console.log(error)
       });
     }
+
+    addBranchV2=(data, success, reject)=>{
+      var stateRef = firebase.firestore().collection('Branch').doc('state')
+      return firebase.firestore().runTransaction((transaction)=>{
+        return transaction.get(stateRef).then((stateDoc)=>{
+          if(!stateDoc.exists){
+            throw "Document does not exist!";
+          }
+
+          let state = stateDoc.data().count
+          var newState = parseInt(state)+1
+          
+          if(newState/10 < 1){
+            newState = newState.toString()
+            newState = '0'+newState
+          }else{
+            newState = newState.toString()
+          }
+          transaction.update(stateRef, {count : newState})
+          
+          firebase.firestore().collection('Branch').doc(state)
+          .set(data)
+          .then(()=>{
+            success();
+          })
+          .catch((error)=>{
+            reject(error);
+          });
+        })
+      })
+      .then()
+      .catch((error)=>{
+        console.log(error)
+      });
+    }
 }
 const firestore = new Firestore();
 export default firestore

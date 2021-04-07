@@ -153,7 +153,8 @@ class AddBranch extends React.Component {
               this.setState({ loading: true });
               this.account = values;
               console.log(values)
-              firestore.addBranch(values, this.addBranchSuccess, this.unSuccess);
+              // firestore.addBranch(values, this.addBranchSuccess, this.unSuccess);
+              firestore.addBranchV2(values, this.addBranchSuccess, this.unSuccess);
               resetForm(true);
               
             }}

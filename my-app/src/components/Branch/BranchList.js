@@ -118,20 +118,22 @@ class BranchList extends React.PureComponent {
     listeningBranchSuccess=(snapshot)=>{
         let data = this.state.dataSource;
         snapshot.docChanges().forEach(function (change) {
-            let d = change.doc.data();
-            d.id = change.doc.id
-            if (change.type === "added") {
-                d.no = data.length+1;
-                data.push(d);
-            }
-            if (change.type === "modified") {
-                d.no = data[data.findIndex((obj=>obj.id == d.id))].no
-                data[data.findIndex((obj=>obj.id == d.id))] = d;
-                console.log("Modified : ", d);
-            }
-            if (change.type === "removed") {
-                data.splice(data.findIndex((obj=>obj.id == d.id)),1);
-                console.log("Removed : ", change.doc.data());
+            if(change.doc.id != 'state'){
+                let d = change.doc.data();
+                d.id = change.doc.id
+                if (change.type === "added") {
+                    d.no = data.length+1;
+                    data.push(d);
+                }
+                if (change.type === "modified") {
+                    d.no = data[data.findIndex((obj=>obj.id == d.id))].no
+                    data[data.findIndex((obj=>obj.id == d.id))] = d;
+                    console.log("Modified : ", d);
+                }
+                if (change.type === "removed") {
+                    data.splice(data.findIndex((obj=>obj.id == d.id)),1);
+                    console.log("Removed : ", change.doc.data());
+                }
             }
         })
         console.log(data)

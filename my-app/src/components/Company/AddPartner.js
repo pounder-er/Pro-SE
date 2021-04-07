@@ -50,7 +50,7 @@ var checkZip = false;
 var subDistrictFilter = [];
 var districtFilter = [];
 const formPartnerSchema = Yup.object().shape({
-  comName: Yup.string().required('กรุณาระบุข้อมูล'),
+  companyName: Yup.string().required('กรุณาระบุข้อมูล'),
   agentName: Yup.string().required('กรุณาระบุข้อมูล'),
   phoneNumber: Yup.string()
     .length(10, 'หมายเลขโทรศัพท์ไม่ครบ 10 หลัก')
@@ -158,7 +158,7 @@ class AddPartner extends React.Component {
             }}
             //กำหนดค่า default from
             initialValues={{
-              comName: '',
+              companyName: '',
               agentName: '',
               phoneNumber: '',
               address: '',
@@ -203,18 +203,18 @@ class AddPartner extends React.Component {
                     
                     <Col md={6}>
                       <FormGroup>
-                        <Label for="comName">ชื่อบริษัท</Label>
+                        <Label for="companyName">ชื่อบริษัท</Label>
                         <Input
                           type="text"
-                          name="comName"
-                          id="comName"
+                          name="companyName"
+                          id="companyName"
                           placeholder="ตย. สมชาย"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.comName}
-                          invalid={errors.comName && touched.comName}
+                          value={values.companyName}
+                          invalid={errors.companyName && touched.companyName}
                         />
-                        <FormFeedback>*{errors.comName}</FormFeedback>
+                        <FormFeedback>*{errors.companyName}</FormFeedback>
                       </FormGroup>
                     </Col>
                     <Col md={6}>
