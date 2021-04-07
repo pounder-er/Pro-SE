@@ -156,7 +156,7 @@ class ListEmployee extends React.PureComponent {
         })
         //console.log(data);
         data.sort(function(a,b){
-            return a.CreateDate.toDate() - b.CreateDate.toDate();
+            return a.createDate.toDate() - b.createDate.toDate();
           });
         this.setState({
             dataSource: [...data]
