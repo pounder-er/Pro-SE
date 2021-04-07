@@ -75,6 +75,7 @@ import ProductsReport from '../ProductsReport/ProductReport'
 import ProductDetail from '../ProductDetail/ProductDetail'
 import Calculate from '../Calculate/Calculate'
 import PartnerList from '../Company/PartnerList'
+import BranchList from '../Branch/BranchList'
 
 import Sell from '../Sell/Sell';
 
@@ -177,7 +178,7 @@ class Home extends React.Component {
 
           <SubMenu key='7' title="ผู้ติดต่อ" icon={<BsBriefcaseFill />}>
             <MenuItem>บริษัทคู่ค้า<Link to={this.props.match.url + "/PartnerList"} onClick={() => this.setState({ headerTitle: 'บริษัทคู่ค้า' })} /></MenuItem>
-            <MenuItem>สาขา<Link onClick={() => this.setState({ headerTitle: 'สาขา' })} /></MenuItem>
+            <MenuItem>สาขา<Link to={this.props.match.url + "/BranchList"} onClick={() => this.setState({ headerTitle: 'สาขา' })} /></MenuItem>
           </SubMenu>
         ]
       )
@@ -252,6 +253,8 @@ console.log(formattedNumber);
                 <Route exact path={this.props.match.path + "/sell"} component={Sell} />
                 <Route exact path={this.props.match.path + "/sell/so"} component={So} />
                 <Route exact path={this.props.match.path + "/PartnerList"} component={PartnerList} />
+                <Route exact path={this.props.match.path + "/BranchList"} component={BranchList} />
+
               </Switch>
             </Container>
             {/* <Button onClick={()=>{fire_base.addTest();}} >kuy</Button> */}
