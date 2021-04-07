@@ -111,7 +111,7 @@ class Calculate extends React.Component {
         return (
             <Container fluid={true} style={{ backgroundColor: 'wheat' }} >
                <Modal isOpen={this.state.modalCalculate} toggle={this.toggleModalmodalCalculate} backdrop='static' size='lg' >
-                    <ModalHeader toggle={this.toggleModalmodalCalculate}>รายละเอียดสินค้า</ModalHeader>
+                    <ModalHeader toggle={this.toggleModalmodalCalculate}>รายละเอียดการคำนวน</ModalHeader>
                     <ModalBody>
                         <EditCalculate product={this.product} />
                     </ModalBody>
