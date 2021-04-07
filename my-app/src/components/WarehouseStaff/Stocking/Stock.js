@@ -42,11 +42,12 @@ class Stock extends React.Component {
         doc.forEach(doc => {
             let array = doc.data()
 
+            array.id = doc.id
             array.balance = 0
             array.damage = 0
             array.report = ''
 
-            // console.log(array)
+            console.log(typeof(doc.id))
 
             this.setState({ checkList: this.state.checkList.concat(array) })
         })
@@ -119,7 +120,7 @@ class Stock extends React.Component {
             return (
                 <tr>
                     <th scope="row">{i}</th>
-                    <td>{data.productID}</td>
+                    <td>{data.id}</td>
                     <td>{data.productName}</td>
 
                     <td>
