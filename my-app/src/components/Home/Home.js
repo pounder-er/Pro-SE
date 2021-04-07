@@ -158,14 +158,6 @@ class Home extends React.Component {
           <Link to={this.props.match.url + "/salesReport"} onClick={() => this.setState({ headerTitle: 'ยอดขายสินค้า' })} />
         </MenuItem>,
 
-<<<<<<< Updated upstream
-        <SubMenu title="ตั้งค่า" icon={<IoMdSettings size={18} />}>
-          <MenuItem suffix={<IoMdCalculator size={18} />} >
-            คำนวนการสั่งซื้อสินค้า
-            <Link to={this.props.match.url + "/calculate"} onClick={() => this.setState({ headerTitle: 'คำนวนจุดสั่งซื้อ' })} />
-            </MenuItem>
-          <MenuItem suffix={<IoAlarmSharp size={18} />} >ตั้งเวลาเช็คสต็อก</MenuItem>
-=======
         <SubMenu key='4' title="ตั้งค่า" icon={<IoMdSettings size={18} />}>
           <MenuItem suffix={<IoMdCalculator size={18} />} >
             คำนวนการสั่งซื้อสินค้า
@@ -174,7 +166,6 @@ class Home extends React.Component {
           <Link to={this.props.match.url + "/set_stock_check_time"} onClick={() => this.setState({ headerTitle: 'ตั้งเวลาเช็คสต็อก' })} />
             ตั้งเวลาเช็คสต็อก
             </MenuItem>
->>>>>>> Stashed changes
         </SubMenu>
       ])
     }
