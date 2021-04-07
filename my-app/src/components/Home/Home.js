@@ -82,6 +82,13 @@ import So from '../Sell/So';
 import Buy from '../Buy/Buy';
 import Po from '../Buy/Po';
 
+// ------------- staff component ------------- //
+import StockCheck from '../WarehouseStaff/Stocking/Stock'
+import ImportProduct from '../WarehouseStaff/Stocking/Import'
+import ExportProduct from '../WarehouseStaff/Stocking/Export'
+import ImportProductTB from '../WarehouseStaff/Stocking/ImportTable'
+import ExportProductTB from '../WarehouseStaff/Stocking/ExportTable'
+
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -186,9 +193,9 @@ class Home extends React.Component {
     if (this.props.userProfile.jobTitle == 'พนักงานคลัง') {
       menu = menu.concat(
         [
-          <MenuItem key='8' >เช็คสต๊อกสินค้า<Link onClick={() => this.setState({ headerTitle: 'เช็คสต๊อกสินค้า' })} /></MenuItem>,
-          <MenuItem key='9' >นำสินค้าออกจากคลัง<Link onClick={() => this.setState({ headerTitle: 'นำสินค้าออกจากคลัง' })} /></MenuItem>,
-          <MenuItem key='10' >นำสินค้าเข้าคลัง<Link onClick={() => this.setState({ headerTitle: 'นำสินค้าเข้าคลัง' })} /></MenuItem>,
+          <MenuItem key='8'>เช็คสต๊อกสินค้า<Link to = {this.props.match.url + "/stock_check"} onClick={() => this.setState({ headerTitle: 'เช็คสต๊อกสินค้า' })} /></MenuItem>,
+          <MenuItem key='9'>นำสินค้าออกจากคลัง<Link to = {this.props.match.url + "/export_product"} onClick={() => this.setState({ headerTitle: 'นำสินค้าออกจากคลัง' })} /></MenuItem>,
+          <MenuItem key='10'>นำสินค้าเข้าคลัง<Link to = {this.props.match.url + "/import_product"} onClick={() => this.setState({ headerTitle: 'นำสินค้าเข้าคลัง' })} /></MenuItem>,
         ])
     }
     return menu;
@@ -256,6 +263,12 @@ console.log(formattedNumber);
                 <Route exact path={this.props.match.path + "/PartnerList"} component={PartnerList} />
                 <Route exact path={this.props.match.path + "/BranchList"} component={BranchList} />
                 <Route exact path={this.props.match.path + "/DashBoard"} component={DashBoard} />
+
+                <Route exact path={this.props.match.path + "/stock_check"} component={StockCheck} />
+                <Route exact path={this.props.match.path + "/import_product"} component={ImportProduct} />
+                <Route exact path={this.props.match.path + "/export_product"} component={ExportProduct} />
+                <Route exact path={this.props.match.path + "/import_product/import_product_tb"} component={ImportProductTB} />
+                <Route exact path={this.props.match.path + "/export_product/export_product_tb"} component={ExportProductTB} />
 
               </Switch>
             </Container>

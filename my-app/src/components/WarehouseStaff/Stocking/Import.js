@@ -19,84 +19,70 @@ import 'react-pro-sidebar/dist/css/styles.css';
 
 import { FiFileText } from 'react-icons/fi'
 
+import importList from './importList.json'
 
-class Import extends React.Component{
-    constructor(props){
+class Import extends React.Component {
+    constructor(props) {
         super(props)
         this.state = {
-
+            importList:importList
         }
     }
 
-    importTable =()=> {
-        this.props.history.push("/ImportTable")
-        // console.log("hi")
-    }
+    render() {
 
-    render(){
-        return(
-            <div className = 'ContainerImport'>
+        let i = 0
+        const listItems = this.state.importList.map((data) => {
+            i++
+            return (
 
-                <div className = 'ContentImport'>
-                    <h1 style = {{width:'100%', marginTop:60}}>ตารางงานขนสินค้าเข้าคลัง</h1>
+                <tr style={{ textAlign: 'center' }}>
+                    <th scope="row">{i}</th>
+                    <td>{data.lot}</td>
+                    <td>{data.channel}</td>
+                    <td onClick={() => this.props.history.push({
+                        pathname : this.props.match.url + "/import_product_tb",
+                        lot : data.lot,
+                        channel : data.channel,
+                        data: data.detail
+                    })}>
+                        <FiFileText style={{ color: "#00A3FF" }} />
+                    </td>
+                </tr>
+            )
+        }
+        );
 
-                    <Table hover style={{width:'80%', alignSelf:'center', marginTop:30, marginBottom:20 ,background:"#f1f1f1"}}>
+        return (
+            <div className='ContainerImport'>
 
-                            {/* -------------------------- This is header for table  --------------------------*/}
-                            <thead>
-                                <tr style ={{textAlign:'center'}}>
-                                    <th>ลำดับ</th>
-                                    <th>หมายเลขล็อต</th>
-                                    <th>ช่องขนส่ง</th>
-                                    <th>รายละเอียด</th>
-                                </tr>
-                            </thead>
+                <div className='ContentImport' style={{ border: '2px solid gray' }}>
+                    <h1 style={{ width: '95%', alignSelf: 'center', marginTop: 60 }}>ตารางงานขนสินค้าเข้าคลัง</h1>
 
-                            {/* -------------------------- This is dataFrom for table that should render --------------------------*/}
-                            {/* Example */}
-                            <tbody style = {{justifyContent:'center'}}>
+                    <Table hover style={{ width: '95%', alignSelf: 'center', marginTop: 30, marginBottom: 20, background: "#f1f1f1" }}>
 
-                                <tr style ={{textAlign:'center'}}>
-                                    <th scope="row">1</th>
-                                    <td>100100</td>
-                                    <td>A1</td>
-                                    <td onClick = { () => this.props.history.push("ImportTable")}>
-                                        <FiFileText style = {{color:"#00A3FF"}}/>
-                                    </td>
-                                </tr>
+                        {/* -------------------------- This is header for table  --------------------------*/}
+                        <thead>
+                            <tr style={{ textAlign: 'center' }}>
+                                <th>ลำดับ</th>
+                                <th>หมายเลขล็อต</th>
+                                <th>ช่องขนส่ง</th>
+                                <th>รายละเอียด</th>
+                            </tr>
+                        </thead>
 
-                            </tbody>
+                        {/* -------------------------- This is dataFrom for table that should render --------------------------*/}
+                        {/* Example */}
+                        <tbody style={{ justifyContent: 'center' }}>
+
+                            {listItems}
+
+                        </tbody>
                     </Table>
 
-                    {/* <body className = 'PaginationImport'>
-                        <Pagination aria-label="Page navigation example" style={{justifyContent:'center', marginTop:10}}>
-                            <PaginationItem>
-                                <PaginationLink first href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                 <PaginationLink previous href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">1</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">2</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">3</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink next href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink last href="#" />
-                            </PaginationItem>
-                        </Pagination>
-                    </body> */}
-
-                    <body className = 'ButtonImport'>
+                    {/* <body className = 'ButtonImport'>
                         <Button style = {{height:40, width:100, background:"#FF0000"}} onClick ={()=> this.props.history.goBack()}>ย้อนกลับ</Button>
-                    </body>
+                    </body> */}
 
                 </div>
             </div>
