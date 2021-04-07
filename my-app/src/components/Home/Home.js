@@ -74,6 +74,8 @@ import SalesReport from '../SalesReport/SalesReport'
 import ProductsReport from '../ProductsReport/ProductReport'
 import ProductDetail from '../ProductDetail/ProductDetail'
 import PartnerList from '../Company/PartnerList'
+import BranchList from '../Branch/BranchList'
+import DashBoard from '../DashBoard/DashBoard'
 
 import Sell from '../Sell/Sell';
 import So from '../Sell/So';
@@ -127,7 +129,7 @@ class Home extends React.Component {
         <MenuItem key='1' icon={<BsFillGrid1X2Fill />}>
          
           Dashboard
-          <Link onClick={() => this.setState({ headerTitle: 'Dashboard' })} />
+          <Link to={this.props.match.url + "/DashBoard"} onClick={() => this.setState({ headerTitle: 'Dashboard' })} />
         </MenuItem>,
         <SubMenu key='2' title="จัดการพนักงาน" icon={<BsFillPeopleFill />}>
           <MenuItem suffix={<FaUserPlus size={18} />} >
@@ -176,7 +178,7 @@ class Home extends React.Component {
 
           <SubMenu key='7' title="ผู้ติดต่อ" icon={<BsBriefcaseFill />}>
             <MenuItem>บริษัทคู่ค้า<Link to={this.props.match.url + "/PartnerList"} onClick={() => this.setState({ headerTitle: 'บริษัทคู่ค้า' })} /></MenuItem>
-            <MenuItem>สาขา<Link onClick={() => this.setState({ headerTitle: 'สาขา' })} /></MenuItem>
+            <MenuItem>สาขา<Link to={this.props.match.url + "/BranchList"} onClick={() => this.setState({ headerTitle: 'สาขา' })} /></MenuItem>
           </SubMenu>
         ]
       )
@@ -252,6 +254,9 @@ console.log(formattedNumber);
                 <Route exact path={this.props.match.path + "/buy"} component={Buy} />
                 <Route exact path={this.props.match.path + "/buy/po"} component={Po} />
                 <Route exact path={this.props.match.path + "/PartnerList"} component={PartnerList} />
+                <Route exact path={this.props.match.path + "/BranchList"} component={BranchList} />
+                <Route exact path={this.props.match.path + "/DashBoard"} component={DashBoard} />
+
               </Switch>
             </Container>
             {/* <Button onClick={()=>{fire_base.addTest();}} >kuy</Button> */}

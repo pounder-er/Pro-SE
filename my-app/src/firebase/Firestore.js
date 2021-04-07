@@ -54,6 +54,28 @@ class Firestore {
 
     }
 
+    listeningBranch = (success,reject) =>{
+        firebase.firestore().collection('Branch')
+        .onSnapshot(function (querySnapshot) {
+          console.log("hi from listen brh")  
+          success(querySnapshot);
+        }, function (error) {
+          reject(error);
+        });
+    }
+
+    updateBranch=(id, data, success, reject)=>{
+        firebase.firestore().collection('Branch')
+        .doc(id)
+        .update(data)
+        .then(function(){
+            success()
+        })
+        .catch(function(error){
+            reject(error)
+        });
+    }
+
     getAllUserProfile = (success,reject)=>{
       firebase.firestore().collection('UserProfiles')
       .get()
@@ -65,8 +87,17 @@ class Firestore {
       })
     }
 
+    // listeningPartnerCompany = (success,reject) =>{
+    //   firebase.firestore().collection('PartnerCompany')
+    //   .onSnapshot(function (querySnapshot) {
+    //     success(querySnapshot);
+    //   }, function (error) {
+    //     reject(error);
+    //   });
+    // }
+
     listeningPartnerCompany = (success,reject) =>{
-      firebase.firestore().collection('PartnerCompany')
+      firebase.firestore().collection('Company')
       .onSnapshot(function (querySnapshot) {
         success(querySnapshot);
       }, function (error) {
@@ -82,6 +113,76 @@ class Firestore {
       })
       .catch(function(error){
         reject(error);
+      });
+    }
+
+    addVender=(data, success, reject)=>{
+      var stateRef = firebase.firestore().collection('Company').doc('state')
+      return firebase.firestore().runTransaction((transaction)=>{
+        return transaction.get(stateRef).then((stateDoc)=>{
+          if(!stateDoc.exists){
+            throw "Document does not exist!";
+          }
+
+          let state = stateDoc.data().count
+          var newState = parseInt(state)+1
+          
+          if(newState/10 < 1){
+            newState = newState.toString()
+            newState = '0'+newState
+          }else{
+            newState = newState.toString()
+          }
+          transaction.update(stateRef, {count : newState})
+          
+          firebase.firestore().collection('Company').doc(state)
+          .set(data)
+          .then(()=>{
+            success();
+          })
+          .catch((error)=>{
+            reject(error);
+          });
+        })
+      })
+      .then()
+      .catch((error)=>{
+        console.log(error)
+      });
+    }
+
+    addBranchV2=(data, success, reject)=>{
+      var stateRef = firebase.firestore().collection('Branch').doc('state')
+      return firebase.firestore().runTransaction((transaction)=>{
+        return transaction.get(stateRef).then((stateDoc)=>{
+          if(!stateDoc.exists){
+            throw "Document does not exist!";
+          }
+
+          let state = stateDoc.data().count
+          var newState = parseInt(state)+1
+          
+          if(newState/10 < 1){
+            newState = newState.toString()
+            newState = '0'+newState
+          }else{
+            newState = newState.toString()
+          }
+          transaction.update(stateRef, {count : newState})
+          
+          firebase.firestore().collection('Branch').doc(state)
+          .set(data)
+          .then(()=>{
+            success();
+          })
+          .catch((error)=>{
+            reject(error);
+          });
+        })
+      })
+      .then()
+      .catch((error)=>{
+        console.log(error)
       });
     }
 }
