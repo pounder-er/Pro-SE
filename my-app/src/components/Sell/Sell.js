@@ -8,6 +8,7 @@ import {
 import {
     Button,
     Row,
+    // Column,
     Container,
 } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
