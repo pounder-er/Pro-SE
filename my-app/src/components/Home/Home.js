@@ -72,7 +72,7 @@ import AddProduct from '../Product/AddProduct';
 import HistoryInOut from '../HistoryInOut/HistoryInOut'
 import SalesReport from '../SalesReport/SalesReport'
 import ProductsReport from '../ProductsReport/ProductReport'
-import ProductDetail from '../ProductDetail/ProductDetail'
+import ProductDetail from '../ProductsReport/ProductDetail'
 import Calculate from '../Calculate/Calculate'
 import PartnerList from '../Company/PartnerList'
 import BranchList from '../Branch/BranchList'
