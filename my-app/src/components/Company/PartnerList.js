@@ -114,20 +114,22 @@ class PartnerList extends React.PureComponent {
     listeningPartnerCompanySuccess=(snapshot)=>{
         let data = this.state.dataSource;
         snapshot.docChanges().forEach(function (change) {
-            let d = change.doc.data();
-            d.id = change.doc.id
-            if (change.type === "added") {
-                d.no = data.length+1;
-                data.push(d);
-            }
-            if (change.type === "modified") {
-                d.no = data[data.findIndex((obj=>obj.id == d.id))].no
-                data[data.findIndex((obj=>obj.id == d.id))] = d;
-                console.log("Modified : ", d);
-            }
-            if (change.type === "removed") {
-                data.splice(data.findIndex((obj=>obj.id == d.id)),1);
-                console.log("Removed : ", change.doc.data());
+            if(change.doc.id != 'state'){
+                let d = change.doc.data();
+                d.id = change.doc.id
+                if (change.type === "added") {
+                    d.no = data.length+1;
+                    data.push(d);
+                }
+                if (change.type === "modified") {
+                    d.no = data[data.findIndex((obj=>obj.id == d.id))].no
+                    data[data.findIndex((obj=>obj.id == d.id))] = d;
+                    console.log("Modified : ", d);
+                }
+                if (change.type === "removed") {
+                    data.splice(data.findIndex((obj=>obj.id == d.id)),1);
+                    console.log("Removed : ", change.doc.data());
+                }
             }
         })
 
@@ -183,9 +185,14 @@ class PartnerList extends React.PureComponent {
                 <div style={{display:'flex', width:'100%', justifyContent:'flex-end'}}>
                     <Button color="success" 
                             onClick={()=>{this.setState({modalAddPartner : !this.state.modalAddPartner})}}
-                            style={{width:'10%', 
+                            style={{width:150, 
                                     height:45, 
                                     marginBottom:10}}>เพิ่มบริษัทคู่ค้า</Button>
+                    {/* <Button color="success" 
+                            onClick={()=>{firestore.addVender()}}
+                            style={{width:'10%', 
+                                    height:45, 
+                                    marginBottom:10}}>Test</Button>                 */}
                 </div>
                 
                 <ReactDataGrid

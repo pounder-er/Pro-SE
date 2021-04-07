@@ -186,7 +186,7 @@ class BranchList extends React.PureComponent {
                 <div style={{display:'flex', width:'100%', justifyContent:'flex-end'}}>
                     <Button color="success" 
                             onClick={()=>{this.setState({modalAddBranch : !this.state.modalAddBranch})}}
-                            style={{width:'10%', 
+                            style={{width:150, 
                                     height:45, 
                                     marginBottom:10}}>เพิ่มสาขา</Button>
                 </div>

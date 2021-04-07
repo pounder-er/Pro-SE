@@ -151,7 +151,8 @@ class AddPartner extends React.Component {
               this.setState({ loading: true });
               this.account = values;
               console.log(values)
-              firestore.addPartnerCompany(values, this.addPartnerSuccess, this.unSuccess);
+              //firestore.addPartnerCompany(values, this.addPartnerSuccess, this.unSuccess);
+              firestore.addVender(values, this.addPartnerSuccess, this.unSuccess);
               resetForm(true);
               
             }}
