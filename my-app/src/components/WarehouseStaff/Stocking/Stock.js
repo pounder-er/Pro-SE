@@ -38,7 +38,7 @@ class Stock extends React.Component {
     }
 
     success = (doc) => {
-        console.log('success')
+        // console.log('success')
         doc.forEach(doc => {
             let array = doc.data()
 
@@ -66,8 +66,18 @@ class Stock extends React.Component {
 
         if (type == "balance") {
             for (let i = 0; i < this.state.checkList.length; i++) {
-                if (this.state.checkList[i].productID === numOrder && isNaN(text.target.value) != true && text.target.value != '') {
-                    this.state.checkList[i].balance = parseInt(text.target.value, 10)
+                if (this.state.checkList[i].productID === numOrder) {
+
+                    let num = parseInt(text.target.value, 10)
+                    // console.log(typeof(num))
+                    // console.log(isNaN(num))
+
+                    if(isNaN(num)){
+                        this.state.checkList[i].balance = 0
+                    }
+                    else
+                        this.state.checkList[i].balance = num
+
                     // console.log(this.state.checkList[i].balance)
                     // console.log(isNaN(text.target.value))
                     // console.log(typeof(checkList[i].balance))
@@ -77,15 +87,23 @@ class Stock extends React.Component {
         }
         else if (type == "damage") {
             for (let i = 0; i < this.state.checkList.length; i++) {
-                if (this.state.checkList[i].no === numOrder && isNaN(text.target.value) != true && text.target.value != '') {
-                    this.state.checkList[i].damage = parseInt(text.target.value, 10)
+                if (this.state.checkList[i].productID === numOrder) {
+
+                    let num = parseInt(text.target.value, 10)
+
+                    if(isNaN(num)){
+                        this.state.checkList[i].damage = 0
+                    }
+                    else
+                        this.state.checkList[i].damage = num
+
                     break
                 }
             }
         }
         else if (type == "report") {
             for (let i = 0; i < this.state.checkList.length; i++) {
-                if (this.state.checkList[i].no === numOrder) {
+                if (this.state.checkList[i].productID === numOrder) {
                     this.state.checkList[i].report = text.target.value
                     break
                 }

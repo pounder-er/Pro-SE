@@ -26,7 +26,7 @@ class Export extends React.Component {
         super(props)
         this.state = {
             checkList: exportList,
-            test:"ad1345135135hn123523jnawdab"
+            // test:"ad1345135135hn123523jnawdab"
         }
     }
 

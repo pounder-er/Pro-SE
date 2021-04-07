@@ -12,18 +12,18 @@
         "lot" : "100100",
         "channel" : "A1",
         "detail":[
-            {"productID" : "11323", "oldNew" : "ใหม่", "comName" : "สส.จำกัด", "productName" : "ข้าวหอมมะลิ ตราสส", "productWeight" : 5, "total" : 20, "status" : false},
-            {"productID" : "11323", "oldNew" : "ใหม่", "comName" : "สส.จำกัด", "productName" : "ข้าวหอมมะลิ ตราสส", "productWeight" : 5, "total" : 20, "status" : false},
-            {"productID" : "11323", "oldNew" : "ใหม่", "comName" : "สส.จำกัด", "productName" : "ข้าวหอมมะลิ ตราสส", "productWeight" : 5, "total" : 20, "status" : false}
+            {"productID" : "111rvtdyk1323", "oldNew" : "ใหม่", "comName" : "สส.จำกัด", "productName" : "ข้าวหอมมะลิ ตราสส", "productWeight" : 5, "total" : 20, "status" : false},
+            {"productID" : "113brk123", "oldNew" : "ใหม่", "comName" : "สส.จำกัด", "productName" : "ข้าวหอมมะลิ ตราสส", "productWeight" : 5, "total" : 20, "status" : false},
+            {"productID" : "1131v23", "oldNew" : "ใหม่", "comName" : "สส.จำกัด", "productName" : "ข้าวหอมมะลิ ตราสส", "productWeight" : 5, "total" : 20, "status" : false}
         ]
     },
     {
         "lot" : "100100",
         "channel" : "A1",
         "detail":[
-            {"productID" : "11323", "oldNew" : "ใหม่", "comName" : "สส.จำกัด", "productName" : "ข้าวหอมมะลิ ตราสส", "productWeight" : 5, "total" : 20, "status" : false},
-            {"productID" : "11323", "oldNew" : "ใหม่", "comName" : "สส.จำกัด", "productName" : "ข้าวหอมมะลิ ตราสส", "productWeight" : 5, "total" : 20, "status" : false},
-            {"productID" : "11323", "oldNew" : "ใหม่", "comName" : "สส.จำกัด", "productName" : "ข้าวหอมมะลิ ตราสส", "productWeight" : 5, "total" : 20, "status" : false}
+            {"productID" : "113v1k3r23", "oldNew" : "ใหม่", "comName" : "สส.จำกัด", "productName" : "ข้าวหอมมะลิ ตราสส", "productWeight" : 5, "total" : 20, "status" : false},
+            {"productID" : "113vdt1r323", "oldNew" : "ใหม่", "comName" : "สส.จำกัด", "productName" : "ข้าวหอมมะลิ ตราสส", "productWeight" : 5, "total" : 20, "status" : false},
+            {"productID" : "11313htk23", "oldNew" : "ใหม่", "comName" : "สส.จำกัด", "productName" : "ข้าวหอมมะลิ ตราสส", "productWeight" : 5, "total" : 20, "status" : false}
         ]
     }
 ]

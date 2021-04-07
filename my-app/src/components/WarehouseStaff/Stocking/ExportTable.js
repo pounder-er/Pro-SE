@@ -24,18 +24,32 @@ class ExportTable extends React.Component {
         this.state = {
             lot: this.props.location.lot,
             channel: this.props.location.channel,
-            exportDetail: this.props.location.data
-            // test: this.props.location.data 
+            exportDetail: this.props.location.data,
+            checkCount:this.props.location.data.length
         }
         // console.log(this.state.exportDetail)
     }
 
     onCheckChange =(event)=>{
-        console.log(event.target.checked)
+        if(event.target.checked == true){
+            this.setState({checkCount:(this.state.checkCount-=1)})
+            console.log(event.target.checked)
+            // console.log(this.state.checkCount)
+        }
+        else{
+            this.setState({checkCount:(this.state.checkCount+=1)})
+            console.log(event.target.checked)
+            // console.log(this.state.checkCount)
+        }
     }
 
-    onSave =()=>{
-        
+    onSaveOrder =()=>{
+        if(this.state.checkCount == 0){
+            console.log("Success")
+        }
+        else if(this.state.checkCount != 0){
+            console.log("Unsuadadw ccess")
+        }
     }
 
     render() {
@@ -53,7 +67,7 @@ class ExportTable extends React.Component {
                     <td>{data.total}</td>
                     <td>
                         <InputGroup>
-                            <Input addon type="checkbox" style={{ width: 20, height: 20 }} onClick = {this.onCheckChange}/>
+                            <Input addon type="checkbox" style={{ width: 20, height: 20 }} onChange = {this.onCheckChange}/>
                         </InputGroup>
                     </td>
                 </tr>
@@ -94,7 +108,7 @@ class ExportTable extends React.Component {
 
                     <body className="ButtonTable">
                         <Button style={{ height: 40, width: 80, background: "#FF0000" }} onClick={() => this.props.history.goBack()}>กลับ</Button>
-                        <Button style={{ height: 40, width: 80, background: "#00B046", marginRight: 20 }}>บันทึก</Button>
+                        <Button style={{ height: 40, width: 80, background: "#00B046", marginRight: 20 }} onClick={this.onSaveOrder}>บันทึก</Button>
                     </body>
 
                 </body>
