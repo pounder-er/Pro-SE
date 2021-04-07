@@ -65,12 +65,12 @@ class Buy extends React.Component {
             let log = doc.data().log;
             d.InID = doc.id;
             d.dateCreate = d.dateCreate.toDate().getDate()+"/"+(d.dateCreate.toDate().getMonth()+1)+"/"+d.dateCreate.toDate().getFullYear()
-            if(d.dateIn != undefined)
+            if(d.dateIn)
                 d.dateIn = d.dateIn.toDate().getDate()+"/"+(d.dateIn.toDate().getMonth()+1)+"/"+d.dateIn.toDate().getFullYear()
             else
                 d.dateIn = "-"
-            if(d.datePay != undefined)
-            d.datePay = d.datePay.toDate().getDate()+"/"+(d.datePay.toDate().getMonth()+1)+"/"+d.datePay.toDate().getFullYear()
+            if(d.datePay)
+                d.datePay = d.datePay.toDate().getDate()+"/"+(d.datePay.toDate().getMonth()+1)+"/"+d.datePay.toDate().getFullYear()
             else
                 d.datePay = "-"
 
