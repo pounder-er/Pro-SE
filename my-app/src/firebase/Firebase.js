@@ -100,6 +100,39 @@ class Firebase {
 
   getAllCalculate = (success, reject) => {
     firebase.firestore().collection('Calculate')
+    .get()
+      .then(querySnapshot => {
+        success(querySnapshot);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  }
+  getAllProductType = (success, reject) => {
+    firebase.firestore().collection('ProductType')
+      .get()
+      .then(querySnapshot => {
+        success(querySnapshot);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  }
+
+  getAllCompany = (success, reject) => {
+    firebase.firestore().collection('Company')
+    .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
+      .get()
+      .then(querySnapshot => {
+        success(querySnapshot);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  }
+
+  getAllHistoryInOut = (success, reject) => {
+    firebase.firestore().collection('HistoryInOut')
       .get()
       .then(querySnapshot => {
         success(querySnapshot);
@@ -110,6 +143,18 @@ class Firebase {
   }
   getAllSell = (success, reject) => {
     firebase.firestore().collection('Sell')
+    .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
+      .get()
+      .then(querySnapshot => {
+        success(querySnapshot);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  }
+  getAllBuy = (success, reject) => {
+    firebase.firestore().collection('Buy')
+    .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
       .get()
       .then(querySnapshot => {
         success(querySnapshot);
@@ -154,7 +199,7 @@ class Firebase {
   }
 
   uploadImageProfile = async (uid, image, success, reject) => {
-    var ref = await firebase
+    let ref = await firebase
       .storage()
       .ref()
       .child('profile/' + uid);
@@ -170,6 +215,24 @@ class Firebase {
       });
   }
 
+  uploadImage= async(path,image,success,reject)=>{
+    let ref = await firebase
+      .storage()
+      .ref()
+      .child(path);
+    ref
+      .put(image)
+      .then(async (snapshot) => {
+        await snapshot.ref.getDownloadURL().then((url) => {
+          success(url);
+        });
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  }
+
+
   listeningProfile = (success, reject) => {
     firebase.firestore().collection('UserProfiles')
       .where('firstName', '!=', 'แอดมิน')
@@ -179,7 +242,75 @@ class Firebase {
         reject(error);
       });
   }
+  
+  addProduct = (product) =>{
+    let db = firebase.firestore(),
+    productType = product.productType,
+    companyID = product.companyID,
+    prod = Object.assign({},product);
+    prod.productType = db.collection('ProductType').doc(prod.productType);
+    prod.companyID = db.collection('Company').doc(prod.companyID);
+    prod.image = "";
+    console.log(prod);
 
+    return db.runTransaction((transaction)=>{
+      return transaction
+      .get(db.collection('Product').doc('state'))
+      .then(doc=>{
+        if (!doc.exists) {
+          throw "Document does not exist!";
+        }
+        let state = doc.data().productCount,
+        id,indexArr;     
+        state.find((doc,index)=>{
+          if(doc.id == productType+'1'+companyID){
+            indexArr = index
+            return true;
+          }
+        })
+        let idReturn;
+        if(indexArr != undefined){
+         
+
+          id = state[indexArr].id+state[indexArr].count;
+          idReturn = id;
+          transaction.set(db.collection('Product').doc(id), prod);
+
+          state[indexArr].count = ("0"+(Number(state[indexArr].count)+1).toString()).slice(-2);
+          transaction.update(db.collection('Product').doc('state'),{productCount:state});
+
+          id = state[indexArr+1].id+state[indexArr+1].count;
+          transaction.set(db.collection('Product').doc(id), prod);
+
+          state[indexArr+1].count = ("0"+(Number(state[indexArr+1].count)+1).toString()).slice(-2);
+          transaction.update(db.collection('Product').doc('state'),{productCount:state});
+          
+        }else{
+
+          id = productType+'1'+companyID+'00';
+          idReturn = id;
+          transaction.set(db.collection('Product').doc(id), prod);
+
+          state.push({id:productType+'1'+companyID,count:'01'});
+          transaction.update(db.collection('Product').doc('state'),{productCount:state});
+
+          id = productType+'0'+companyID+'00';
+          transaction.set(db.collection('Product').doc(id), prod);
+
+          state.push({id:productType+'0'+companyID,count:'01'});
+          transaction.update(db.collection('Product').doc('state'),{productCount:state});
+        }
+        idReturn = idReturn.substring(2);
+        return idReturn;
+        // transaction.set(db.collection('Product').doc('11'), { test: count });
+      })
+    }).then((id)=>{
+      console.log("Transaction successfully committed!",id);
+    }).catch((error)=>{
+      console.log("Transaction failed: ", error);
+    })
+
+  }
 }
 const fire_base = new Firebase();
 export default fire_base;
