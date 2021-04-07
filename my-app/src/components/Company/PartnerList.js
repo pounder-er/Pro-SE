@@ -43,6 +43,7 @@ import EditPartnerCompany from './EditPartner'
 import AddPartner from './AddPartner'
 
 const filterValue = [
+    { name: 'id', operator: 'startsWith', type: 'string', value: '' },
     { name: 'comName', operator: 'startsWith', type: 'string', value: '' },
     { name: 'agentName', operator: 'startsWith', type: 'string', value: '' },
     { name: 'email', operator: 'startsWith', type: 'string', value: '' },
@@ -81,8 +82,8 @@ class PartnerList extends React.PureComponent {
         }
         this.data = {};
         this.columns = [
-            { name: 'id', header: 'Id', defaultVisible: false, maxWidth: 50 },
-            { name: 'no', header: 'No', type: 'number' ,groupBy: false, maxWidth: 50 },
+            { name: 'no', header: 'No', type: 'number' , groupBy: false, maxWidth: 50 },
+            { name: 'id', groupBy: false,defaultFlex: 0.5, header: 'รหัสบริษัท'},
             { name: 'comName', groupBy: false,defaultFlex: 1, header: 'ชื่อบริษัท' },
             { name: 'agentName', groupBy: false,defaultFlex: 1, header: 'ชื่อตัวแทน' },
             { name: 'email', groupBy: false, defaultFlex: 1, header: 'อีเมล' },

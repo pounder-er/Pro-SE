@@ -43,6 +43,7 @@ import EditBranch from './EditBranch'
 import AddBranch from './AddBranch'
 
 const filterValue = [
+    { name: 'id', operator: 'startsWith', type: 'string', value: '' },
     { name: 'branchName', operator: 'startsWith', type: 'string', value: '' },
     { name: 'ownerName', operator: 'startsWith', type: 'string', value: '' },
     { name: 'agentName', operator: 'startsWith', type: 'string', value: '' },
@@ -82,8 +83,8 @@ class BranchList extends React.PureComponent {
         }
         this.data = {};
         this.columns = [
-            { name: 'id', header: 'Id', defaultVisible: false, maxWidth: 50 },
-            { name: 'no', header: 'No', type: 'number' ,groupBy: false, maxWidth: 50 },
+            { name: 'no', header: 'No', type: 'number' , groupBy: false, maxWidth: 50 },
+            { name: 'id', groupBy: false,defaultFlex: 0.5, header: 'รหัสสาขา'},
             { name: 'branchName', groupBy: false,defaultFlex: 1, header: 'ชื่อบริษัท' },
             { name: 'ownerName', groupBy: false,defaultFlex: 1, header: 'ชื่อเจ้าของ' },
             { name: 'agentName', groupBy: false,defaultFlex: 1, header: 'ชื่อตัวแทน' },
