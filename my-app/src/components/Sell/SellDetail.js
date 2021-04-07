@@ -28,7 +28,7 @@ const filterValue = [
     { name: 'productName', operator: 'startsWith', type: 'string', },
     { name: 'productPrice', operator: 'startsWith', type: 'string', },
     { name: 'volume', operator: 'startsWith', type: 'string', },
-    { name: 'discount', operator: 'startsWith', type: 'string', },
+    { name: 'disCount', operator: 'startsWith', type: 'string', },
     { name: 'summary', operator: 'startsWith', type: 'string', },
 
 ];
@@ -38,7 +38,7 @@ const columns = [
     { name: 'productName', groupBy: false, defaultFlex: 1, header: 'รายการสินค้า' },
     { name: 'productPrice', groupBy: false, defaultFlex: 1, header: 'ราคาสินค้าต่อหน่วย' },
     { name: 'volume', groupBy: false, defaultFlex: 1, header: 'จำนวน' },
-    { name: 'discount', groupBy: false, defaultFlex: 1, header: 'ส่วนลด' },
+    { name: 'disCount', groupBy: false, defaultFlex: 1, header: 'ส่วนลด' },
     { name: 'summary', groupBy: false, defaultFlex: 1, header: 'ยอดรวม' },
 
 ]
@@ -54,32 +54,38 @@ class SellDetail extends React.Component {
     
     componentDidMount() {
         //await fire_base.getAllSell(this.getAllSellSuccess, this.unSuccess);
-        // console.log(this.props.profile.log)
-        for(let x in this.props.profile.log){
-           console.log(x)
+        //console.log(this.props.profile.log[0].productPrice)
+        for(let x of this.props.profile.log){
+            
+           
+            x.productID.get()
+            .then(doc=>{
+                let d = doc.data();
+                d.productID = doc.id;
+                d.productPrice = x.productPrice
+                d.disCount = x.disCount
+                d.volume = x.volume
+                d.summary = d.volume*d.productPrice-d.disCount
+                this.setState({dataSource:this.state.dataSource.concat(d)});
+                console.log(this.state.dataSource)
+            })
+            
         }
-    }
-
-    getAllSellSuccess = async(querySnapshot) => {   
-        let data = []
-        await querySnapshot.forEach((doc) => { 
-
-        });
     }
     setDataGridRef = (ref) => (this.dataGrid = ref)
 
     render() {
         return (
             <Container fluid={false} style={{ backgroundColor: 'while'}} >
-                <Row style={{ height: 50 }}>
+                <Row style={{ height: 25 }}>
                     <Col >
                     </Col>
                     <Col >
                     </Col >
                     <Col style={{display:'flex',flexDirection:'row',justifyContent: 'flex-end'}} >
-                        <Button color="info" style={{ width: 150 ,marginRight: 15}}>บันทึก</Button>
+                        <Button color="info" style={{ width: 100 ,marginRight: 15}}>บันทึก</Button>
                         {' '}
-                        <Button color="info" style={{ width: 150 }}>ยกเลิก</Button>
+                        <Button color="danger" style={{ width: 100 }}>ยกเลิก</Button>
                     </Col>
                 </Row>
                 <Row style={{ height: 50 }}>
