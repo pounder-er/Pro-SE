@@ -1,146 +1,123 @@
 import React from 'react';
 
-
-import './Company.css';
+import fire_base from '../../firebase/Firebase';
+import {
+    Link,
+} from 'react-router-dom';
 
 import {
     Button,
-    InputGroup,
-    InputGroupAddon,
-    InputGroupText,
-    Input,
-    Table,
-    Pagination,
-    PaginationItem,
-    PaginationLink
+    Row, Container,
+
 } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { 
-    Switch, 
-    Route, 
-    Link, 
-    NavLink, 
-    withRouter } from 'react-router-dom';
-import {
-    ProSidebar,
-    Menu,
-    MenuItem,
-    SubMenu
-} from 'react-pro-sidebar';
+
+import ReactDataGrid from '@inovua/reactdatagrid-community'
 import 'react-pro-sidebar/dist/css/styles.css';
+import '@inovua/reactdatagrid-community/base.css'
+import '@inovua/reactdatagrid-community/theme/default-light.css'
 
-import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
-import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons/md";
-import { IoMdTrash } from "react-icons/io";
+import {i18n} from '../i18n';
 
 
+const filterValue = [
+    { name: 'InID', operator: 'startsWith', type: 'string', },
+    { name: 'companyID', operator: 'startsWith', type: 'string', },
+    { name: 'dateCreate', operator: 'startsWith', type: 'string', },
+    { name: 'dateIn', operator: 'startsWith', type: 'string', },
+    { name: 'res', operator: 'startsWith', type: 'string', },
+    { name: 'status', operator: 'startsWith', type: 'string', },
+
+];
+
+const columns = [
+    { name: 'id', header: 'id', defaultVisible: false, },
+    { name: 'InID', header: 'หมายเลขใบสั่งซื้อ', defaultVisible: true, groupBy: false },
+    { name: 'companyID', groupBy: false, defaultFlex: 1, header: 'บริษัท' },
+    { name: 'dateCreate', groupBy: false, defaultFlex: 1, header: 'วันที่สร้าง' },
+    { name: 'dateIn', groupBy: false, defaultFlex: 1, header: 'วันที่สำเร็จการซื้อ' },
+    { name: 'res', groupBy: false, defaultFlex: 1, header: 'ผู้รับผิดชอบ' },
+    { name: 'status', groupBy: false, defaultFlex: 1, header: 'สถานะ' },
+
+]
 
 class Buy extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            searchText: '',
+            dataSource: [],
         }
+    }
+    setDataGridRef = (ref) => (this.dataGrid = ref)
+
+    async componentDidMount() {
+        await fire_base.getAllBuy(this.getAllBuySuccess, this.unSuccess);
+    }
+
+    getAllBuySuccess = async(querySnapshot) => {
+        
+        let data = []
+        await querySnapshot.forEach((doc) => { 
+            if(doc.id != 'state')
+            {
+            let d = doc.data();
+            let log = doc.data().log;
+            d.InID = doc.id;
+            d.dateCreate = d.dateCreate.toDate().getDate()+"/"+(d.dateCreate.toDate().getMonth()+1)+"/"+d.dateCreate.toDate().getFullYear()
+            if(d.dateIn != undefined)
+                d.dateIn = d.dateIn.toDate().getDate()+"/"+(d.dateIn.toDate().getMonth()+1)+"/"+d.dateIn.toDate().getFullYear()
+            else
+                d.dateIn = "-"
+            if(d.datePay != undefined)
+            d.datePay = d.datePay.toDate().getDate()+"/"+(d.datePay.toDate().getMonth()+1)+"/"+d.datePay.toDate().getFullYear()
+            else
+                d.datePay = "-"
+
+            let a = d.companyID.get()
+            .then(doc=>{
+                d.companyID = doc.data().companyName
+                return d;
+            })
+            a.then(doc=>{
+                console.log(doc)
+                this.setState({dataSource:this.state.dataSource.concat(doc)});
+            })
+            }
+        });
+         await this.setState({dataSource: data });
+        
+        
+    }
+
+    unSuccess(error) {
+        console.log(error);
     }
     render() {
         return (
-            <div className="Container">
+            <Container fluid={true} style={{ backgroundColor: 'while' }} >
 
-                <div className="Content">
-                    <body className="Body">
-                        <h1 style={{
-                            marginTop: 20,
-                            marginBottom: 20,
-                            width: '95%',
-                            alignSelf: 'center'
-                        }}>รายการสั่งซื้อสินค้า</h1>
-                        <div className="Search_Button">
-                            <InputGroup style={{ width: 400 }}>
-                                <Input placeholder="หมายเลขใบสั่งซื้อ" />
-                                <InputGroupAddon addonType="append">
-                                    <InputGroupText><MdSearch color="#1F1F1F" size={22} /></InputGroupText>
-                                </InputGroupAddon>
-                            </InputGroup>
-                            <Button color="info" style={{ width: 100 }}>fillter</Button>
-                            <Link to={this.props.match.url+"/po"}>
-                            <Button color="info" style={{ width: 150 }}>เพิ่มรายการสั่งซื้อ</Button>
-                            </Link>
-                        </div>
+                <Link to={this.props.match.url + "/po"}>
+                    <Button color="info" style={{ width: 150 }}>เพิ่มรายการสั่งซื้อ</Button>
+                </Link>
+                <Row style={{ marginTop: '20px' }}>
+                    <ReactDataGrid
+                        onReady={this.setDataGridRef}
+                        i18n={i18n}
+                        idProperty="id"
+                        columns={columns}
+                        pagination
+                        defaultLimit={15}
+                        defaultSkip={15}
+                        pageSizes={[10, 15, 30]}
+                        dataSource={this.state.dataSource}
+                        defaultFilterValue={filterValue}
+                        showColumnMenuTool={true}
+                        emptyText="ไม่มีรายการ"
+                    />
+                </Row>
 
-                        <Table striped style={{ width: '95%', alignSelf: 'center', marginTop: 20 }}>
-                            <thead>
-                                <tr>
-                                    <th>ลำดับที่</th>
-                                    <th>บริษัท</th>
-                                    <th>หมายเลขใบสั่งซื้อ</th>
-                                    <th>วันที่สั่งซื้อ</th>
-                                    <th>ผู้รับผิดชอบ</th>
-                                    <th>สถานะ</th>
-                                    <th>รายละเอียด</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>สส.จำกัด</td>
-                                    <td>100012</td>
-                                    <td>01/01/2564</td>
-                                    <td>ประยา จันชุด</td>
-                                    <td>รอใบเสนอขาย</td>
-                                    <td className="CenterTd"><MdDescription color="#00A3FF" size={25} /></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>สส.จำกัดค้าแป้ง</td>
-                                    <td>100013</td>
-                                    <td>01/01/2564</td>
-                                    <td>ประยา จันชุด</td>
-                                    <td>รอการยืนยัน</td>
-                                    <td className="CenterTd"><MdDescription color="#00A3FF" size={25} /></td>
-                                </tr>
-                                {/* <tr>
-                                    <th scope="row">3</th>
-                                    <td>100012</td>
-                                    <td>01/01/2564</td>
-                                    <td>ประยา จันชุด</td>
-                                    <td>เข้า</td>
-                                    <td className="CenterTd"><MdDescription color="#00A3FF" size={25} /></td>
-                                </tr> */}
-
-
-
-                            </tbody>
-                        </Table>
-                        <Pagination aria-label="Page navigation example"
-                            style={{
-                                justifyContent: 'center',
-                                marginTop: 10
-                            }}>
-                            <PaginationItem>
-                                <PaginationLink first href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink previous href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">1</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">2</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">3</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink next href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink last href="#" />
-                            </PaginationItem>
-                        </Pagination>
-                    </body>
-                </div>
-            </div>
+            </Container>
         );
     }
 }

@@ -2,24 +2,14 @@ import React from 'react';
 
 import fire_base from '../../firebase/Firebase';
 import {
-    Switch,
-    Route,
     Link,
-    NavLink,
-    withRouter
 } from 'react-router-dom';
 
 import {
     Button,
-    InputGroup,
-    InputGroupAddon,
-    InputGroupText,
-    Input,
-    Table,
-    Pagination,
-    Row, Col, Container,
-    PaginationItem,
-    PaginationLink
+    Row,
+    // Column,
+    Container,
 } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -32,10 +22,8 @@ import SelectFilter from '@inovua/reactdatagrid-community/SelectFilter'
 
 import moment from 'moment'
 
-import { i18n } from '../i18n';
-import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
-import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons/md";
-import { IoMdTrash } from "react-icons/io";
+import {i18n} from '../i18n';
+
 
 const filterValue = [
     { name: 'InID', operator: 'startsWith', type: 'string', },
@@ -95,27 +83,33 @@ class Sell extends React.Component {
         await fire_base.getAllSell(this.getAllSellSuccess, this.unSuccess);
     }
 
-    getAllSellSuccess = async (querySnapshot) => {
+    getAllSellSuccess = async(querySnapshot) => {
+        
         let data = []
-        await querySnapshot.forEach((doc) => {
-            if (doc.id != 'state') {
+        await querySnapshot.forEach((doc) => { 
+            if(doc.id != 'state')
+            {
+            let d = doc.data();
+            let log = doc.data().log;
+            d.InID = doc.id;
+            d.dateCreate = d.dateCreate.toDate().getDate()+"/"+(d.dateCreate.toDate().getMonth()+1)+"/"+d.dateCreate.toDate().getFullYear()
+            d.dateIn = d.dateIn.toDate().getDate()+"/"+(d.dateIn.toDate().getMonth()+1)+"/"+d.dateIn.toDate().getFullYear()
+            d.datePay = d.datePay.toDate().getDate()+"/"+(d.datePay.toDate().getMonth()+1)+"/"+d.datePay.toDate().getFullYear()
 
-                let d = doc.data();
-                d.InID = doc.id;
-                console.log(d)
-                d.dateCreate =   moment(d.dateCreate.toDate()).format('DD/MM/YYYY')
-                console.log(d.dateCreate);
-                // d.dateIn = d.dateIn.toDate().getDate() + "/" + (d.dateIn.toDate().getMonth() + 1) + "/" + d.dateIn.toDate().getFullYear()
-                // d.datePay = d.datePay.toDate().getDate() + "/" + (d.datePay.toDate().getMonth() + 1) + "/" + d.datePay.toDate().getFullYear()
-
-                let a = d.branchID.get()
-                    .then(doc => {
-                        d.branchID = doc.data().branchName
-                        this.setState({ dataSource: this.state.dataSource.concat(d) });
-                    })
+            let a = d.branchID.get()
+            .then(doc=>{
+                d.branchID = doc.data().branchName
+                return d;
+            })
+            a.then(doc=>{
+                console.log(doc)
+                this.setState({dataSource:this.state.dataSource.concat(doc)});
+            })
             }
         });
-
+         await this.setState({dataSource: data });
+        
+        
     }
 
     unSuccess(error) {
@@ -126,7 +120,7 @@ class Sell extends React.Component {
             <Container fluid={true} style={{ backgroundColor: 'while' }} >
 
                 <Link to={this.props.match.url + "/so"}>
-                    <Button color="info" style={{ width: 150 }}>เพิ่มรายการสั่งซื้อ</Button>
+                    <Button color="info" style={{ width: 150 }}>เพิ่มรายการขาย</Button>
                 </Link>
                 <Row style={{ marginTop: '20px' }}>
                     <ReactDataGrid

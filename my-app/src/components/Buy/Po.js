@@ -1,8 +1,5 @@
 import React from 'react';
 
-
-import './Company.css';
-
 import {
     Button,
     InputGroup,
