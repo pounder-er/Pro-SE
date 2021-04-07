@@ -85,7 +85,7 @@ class Calculate extends React.Component {
                 let d = doc.data();
                 
                 d.productID = doc.id
-                d.sum =  Math.round(Math.sqrt((2*d.O*d.D)/(d.U*d.C)));
+                d.sum =  Math.round(Math.sqrt((2*d.cal.O*d.cal.D)/(d.cal.U*d.cal.C)));
                 console.log(d.sum)
                 await d.productType.get()
                     .then(async(doc) => {

@@ -2,20 +2,21 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import {
-    Button,
-    InputGroup,
-    InputGroupAddon,
-    InputGroupText,
+    Form,
     FormGroup,
     Label,
-    FormFeedback,
     Input,
-    Table,
-    Pagination,
-    PaginationItem,
-    PaginationLink, Row, Col, Container, Modal,
+    FormFeedback,
+    FormText,
+    CardBody,
+    Card,
+    Button,
+    Col,
+    Row,
+    Modal,
     ModalHeader,
     ModalBody,
+    ModalFooter, Container
 } from 'reactstrap';
 
 import { Formik, Field, ErrorMessage } from 'formik';
@@ -159,115 +160,134 @@ class EditCalculate extends React.Component {
     render() {
         return (
 
-            <Formik
-                validationSchema={formEmployeeSchema}
-                onSubmit={async (values, { resetForm }) => {
-                    this.setState({ loading: true });
-                    this.account = values;
-                    await axios.post('/appInventory/createUser',
-                        {
-                            email: values.email,
-                            password: values.password,
-                        })
-                        .then(async (res) => {
-                            if (res.data.userRecord) {
-                                if (values.imageProfile) {
-                                    await fire_base.uploadImageProfile(res.data.userRecord.uid, values.imageProfile, this.uploadImageProfileSuccess, this.unSuccess);
-                                } else {
-                                    await this.uploadImageProfileSuccess('', res.data.userRecord.uid);
-                                }
-                            } else {
-                                this.sweetAlret("ไม่สำเร็จ", "อีเมลซ้ำหรือการเชื่อมต่อมีปัญหา", "error", "ตกลง");
-                                this.setState({ loading: false });
-                            }
-                            console.log(res.data);
-                        }).catch(error => {
-                            console.log(error);
-                            this.sweetAlret("ไม่สำเร็จ", "ไม่สามารถเชื่อมต่อปลายทางได้", "error", "ตกลง");
-                            this.setState({ loading: false });
-                        });
-                    resetForm();
-                    this.setDefaultImageCrop();
-                    console.log(values);
-                }
-                }
-                //กำหนดค่า default from
-                initialValues={{
-                    D: '',
-                    O: '',
-                    U: '',
-                    C: '',
-                    L: '',
-                    d: '',
-                }}
-            >
-                {({
-                    handleSubmit,
-                    handleChange,
-                    handleBlur,
-                    setFieldValue,
-                    handleReset,
-                    values,
-                    touched,
-                    isValid,
-                    errors,
-                }) => (
-                    <Container fluid={true} style={{ backgroundColor: '#B3D864' }} >
-                        <Row>
-                            <Col >
-                                รหัสสินค้า: {this.props.product.productID}
-                            </Col>
-                            <Col >
-                                รายการสินค้า: {this.props.product.productName}
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col >
-                                EOQ   =   SQR(2DO / UC)
+            <Container fluid={true} style={{ backgroundColor: '#B3D864' }} >
+                <Row>
+                    <Col >
+                        รหัสสินค้า: {this.props.product.productID}
                     </Col>
-                        </Row>
-                        <Row>
-                            <Col >
-                                D ความต้องการสินค้าในเวลา 1 ปี
+                    <Col >
+                        รายการสินค้า: {this.props.product.productName}
                     </Col>
-                        </Row>
-                        <Row>
-                            <Col >
-                                O ค่าใช้จ่ายในการสั่งซื้อต่อครั้ง
-                    </Col>
-                        </Row>
-                        <Row>
-                            <Col >
-                                U ต้นทุนของสินค้าต่อหน่วย
-                    </Col>
-                        </Row>
-                        <Row>
-                            <Col >
-                                C ค่าใช้จ่ายในการเก็บรักษาสินค้าคิดเป็น % ของมูลค่าสินค้าทั้งปี
-                    </Col>
-                        </Row>
-                        <Row>
-                            <Col style={{ backgroundColor: 'wheat' }}>
-                                <FormGroup>
-                                    <Label for="D">D</Label>
-                                    <Input
-                                        maxLength={10}
-                                        type="tel"
-                                        name="D"
-                                        id="D"
-                                        placeholder="D"
-                                        onKeyPress={(e) => {
-                                            setFieldValue('D', values.phoneNumber.replace(/[^0-9]/, ''))
-                                        }}
-                                        onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9]/, ''); handleChange(e); }}
-                                    />
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                    </Container>
-                )}
-            </Formik>
+                </Row>
+                <Row>
+                    <Col >EOQ   =   SQR(2DO / UC)</Col>
+                </Row>
+                <Row>
+                    <Col >D ความต้องการสินค้าในเวลา 1 ปี</Col>
+                </Row>
+                <Row>
+                    <Col >O ค่าใช้จ่ายในการสั่งซื้อต่อครั้ง</Col>
+                </Row>
+                <Row>
+                    <Col >U ต้นทุนของสินค้าต่อหน่วย</Col>
+                </Row>
+                <Row>
+                    <Col >C ค่าใช้จ่ายในการเก็บรักษาสินค้าคิดเป็น % ของมูลค่าสินค้าทั้งปี</Col>
+                </Row>
+                <Formik
+                    validationSchema={formEmployeeSchema}
 
+                    initialValues={{
+                        D: this.props.product.cal.D,
+                        O: this.props.product.cal.O,
+                        U: this.props.product.cal.U,
+                        C: this.props.product.cal.C,
+                        L: this.props.product.cal.L,
+                        d: this.props.product.cal.d,
+                    }}
+                >
+                    {({
+                        handleSubmit,
+                        handleChange,
+                        handleBlur,
+                        setFieldValue,
+                        handleReset,
+                        values,
+                        touched,
+                        isValid,
+                        errors,
+                    }) => (
+                        <Form onSubmit={handleSubmit} onReset={handleReset}>
+                            <Row form style={{ marginTop: '30px' }}>
+                                <Col style={{ backgroundColor: 'wheat' }}>
+                                    <FormGroup>
+                                        <Label for="D">D :</Label>
+                                        <Input
+                                            type="tel"
+                                            name="D"
+                                            id="D"
+                                            placeholder="D"
+                                            
+                                            onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/, ''); handleChange(e); }}
+                                            value={values.D}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                                <Col style={{ backgroundColor: 'wheat' }}>
+                                    <FormGroup>
+                                        <Label for="O">O :</Label>
+                                        <Input
+
+                                            type="tel"
+                                            name="O"
+                                            id="O"
+                                            placeholder="O"
+                                           
+                                            onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/, ''); handleChange(e); }}
+                                            value={values.O}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row form>
+                                <Col style={{ backgroundColor: 'wheat' }}>
+                                    <FormGroup>
+                                        <Label for="U">U :</Label>
+                                        <Input
+
+                                            type="tel"
+                                            name="U"
+                                            id="U"
+                                            placeholder="U"
+                                           
+                                            onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/, ''); handleChange(e); }}
+                                            value={values.U}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                                <Col style={{ backgroundColor: 'wheat' }}>
+                                    <FormGroup>
+                                        <Label for="C">C :</Label>
+                                        <Input
+
+                                            type="tel"
+                                            name="C"
+                                            id="C"
+                                            placeholder="C"
+                                           
+                                            onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/, ''); handleChange(e); }}
+                                            value={values.C}
+                                        />
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row >
+                                <Col md={8} />
+                                <Col md={2} style={{ display: 'flex' }}>
+                                    <FormGroup style={{ display: 'flex', flex: 1 }}>
+                                        <Button type="reset" color="secondary" style={{ flex: 1 }}>เคลียร์</Button>
+                                    </FormGroup>
+                                </Col>
+                                <Col md={2} style={{ display: 'flex' }}>
+                                    <FormGroup style={{ display: 'flex', flex: 1 }}>
+                                        <Button type="submit" color="success" style={{ flex: 1 }}>บันทึก</Button>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                        </Form>
+                    )}
+                </Formik>
+            </Container>
         );
     }
 }
