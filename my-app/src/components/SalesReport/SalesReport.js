@@ -58,7 +58,7 @@ class SalesReport extends React.Component {
     setDataGridRef = (ref) => (this.dataGrid = ref)
 
     async componentDidMount() {
-        await fire_base.getAllSaleReport(this.getAllSaleReportSuccess, this.unSuccess);
+        //await fire_base.getAllSaleReport(this.getAllSaleReportSuccess, this.unSuccess);
         await fire_base.getAllProduct(this.getAllProductSuccess, this.unSuccess);
     }
     // getAllSaleReportSuccess = (querySnapshot) => {

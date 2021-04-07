@@ -152,8 +152,10 @@ class EditCalculate extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            loading: false,
+            cal:[],
         }
+        this.loading = false;
     }
 
 
@@ -186,7 +188,14 @@ class EditCalculate extends React.Component {
                 </Row>
                 <Formik
                     validationSchema={formEmployeeSchema}
+                    onSubmit={ (values, { resetForm }) => {
+                        this.setState({ loading: true });
+                        this.cal = values;
 
+                        resetForm();
+                        console.log(values);
+                    }
+                    }
                     initialValues={{
                         D: this.props.product.cal.D,
                         O: this.props.product.cal.O,
@@ -207,84 +216,90 @@ class EditCalculate extends React.Component {
                         isValid,
                         errors,
                     }) => (
-                        <Form onSubmit={handleSubmit} onReset={handleReset}>
-                            <Row form style={{ marginTop: '30px' }}>
-                                <Col style={{ backgroundColor: 'wheat' }}>
-                                    <FormGroup>
-                                        <Label for="D">D :</Label>
-                                        <Input
-                                            type="tel"
-                                            name="D"
-                                            id="D"
-                                            placeholder="D"
-                                            
-                                            onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/, ''); handleChange(e); }}
-                                            value={values.D}
-                                        />
-                                    </FormGroup>
-                                </Col>
-                                <Col style={{ backgroundColor: 'wheat' }}>
-                                    <FormGroup>
-                                        <Label for="O">O :</Label>
-                                        <Input
+                        <LoadingOverlay
+                            active={this.state.loading}
+                            spinner
+                            text='กำลังเพิ่มพนักงาน...'
+                        >
+                            <Form >
+                                <Row form style={{ marginTop: '30px' }}>
+                                    <Col style={{ backgroundColor: 'wheat' }}>
+                                        <FormGroup>
+                                            <Label for="D">D :</Label>
+                                            <Input
+                                                type="tel"
+                                                name="D"
+                                                id="D"
+                                                placeholder="D"
 
-                                            type="tel"
-                                            name="O"
-                                            id="O"
-                                            placeholder="O"
-                                           
-                                            onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/, ''); handleChange(e); }}
-                                            value={values.O}
-                                        />
-                                    </FormGroup>
-                                </Col>
-                            </Row>
-                            <Row form>
-                                <Col style={{ backgroundColor: 'wheat' }}>
-                                    <FormGroup>
-                                        <Label for="U">U :</Label>
-                                        <Input
+                                                onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/, ''); handleChange(e); }}
+                                                value={values.D}
+                                            />
+                                        </FormGroup>
+                                    </Col>
+                                    <Col style={{ backgroundColor: 'wheat' }}>
+                                        <FormGroup>
+                                            <Label for="O">O :</Label>
+                                            <Input
 
-                                            type="tel"
-                                            name="U"
-                                            id="U"
-                                            placeholder="U"
-                                           
-                                            onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/, ''); handleChange(e); }}
-                                            value={values.U}
-                                        />
-                                    </FormGroup>
-                                </Col>
-                                <Col style={{ backgroundColor: 'wheat' }}>
-                                    <FormGroup>
-                                        <Label for="C">C :</Label>
-                                        <Input
+                                                type="tel"
+                                                name="O"
+                                                id="O"
+                                                placeholder="O"
 
-                                            type="tel"
-                                            name="C"
-                                            id="C"
-                                            placeholder="C"
-                                           
-                                            onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/, ''); handleChange(e); }}
-                                            value={values.C}
-                                        />
-                                    </FormGroup>
-                                </Col>
-                            </Row>
-                            <Row >
-                                <Col md={8} />
-                                <Col md={2} style={{ display: 'flex' }}>
-                                    <FormGroup style={{ display: 'flex', flex: 1 }}>
-                                        <Button type="reset" color="secondary" style={{ flex: 1 }}>เคลียร์</Button>
-                                    </FormGroup>
-                                </Col>
-                                <Col md={2} style={{ display: 'flex' }}>
-                                    <FormGroup style={{ display: 'flex', flex: 1 }}>
-                                        <Button type="submit" color="success" style={{ flex: 1 }}>บันทึก</Button>
-                                    </FormGroup>
-                                </Col>
-                            </Row>
-                        </Form>
+                                                onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/, ''); handleChange(e); }}
+                                                value={values.O}
+                                            />
+                                        </FormGroup>
+                                    </Col>
+                                </Row>
+                                <Row form>
+                                    <Col style={{ backgroundColor: 'wheat' }}>
+                                        <FormGroup>
+                                            <Label for="U">U :</Label>
+                                            <Input
+
+                                                type="tel"
+                                                name="U"
+                                                id="U"
+                                                placeholder="U"
+
+                                                onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/, ''); handleChange(e); }}
+                                                value={values.U}
+                                            />
+                                        </FormGroup>
+                                    </Col>
+                                    <Col style={{ backgroundColor: 'wheat' }}>
+                                        <FormGroup>
+                                            <Label for="C">C :</Label>
+                                            <Input
+
+                                                type="tel"
+                                                name="C"
+                                                id="C"
+                                                placeholder="C"
+
+                                                onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/, ''); handleChange(e); }}
+                                                value={values.C}
+                                            />
+                                        </FormGroup>
+                                    </Col>
+                                </Row>
+                                <Row >
+                                    <Col md={8} />
+                                    <Col md={2} style={{ display: 'flex' }}>
+                                        <FormGroup style={{ display: 'flex', flex: 1 }}>
+                                            <Button type="reset" color="secondary" style={{ flex: 1 }}>เคลียร์</Button>
+                                        </FormGroup>
+                                    </Col>
+                                    <Col md={2} style={{ display: 'flex' }}>
+                                        <FormGroup style={{ display: 'flex', flex: 1 }}>
+                                            <Button type="submit" color="success" style={{ flex: 1 }}>บันทึก</Button>
+                                        </FormGroup>
+                                    </Col>
+                                </Row>
+                            </Form>
+                        </LoadingOverlay>
                     )}
                 </Formik>
             </Container>
