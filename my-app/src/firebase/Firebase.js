@@ -101,13 +101,13 @@ class Firebase {
   getAllCalculate = (success, reject) => {
     firebase.firestore().collection('Calculate')
     .get()
-      .then(querySnapshot => {
-        success(querySnapshot);
-      })
-      .catch((error) => {
-        reject(error);
-      })
-  }
+    .then(querySnapshot => {
+      success(querySnapshot);
+    })
+    .catch((error) => {
+      reject(error);
+    })
+}
   getAllProductType = (success, reject) => {
     firebase.firestore().collection('ProductType')
       .get()
