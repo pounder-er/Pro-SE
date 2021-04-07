@@ -35,7 +35,7 @@ import { AiFillFileText } from "react-icons/ai";
 import classnames from 'classnames';
 import fire_base from '../../firebase/Firebase';
 
-import {i18n} from '../i18n';
+import { i18n } from '../i18n';
 
 import ReactDataGrid from '@inovua/reactdatagrid-community';
 import '@inovua/reactdatagrid-community/base.css';
@@ -100,29 +100,29 @@ class SetStockCheckTime extends Component {
 
     setDataGridRef = (ref) => (this.dataGrid = ref)
 
-    getUesrCheckStockSuccess=(querySnapshot)=>{
+    getUesrCheckStockSuccess = (querySnapshot) => {
         let data = [];
-        querySnapshot.forEach(doc=>{
+        querySnapshot.forEach(doc => {
             let d = doc.data();
             d.id = doc.id;
             data.push(d);
         });
-        this.setState({dataSource:data});
+        this.setState({ dataSource: data });
         console.log(data);
     }
 
-    getProductCheckStockSuccess=(querySnapshot)=>{
+    getProductCheckStockSuccess = (querySnapshot) => {
         let data = [];
-        querySnapshot.forEach(doc=>{
+        querySnapshot.forEach(doc => {
             let d = doc.data();
             d.id = doc.id;
             data.push(d);
         });
-        this.setState({dataSourceProduct:data});
+        this.setState({ dataSourceProduct: data });
         console.log(data);
     }
 
-    unSuccess=(error)=>{
+    unSuccess = (error) => {
         console.log(error)
     }
 
@@ -144,10 +144,10 @@ class SetStockCheckTime extends Component {
                     <NavItem>
                         <NavLink
                             className={classnames({ active: this.state.activeTab === '2' })}
-                            onClick={async() => { 
-                                await this.toggleTab('2'); 
-                                await fire_base.getUesrCheckStock(this.getUesrCheckStockSuccess,this.unSuccess);
-                                await fire_base.getProductCheckStock(this.getProductCheckStockSuccess,this.unSuccess);
+                            onClick={async () => {
+                                await this.toggleTab('2');
+                                await fire_base.getUesrCheckStock(this.getUesrCheckStockSuccess, this.unSuccess);
+                                await fire_base.getProductCheckStock(this.getProductCheckStockSuccess, this.unSuccess);
                             }}
                         >
                             กำหนดเอง
@@ -167,22 +167,31 @@ class SetStockCheckTime extends Component {
                             <Col >
                                 <br />
                                 <h4>รายชื่อพนักงานที่สามารถมอบหมายได้</h4>
-                            <ReactDataGrid
-                    onReady={this.setDataGridRef}
-                    i18n={i18n}
-                    idProperty="id"
-                    columns={this.columns}
-                    pagination
-                    defaultLimit={15}
-                    defaultSkip={15}
-                    pageSizes={[10, 15, 30]}
-                    dataSource={this.state.dataSource}
-                    defaultFilterValue={filterValue}
-                    showColumnMenuTool={false}
-                    emptyText="ไม่มีรายการ"
-                    style={{minHeight: 550}}
-                />
+                                <ReactDataGrid
+                                    onReady={this.setDataGridRef}
+                                    i18n={i18n}
+                                    idProperty="id"
+                                    columns={this.columns}
+                                    pagination
+                                    defaultLimit={15}
+                                    defaultSkip={15}
+                                    pageSizes={[10, 15, 30]}
+                                    dataSource={this.state.dataSource}
+                                    defaultFilterValue={filterValue}
+                                    showColumnMenuTool={false}
+                                    emptyText="ไม่มีรายการ"
+                                    style={{ minHeight: 550 }}
+                                />
 
+                            </Col>
+                        </Row>
+                        <Row style={{marginTop:10}}>
+                            <Col md={8} />
+                            <Col md={2} />
+                            <Col md={2} style={{ display: 'flex' }} >
+                        
+                                <Button color="success" style={{ flex: 1 }} >มอบหมาย</Button>
+                    
                             </Col>
                         </Row>
                     </TabPane>
