@@ -223,20 +223,70 @@ class Firebase {
   }
   
   addProduct = (product) =>{
-    let db = firebase.firestore();
-    product.productType = db.collection('ProductType').doc(product.productType);
-    product.companyID = db.collection('Company').doc(product.companyID);
-    
-    db.runTransaction((transaction)=>{
+    let db = firebase.firestore(),
+    productType = product.productType,
+    companyID = product.companyID,
+    prod = Object.assign({},product);
+    prod.productType = db.collection('ProductType').doc(prod.productType);
+    prod.companyID = db.collection('Company').doc(prod.companyID);
+    prod.image = "";
+    console.log(prod);
+
+    return db.runTransaction((transaction)=>{
       return transaction
       .get(db.collection('Product').doc('state'))
       .then(doc=>{
         if (!doc.exists) {
           throw "Document does not exist!";
         }
-        let count = doc.data().count
+        let state = doc.data().productCount,
+        id,indexArr;     
+        state.find((doc,index)=>{
+          if(doc.id == productType+'1'+companyID){
+            indexArr = index
+            return true;
+          }
+        })
+        let idReturn;
+        if(indexArr != undefined){
+         
 
+          id = state[indexArr].id+state[indexArr].count;
+          idReturn = id;
+          transaction.set(db.collection('Product').doc(id), prod);
+
+          state[indexArr].count = ("0"+(Number(state[indexArr].count)+1).toString()).slice(-2);
+          transaction.update(db.collection('Product').doc('state'),{productCount:state});
+
+          id = state[indexArr+1].id+state[indexArr+1].count;
+          transaction.set(db.collection('Product').doc(id), prod);
+
+          state[indexArr+1].count = ("0"+(Number(state[indexArr+1].count)+1).toString()).slice(-2);
+          transaction.update(db.collection('Product').doc('state'),{productCount:state});
+          
+        }else{
+
+          id = productType+'1'+companyID+'00';
+          idReturn = id;
+          transaction.set(db.collection('Product').doc(id), prod);
+
+          state.push({id:productType+'1'+companyID,count:'01'});
+          transaction.update(db.collection('Product').doc('state'),{productCount:state});
+
+          id = productType+'0'+companyID+'00';
+          transaction.set(db.collection('Product').doc(id), prod);
+
+          state.push({id:productType+'0'+companyID,count:'01'});
+          transaction.update(db.collection('Product').doc('state'),{productCount:state});
+        }
+        idReturn = idReturn.substring(2);
+        return idReturn;
+        // transaction.set(db.collection('Product').doc('11'), { test: count });
       })
+    }).then((id)=>{
+      console.log("Transaction successfully committed!",id);
+    }).catch((error)=>{
+      console.log("Transaction failed: ", error);
     })
 
   }
