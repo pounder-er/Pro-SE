@@ -235,7 +235,7 @@ console.log(formattedNumber);
 
           </Header>
           <Body>
-            <Container fluid style={{ backgroundColor: 'white', borderRadius: 5, padding: 10 }}>
+            <Container fluid style={{ backgroundColor: 'white', borderRadius: 5, padding: 20 }}>
               <Switch>
                 <Route exact path={this.props.match.path + "/historyInOut"} component={HistoryInOut} />
                 <Route exact path={this.props.match.path + "/salesReport"} component={SalesReport} />
@@ -290,7 +290,7 @@ const Header = styled.div`
 const Body = styled.div`
     display: flex;
     flex-direction: column;
-      padding: 2vh;
+    padding: 3vh;
     flex-grow: 1;
     overflow-y: scroll;
     background-color: lightgrey;

@@ -16,7 +16,8 @@ import {
     Modal,
     ModalHeader,
     ModalBody,
-    ModalFooter
+    ModalFooter,
+    CustomInput
 } from 'reactstrap';
 
 import { Formik, Field, ErrorMessage } from 'formik';
@@ -33,21 +34,23 @@ import Resizer from 'react-image-file-resizer';
 
 import swal from 'sweetalert';
 
+import { BsImage } from "react-icons/bs";
+import { BiImageAdd } from "react-icons/bi";
+
+
 const fromProductSchema = Yup.object().shape({
-    name: Yup.string()
+    productName: Yup.string()
         .required('กรุณาระบุข้อมูล'),
-    type: Yup.string()
+    productType: Yup.string()
         .required('กรุณาระบุข้อมูล'),
-    isNew: Yup.number()
+    isNew: Yup.number(),
+    productPrice: Yup.number()
         .required('กรุณาระบุข้อมูล'),
-    price: Yup.number()
-        .required('กรุณาระบุข้อมูล'),
-    weight: Yup.number()
-        .required('กรุณาระบุข้อมูล'),
+    productWeight: Yup.number(),
+    // of(Yup.string().required()),
     image: Yup.string()
         .required('กรุณาระบุข้อมูล'),
-    vender: Yup.string()
-        .required('กรุณาระบุข้อมูล'),
+    companyID: Yup.string(),
     detail: Yup.string(),
 })
 
@@ -73,7 +76,9 @@ class AddProduct extends Component {
             loading: false,
             resizeImageUrl: '',
 
-            elementProductType: []
+
+            elementProductType: [],
+            elementPartnerCompany: []
         }
         this.loading = false;
         this.product = null;
@@ -84,19 +89,24 @@ class AddProduct extends Component {
 
     async componentDidMount() {
         await fire_base.getAllProductType(this.getProductTypeSuccess, this.unSuccess);
-        await fire_base.getAllPartnerCompany(this.getPartnerCompanySuccess, this.unSuccess)
+        await fire_base.getAllCompany(this.getCompanySuccess, this.unSuccess)
     }
 
-    getPartnerCompanySuccess = (querySnapshot) =>{
-        
+    getCompanySuccess = (querySnapshot) => {
+        let element = [];
+        querySnapshot.forEach((doc) => {
+            let e = <option key={doc.id} value={doc.id}>{doc.id + ' : ' + doc.data().companyName}</option>
+            element.push(e);
+        })
+        this.setState({ elementPartnerCompany: element });
+        console.log(element);
     }
 
     getProductTypeSuccess = (querySnapshot) => {
-        let element = [], key = 0;
+        let element = []
         querySnapshot.forEach((doc) => {
-            let d = <option key={key.toString()} value={doc.id}>{doc.data().name}</option>
-            element.push(d);
-            key++;
+            let e = <option key={doc.id} value={doc.id}>{doc.data().name}</option>
+            element.push(e);
         })
         this.setState({ elementProductType: element });
         console.log(element);
@@ -140,176 +150,289 @@ class AddProduct extends Component {
                 spinner
                 text='กำลังเพิ่มพนักงาน...'
             >
-                <Card>
-                    <CardBody>
-                        <Formik
-                            validationSchema={fromProductSchema}
-                            onSubmit={(values, { resetForm }) => {
-                                console.log(values)
-                            }}
-                            initialValues={{
-                                image: '',
-                                name: '',
-                                type: '1',
-                                isNew: 1,
-                                price: '',
-                                weight: '',
-                                detail: '',
-                                vender: ''
-                            }}
-                        >
-                            {({
-                                handleSubmit,
-                                handleChange,
-                                handleBlur,
-                                setFieldValue,
-                                handleReset,
-                                values,
-                                touched,
-                                isValid,
-                                errors,
-                            }) => (
-                                <Form onSubmit={handleSubmit} onReset={(e) => { e.preventDefault(); this.setDefaultImageCrop(); handleReset(e); }} >
-                                    <Row form>
-                                        <Col md={6}>
-                                            <FormGroup>
-                                                <Label for="name">ชื่อสินค้า</Label>
-                                                <Input
-                                                    maxLength={40}
-                                                    type="text"
-                                                    name="name"
-                                                    id="name"
-                                                    placeholder="ข้าวหอมมะลิ"
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    value={values.name}
-                                                    invalid={errors.name && touched.name}
-                                                />
-                                                <FormFeedback >*{errors.name}</FormFeedback>
-                                            </FormGroup>
-                                        </Col>
-                                        <Col md={6}>
-                                            <FormGroup>
-                                                <Label for="type">ชนิด</Label>
-                                                <Input
-                                                    maxLength={10}
-                                                    type="select"
-                                                    name="type"
-                                                    id="type"
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    value={values.type}
-                                                    invalid={errors.type && touched.type}
-                                                >
-                                                    {this.state.elementProductType}
-                                                </Input>
-                                                <FormFeedback >*{errors.type}</FormFeedback>
-                                            </FormGroup>
-                                        </Col>
-                                        <Col md={6}>
-                                            <FormGroup>
-                                                <Label for="weight">น้ำหนัก(กิโลกรัม)</Label>
-                                                <Input
-                                                    min={1}
-                                                    type="number"
-                                                    name="weight"
-                                                    id="weight"
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    value={values.weight}
-                                                    invalid={errors.weight && touched.weight}
-                                                />
-                                                <FormFeedback >*{errors.weight}</FormFeedback>
-                                            </FormGroup>
-                                        </Col>
-                                        <Col md={6}>
-                                            <FormGroup>
-                                                <Label for="price">ราคาต่อหน่วย</Label>
-                                                <Input
-                                                    min={1}
-                                                    type="number"
-                                                    name="price"
-                                                    id="price"
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    value={values.price}
-                                                    invalid={errors.price && touched.price}
-                                                />
-                                                <FormFeedback >*{errors.price}</FormFeedback>
-                                            </FormGroup>
-                                        </Col>
-                                        <Col md={6} >
-                                            <FormGroup tag="fieldset">
-                                                <Label for="type">ใหม่/เก่า</Label>
-                                                <Input
-                                                    type="select"
-                                                    name="isNew"
-                                                    id="isNew"
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    value={values.isNew}
-                                                    invalid={errors.isNew && touched.isNew}
-                                                >
-                                                    <option value={1}>ใหม่</option>
-                                                    <option value={0}>เก่า</option>
-                                                </Input>
-                                                <FormFeedback >*{errors.isNew}</FormFeedback>
-                                            </FormGroup>
-                                        </Col>
-                                        <Col md={6} >
-                                            <FormGroup>
-                                                <Label for="vender">บริษัท</Label>
-                                                <Input
-                                                    type="select"
-                                                    name="vender"
-                                                    id="vender"
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    value={values.vender}
-                                                    invalid={errors.vender && touched.vender}
-                                                >
-                                                    <option>ใหม่</option>
-                                                    <option>เก่า</option>
-                                                </Input>
-                                                <FormFeedback >*{errors.vender}</FormFeedback>
-                                            </FormGroup>
-                                        </Col>
-                                        <Col>
-                                            <FormGroup>
-                                                <Label for="detail">รายละเอียด</Label>
-                                                <Input
-                                                    type="textarea"
-                                                    name="detail"
-                                                    id="detail"
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    value={values.detail}
-                                                    invalid={errors.detail && touched.detail}
-                                                />
-                                                <FormFeedback >*{errors.detail}</FormFeedback>
-                                            </FormGroup>
-                                        </Col>
 
-                                    </Row>
-                                    <Row form>
-                                        <Col md={8} />
-                                        <Col md={2} style={{ display: 'flex' }}>
-                                            <FormGroup style={{ display: 'flex', flex: 1 }}>
-                                                <Button type="reset" color="secondary" style={{ flex: 1 }}>เคลียร์</Button>
-                                            </FormGroup>
-                                        </Col>
-                                        <Col md={2} style={{ display: 'flex' }}>
-                                            <FormGroup style={{ display: 'flex', flex: 1 }}>
-                                                <Button type="submit" color="success" style={{ flex: 1 }}>บันทึก</Button>
-                                            </FormGroup>
-                                        </Col>
-                                    </Row>
-                                </Form>
+                <Formik
+                    validationSchema={fromProductSchema}
+                    onSubmit={async(values, { resetForm }) => {
 
-                            )}
-                        </Formik>
-                    </CardBody>
-                </Card>
+                        await fire_base.addProduct(values);
+                        //resetForm();
+                        console.log(values)
+                    }}
+                    initialValues={{
+                        image: '',
+                        productName: '',
+                        productType: '1',
+                        isNew: 1,
+                        productPrice: '',
+                        productWeight: 1,
+                        productDetail: '',
+                        companyID: '00'
+                    }}
+                >
+                    {({
+                        checked,
+                        handleSubmit,
+                        handleChange,
+                        handleBlur,
+                        setFieldValue,
+                        handleReset,
+                        values,
+                        touched,
+                        isValid,
+                        errors,
+                    }) => (
+                        <Form onSubmit={handleSubmit} onReset={(e) => { e.preventDefault(); this.setDefaultImageCrop(); handleReset(e); }} >
+                            <Modal isOpen={this.state.ModalImage} toggle={this.toggleModalImage} backdrop='static' >
+                                <ModalHeader >เลือก/แก้ไข รูปโปรไฟล์</ModalHeader>
+                                <ModalBody>
+                                    <FormGroup row>
+                                        <Col style={{ display: 'flex', justifyContent: 'center' }}>
+                                            {/* แสดงตัวแก้ไขรูปโปร */}
+                                            {this.state.sourceImageFile && (
+                                                <AvatarEditor
+                                                    image={this.state.sourceImageFile}
+                                                    width={180}
+                                                    height={180}
+                                                    border={40}
+                                                    onImageReady={() => this.setState({ disabledButtonSaveOrEdit: false, disabledButtonDefault: false })}
+                                                    scale={this.state.zoom}
+                                                    crossOrigin="anonymous"
+                                                    ref={this.setEditorRef}
+                                                />
+                                            )}
+                                            {/* แสดงหน้าเลือกรูป */}
+                                            {!this.state.sourceImageFile && (
+                                                <Button
+                                                    onClick={() => this.hiddenFileInputRef.current.click()}
+                                                    color="secondary"
+                                                    style={{ height: '260px', width: '260px' }} >
+                                                    <input
+                                                        type="file"
+                                                        ref={this.hiddenFileInputRef}
+                                                        onChange={(e) => {
+                                                            console.log(e.target.files[0]);
+                                                            this.setState({ sourceImageFile: e.target.files[0] });
+                                                        }}
+                                                        style={{ display: 'none' }}
+                                                        accept="image/*"
+                                                    />
+                                                    <BiImageAdd size={100} />
+                                                    <h6 style={{ marginTop: 10 }}>อัปโหลดรูปภาพ</h6>
+                                                </Button>
+                                            )}
+                                        </Col>
+                                    </FormGroup>
+                                    {this.state.sourceImageFile && (
+                                        <FormGroup row>
+                                            <Col >
+                                                <Label >ซูม</Label>
+                                                <Input
+                                                    type='range'
+                                                    min="1"
+                                                    max="2"
+                                                    step="0.01"
+                                                    value={this.state.zoom}
+                                                    onChange={(e) => this.setState({ zoom: Number(e.target.value) })}
+                                                />
+                                            </Col>
+                                        </FormGroup>
+                                    )}
+                                </ModalBody>
+                                <ModalFooter>
+                                    <Button color="primary" onClick={() => {
+                                        setFieldValue('image', '');
+                                        this.setDefaultImageCrop();
+                                    }}
+                                        disabled={this.state.disabledButtonDefault} >คืนค่าเริ่มต้น</Button>
+                                    {' '}
+                                    <Button
+                                        color="success"
+                                        disabled={this.state.disabledButtonSaveOrEdit}
+                                        onClick={(e) => {
+                                            this.editor.getImage().toBlob(async (blob) => {
+                                                const resizeBlob = await resizeImageFile(blob);
+                                                await console.log(resizeBlob);
+                                                await setFieldValue('image', resizeBlob);
+                                                const url = await URL.createObjectURL(resizeBlob);
+                                                await this.setState({ resizeImageUrl: url });
+                                                await console.log(url);
+
+                                            }, 'image/jpeg', 1);
+                                            //setFieldValue('imageProfile', this.editor.getImage().toBlob( 'image/jpeg', 0.95));
+                                            this.toggleModalImage(e);
+                                            this.setState({ disabledButtonDefault: false });
+                                        }}>
+                                        แก้ไข/บันทึก
+                    </Button>
+                                    {' '}
+                                    <Button color="secondary" onClick={this.toggleModalImage}>ยกเลิก</Button>
+                                </ModalFooter>
+                            </Modal>
+                            <Row form>
+                                <Col>
+                                    <FormGroup style={{ display: 'flex', justifyContent: 'center' }} >
+                                        <Button
+                                            onClick={this.toggleModalImage}
+                                            style={{ height: 180, width: 180, borderRadius: 100, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                            {values.image && (
+                                                <img src={this.state.resizeImageUrl} style={{ height: 180, width: 180, borderRadius: 100 }} />
+                                            )}
+                                            {!values.image && (
+                                                <div>
+                                                    <BsImage size={65} />
+                                                    <h6>คลิกเพื่อเพิ่มรูป</h6>
+                                                </div>
+                                            )
+
+                                            }
+                                        </Button>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+
+                            <Row form>
+                                <Col md={6}>
+                                    <FormGroup>
+                                        <Label for="productName">ชื่อสินค้า</Label>
+                                        <Input
+                                            maxLength={40}
+                                            type="text"
+                                            name="productName"
+                                            id="productName"
+                                            placeholder="ข้าวหอมมะลิ"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.productName}
+                                            invalid={errors.productName && touched.productName}
+                                        />
+                                        <FormFeedback >*{errors.productName}</FormFeedback>
+                                    </FormGroup>
+                                </Col>
+                                <Col md={6}>
+                                    <FormGroup>
+                                        <Label for="productType">ชนิด</Label>
+                                        <Input
+                                            maxLength={10}
+                                            type="select"
+                                            name="productType"
+                                            id="productType"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.productType}
+                                            invalid={errors.productType && touched.productType}
+                                        >
+                                            {this.state.elementProductType}
+                                        </Input>
+                                        <FormFeedback >*{errors.productType}</FormFeedback>
+                                    </FormGroup>
+                                </Col>
+                                <Col md={6}>
+                                    <FormGroup >
+                                        <Label for="productWeight">น้ำหนัก</Label>
+                                        <Input
+                                            maxLength={10}
+                                            type="select"
+                                            name="productWeight"
+                                            id="productWeight"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.productWeight}
+                                            invalid={errors.productWeight && touched.productWeight}
+                                        >
+                                            <option value={1} >1 กิโลกรัม</option>
+                                            <option value={5} >5 กิโลกรัม</option>
+                                            <option value={15} >15 กิโลกรัม</option>
+                                        </Input>
+                                    </FormGroup>
+
+                                </Col>
+                                <Col md={6}>
+                                    <FormGroup>
+                                        <Label for="productPrice">ราคาต่อหน่วย</Label>
+                                        <Input
+                                            min={1}
+                                            type="number"
+                                            name="productPrice"
+                                            id="productPrice"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.productPrice}
+                                            invalid={errors.productPrice && touched.productPrice}
+                                        />
+                                        <FormFeedback >*{errors.productPrice}</FormFeedback>
+                                    </FormGroup>
+                                </Col>
+                                <Col md={6} >
+                                    <FormGroup tag="fieldset">
+                                        <Label for="type">ใหม่/เก่า</Label>
+                                        <Input
+                                            type="select"
+                                            name="isNew"
+                                            id="isNew"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.isNew}
+                                            invalid={errors.isNew && touched.isNew}
+                                        >
+                                            <option value={1}>ใหม่</option>
+                                            <option value={0}>เก่า</option>
+                                        </Input>
+                                        <FormFeedback >*{errors.isNew}</FormFeedback>
+                                    </FormGroup>
+                                </Col>
+                                <Col md={6} >
+                                    <FormGroup>
+                                        <Label for="companyID">บริษัท</Label>
+                                        <Input
+                                            type="select"
+                                            name="companyID"
+                                            id="companyID"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.companyID}
+                                            invalid={errors.companyID && touched.companyID}
+                                        >
+                                            {this.state.elementPartnerCompany}
+                                        </Input>
+                                        <FormFeedback >*{errors.companyID}</FormFeedback>
+                                    </FormGroup>
+                                </Col>
+                                <Col>
+                                    <FormGroup>
+                                        <Label for="detail">รายละเอียด</Label>
+                                        <Input
+                                            type="textarea"
+                                            name="detail"
+                                            id="detail"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.detail}
+                                            invalid={errors.detail && touched.detail}
+                                        />
+                                        <FormFeedback >*{errors.detail}</FormFeedback>
+                                    </FormGroup>
+                                </Col>
+
+                            </Row>
+                            <Row form>
+                                <Col md={8} />
+                                <Col md={2} style={{ display: 'flex' }}>
+                                    <FormGroup style={{ display: 'flex', flex: 1 }}>
+                                        <Button type="reset" color="secondary" style={{ flex: 1 }}>เคลียร์</Button>
+                                    </FormGroup>
+                                </Col>
+                                <Col md={2} style={{ display: 'flex' }}>
+                                    <FormGroup style={{ display: 'flex', flex: 1 }}>
+                                        <Button type="submit" color="success" style={{ flex: 1 }}>บันทึก</Button>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                        </Form>
+
+                    )}
+                </Formik>
+
             </LoadingOverlay>
         );
     }
