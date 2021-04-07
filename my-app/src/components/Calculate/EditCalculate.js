@@ -148,6 +148,8 @@ const formEmployeeSchema = Yup.object().shape({
 
 })
 
+
+
 class EditCalculate extends React.Component {
     constructor(props) {
         super(props);
@@ -157,8 +159,11 @@ class EditCalculate extends React.Component {
         }
         this.loading = false;
     }
-
-
+   
+    handleSubmit = event => {
+        console.log(1);
+        event.preventDefault()
+      };
     render() {
         return (
 
@@ -188,21 +193,23 @@ class EditCalculate extends React.Component {
                 </Row>
                 <Formik
                     validationSchema={formEmployeeSchema}
-                    onSubmit={ (values, { resetForm }) => {
+                    onSubmit={async (values, { resetForm }) => {
                         this.setState({ loading: true });
+                        
                         this.cal = values;
 
                         resetForm();
                         console.log(values);
                     }
                     }
+                    
                     initialValues={{
                         D: this.props.product.cal.D,
                         O: this.props.product.cal.O,
                         U: this.props.product.cal.U,
                         C: this.props.product.cal.C,
                         L: this.props.product.cal.L,
-                        d: this.props.product.cal.d,
+                        d: this.props.product.cal.d
                     }}
                 >
                     {({
@@ -221,7 +228,7 @@ class EditCalculate extends React.Component {
                             spinner
                             text='กำลังเพิ่มพนักงาน...'
                         >
-                            <Form >
+                            <Form onSubmit={handleSubmit} onReset={(e) => { e.preventDefault(); handleReset(e); }}>
                                 <Row form style={{ marginTop: '30px' }}>
                                     <Col style={{ backgroundColor: 'wheat' }}>
                                         <FormGroup>
@@ -295,6 +302,7 @@ class EditCalculate extends React.Component {
                                     <Col md={2} style={{ display: 'flex' }}>
                                         <FormGroup style={{ display: 'flex', flex: 1 }}>
                                             <Button type="submit" color="success" style={{ flex: 1 }}>บันทึก</Button>
+                                            
                                         </FormGroup>
                                     </Col>
                                 </Row>
