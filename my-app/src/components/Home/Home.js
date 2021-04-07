@@ -202,9 +202,16 @@ class Home extends React.Component {
   }
 
   render() {
-    var myNumber = 15;
+    var myNumber = 1;
 var formattedNumber = ("0" + myNumber).slice(-2);
 console.log(formattedNumber);
+
+// if(undefined){
+//   console.log('ppp')
+// }else{
+//   console.log('hhh')
+// }
+// console.log(!undefined);
     return (
       <ContainerHome>
         <Sidebar>

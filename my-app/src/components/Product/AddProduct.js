@@ -43,7 +43,7 @@ const fromProductSchema = Yup.object().shape({
         .required('กรุณาระบุข้อมูล'),
     productType: Yup.string()
         .required('กรุณาระบุข้อมูล'),
-    isNew: Yup.number(),
+    
     productPrice: Yup.number()
         .required('กรุณาระบุข้อมูล'),
     productWeight: Yup.number(),
@@ -144,6 +144,7 @@ class AddProduct extends Component {
 
 
     render() {
+        console.log(typeof 1);
         return (
             <LoadingOverlay
                 active={this.state.loading}
@@ -163,7 +164,6 @@ class AddProduct extends Component {
                         image: '',
                         productName: '',
                         productType: '1',
-                        isNew: 1,
                         productPrice: '',
                         productWeight: 1,
                         productDetail: '',
@@ -364,24 +364,6 @@ class AddProduct extends Component {
                                     </FormGroup>
                                 </Col>
                                 <Col md={6} >
-                                    <FormGroup tag="fieldset">
-                                        <Label for="type">ใหม่/เก่า</Label>
-                                        <Input
-                                            type="select"
-                                            name="isNew"
-                                            id="isNew"
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            value={values.isNew}
-                                            invalid={errors.isNew && touched.isNew}
-                                        >
-                                            <option value={1}>ใหม่</option>
-                                            <option value={0}>เก่า</option>
-                                        </Input>
-                                        <FormFeedback >*{errors.isNew}</FormFeedback>
-                                    </FormGroup>
-                                </Col>
-                                <Col md={6} >
                                     <FormGroup>
                                         <Label for="companyID">บริษัท</Label>
                                         <Input
@@ -398,6 +380,7 @@ class AddProduct extends Component {
                                         <FormFeedback >*{errors.companyID}</FormFeedback>
                                     </FormGroup>
                                 </Col>
+                                <Col md={6}/>
                                 <Col>
                                     <FormGroup>
                                         <Label for="detail">รายละเอียด</Label>
