@@ -180,7 +180,7 @@ class DashBoard extends React.Component {
                     <div className="cardContainer">
                         <Card style={{
                             borderColor: "transparent",
-                            width: "99%",
+                            width: "98.5%",
                         
                         }}>
                             <p />
