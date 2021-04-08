@@ -103,7 +103,7 @@ class Home extends React.Component {
     }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     // this.props.userProfile.test.get().then(doc=>{
     //   if (doc.exists) {
     //     console.log(doc.data());
@@ -112,7 +112,7 @@ class Home extends React.Component {
     //   }
     //   console.log(doc.data());
     // })
-    
+
   }
 
   toggleProfile = () => {
@@ -138,7 +138,7 @@ class Home extends React.Component {
     if (this.props.userProfile.jobTitle == 'ผู้จัดการ' || this.props.userProfile.jobTitle == 'ผู้ดูแลระบบ') {
       menu = menu.concat([
         <MenuItem key='1' icon={<BsFillGrid1X2Fill />}>
-         
+
           Dashboard
           <Link to={this.props.match.url + "/DashBoard"} onClick={() => this.setState({ headerTitle: 'Dashboard' })} />
         </MenuItem>,
@@ -163,7 +163,7 @@ class Home extends React.Component {
             คำนวนการสั่งซื้อสินค้า
             </MenuItem>
           <MenuItem suffix={<IoAlarmSharp size={18} />} >
-          <Link to={this.props.match.url + "/set_stock_check_time"} onClick={() => this.setState({ headerTitle: 'ตั้งเวลาเช็คสต็อก' })} />
+            <Link to={this.props.match.url + "/set_stock_check_time"} onClick={() => this.setState({ headerTitle: 'ตั้งเวลาเช็คสต็อก' })} />
             ตั้งเวลาเช็คสต็อก
             </MenuItem>
         </SubMenu>
@@ -177,11 +177,11 @@ class Home extends React.Component {
 
           <SubMenu key='5' title="จัดการสินค้า" icon={<BsFillArchiveFill />}>
             <MenuItem suffix={<HiViewGridAdd size={20} />} >เพิ่มสินค้า<Link to={this.props.match.url + "/add_product"} onClick={() => this.setState({ headerTitle: 'เพิ่มสินค้าใหม่' })} /></MenuItem>
-            <MenuItem suffix={<FaThList style={{marginRight:2}}  size={15} />} >
+            <MenuItem suffix={<FaThList style={{ marginRight: 2 }} size={15} />} >
               รายการสินค้า
             <Link to={this.props.match.url + "/productsReport"} onClick={() => this.setState({ headerTitle: 'ตรวจสอบสินค้า' })} />
             </MenuItem>
-            <MenuItem suffix={<GiBuyCard style={{marginRight:2}}  size={18} />} >รายการซื้อสินค้า<Link to={this.props.match.url + "/buy"} onClick={() => this.setState({ headerTitle: 'รายการซื้อสินค้า' })} /></MenuItem>
+            <MenuItem suffix={<GiBuyCard style={{ marginRight: 2 }} size={18} />} >รายการซื้อสินค้า<Link to={this.props.match.url + "/buy"} onClick={() => this.setState({ headerTitle: 'รายการซื้อสินค้า' })} /></MenuItem>
             <MenuItem>รายการขายสินค้า<Link to={this.props.match.url + "/sell"} onClick={() => this.setState({ headerTitle: 'รายการขายสินค้า' })} /></MenuItem>
           </SubMenu>,
           <SubMenu key='6' title="คลังสินค้า" icon={<FaWarehouse />}>
@@ -202,9 +202,9 @@ class Home extends React.Component {
     if (this.props.userProfile.jobTitle == 'พนักงานคลัง') {
       menu = menu.concat(
         [
-          <MenuItem key='8'>เช็คสต๊อกสินค้า<Link to = {this.props.match.url + "/stock_check"} onClick={() => this.setState({ headerTitle: 'เช็คสต๊อกสินค้า' })} /></MenuItem>,
-          <MenuItem key='9'>นำสินค้าออกจากคลัง<Link to = {this.props.match.url + "/export_product"} onClick={() => this.setState({ headerTitle: 'นำสินค้าออกจากคลัง' })} /></MenuItem>,
-          <MenuItem key='10'>นำสินค้าเข้าคลัง<Link to = {this.props.match.url + "/import_product"} onClick={() => this.setState({ headerTitle: 'นำสินค้าเข้าคลัง' })} /></MenuItem>,
+          <MenuItem key='8'>เช็คสต๊อกสินค้า<Link to={this.props.match.url + "/stock_check"} onClick={() => this.setState({ headerTitle: 'เช็คสต๊อกสินค้า' })} /></MenuItem>,
+          <MenuItem key='9'>นำสินค้าออกจากคลัง<Link to={this.props.match.url + "/export_product"} onClick={() => this.setState({ headerTitle: 'นำสินค้าออกจากคลัง' })} /></MenuItem>,
+          <MenuItem key='10'>นำสินค้าเข้าคลัง<Link to={this.props.match.url + "/import_product"} onClick={() => this.setState({ headerTitle: 'นำสินค้าเข้าคลัง' })} /></MenuItem>,
         ])
     }
     return menu;
@@ -212,15 +212,15 @@ class Home extends React.Component {
 
   render() {
     var myNumber = 1;
-var formattedNumber = ("0" + myNumber).slice(-2);
-console.log(formattedNumber);
+    var formattedNumber = ("0" + myNumber).slice(-2);
+    console.log(formattedNumber);
 
-// if(undefined){
-//   console.log('ppp')
-// }else{
-//   console.log('hhh')
-// }
-// console.log(!undefined);
+    // if(undefined){
+    //   console.log('ppp')
+    // }else{
+    //   console.log('hhh')
+    // }
+    // console.log(!undefined);
     return (
       <ContainerHome>
         <Sidebar>
