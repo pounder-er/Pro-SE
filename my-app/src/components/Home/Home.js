@@ -83,6 +83,9 @@ import So from '../Sell/So';
 import Buy from '../Buy/Buy';
 import Po from '../Buy/Po';
 
+// ------------ setting componemt -------------//
+import SetStockCheckTime from '../Setting/SetStockCheckTime'
+
 // ------------- staff component ------------- //
 import StockCheck from '../WarehouseStaff/Stocking/Stock'
 import ImportProduct from '../WarehouseStaff/Stocking/Import'
@@ -155,12 +158,15 @@ class Home extends React.Component {
           <Link to={this.props.match.url + "/salesReport"} onClick={() => this.setState({ headerTitle: 'ยอดขายสินค้า' })} />
         </MenuItem>,
 
-        <SubMenu title="ตั้งค่า" icon={<IoMdSettings size={18} />}>
+        <SubMenu key='4' title="ตั้งค่า" icon={<IoMdSettings size={18} />}>
           <MenuItem suffix={<IoMdCalculator size={18} />} >
             คำนวนการสั่งซื้อสินค้า
             <Link to={this.props.match.url + "/calculate"} onClick={() => this.setState({ headerTitle: 'คำนวนจุดสั่งซื้อ' })} />
           </MenuItem>
-          <MenuItem suffix={<IoAlarmSharp size={18} />} >ตั้งเวลาเช็คสต็อก</MenuItem>
+          <MenuItem suffix={<IoAlarmSharp size={18} />} >
+            <Link to={this.props.match.url + "/set_stock_check_time"} onClick={() => this.setState({ headerTitle: 'ตั้งเวลาเช็คสต็อก' })} />
+            ตั้งเวลาเช็คสต็อก
+            </MenuItem>
         </SubMenu>
       ])
     }
@@ -275,6 +281,8 @@ class Home extends React.Component {
                 <Route exact path={this.props.match.path + "/PartnerList"} component={PartnerList} />
                 <Route exact path={this.props.match.path + "/BranchList"} component={BranchList} />
                 <Route exact path={this.props.match.path + "/DashBoard"} component={DashBoard} />
+
+                <Route exact path={this.props.match.path + "/set_stock_check_time"} component={SetStockCheckTime} />
 
                 <Route exact path={this.props.match.path + "/stock_check"} component={StockCheck} />
                 <Route exact path={this.props.match.path + "/import_product"} component={ImportProduct} />
