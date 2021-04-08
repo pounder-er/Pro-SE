@@ -56,6 +56,7 @@ class SellDetail extends React.Component {
     componentDidMount() {
         //await fire_base.getAllSell(this.getAllSellSuccess, this.unSuccess);
         //console.log(this.props.profile.log[0].productPrice)
+        
         for(let x of this.props.profile.log){
             x.productID.get()
             .then(doc=>{
@@ -64,6 +65,7 @@ class SellDetail extends React.Component {
                 d.productPrice = x.productPrice
                 d.disCount = x.disCount
                 d.volume = x.volume
+                console.log(d.volume,'*',d.productPrice,'-',d.disCount)
                 d.summary = d.volume*d.productPrice-d.disCount
                 this.sum += d.summary
                 this.setState({dataSource:this.state.dataSource.concat(d)});

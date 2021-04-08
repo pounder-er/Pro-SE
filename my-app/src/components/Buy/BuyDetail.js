@@ -56,7 +56,7 @@ class BuyDetail extends React.Component {
     
     componentDidMount() {
         //await fire_base.getAllSell(this.getAllSellSuccess, this.unSuccess);
-        console.log(this.props.profile)
+        
         for(let x of this.props.profile.log){
             x.productID.get()
             .then(doc=>{
@@ -66,6 +66,7 @@ class BuyDetail extends React.Component {
                 d.disCount = x.disCount
                 d.volume = x.volume
                 if(d.disCount && d.volume && d.productPrice)
+                
                     d.summary = d.volume*d.productPrice-d.disCount
                 this.sum += d.summary
                 this.setState({dataSource:this.state.dataSource.concat(d)});
@@ -76,7 +77,7 @@ class BuyDetail extends React.Component {
     setDataGridRef = (ref) => (this.dataGrid = ref)
 
     render() {
-        console.log('1111111',this.props.profile)
+       
         return (
             <Container fluid={false} style={{ backgroundColor: 'while'}} >
                 <Row style={{ height: 50 }}>
