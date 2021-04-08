@@ -155,8 +155,7 @@ class DashBoard extends React.Component {
                         <div className="pineChart">
                             <h3 style={{
                                 justifySelf: 'flex-start',
-                                marginLeft: '2%',
-             
+                                marginBottom: '2%',
                                 alignSelf:'flex-start'
                             }}>สัดส่วนเนื้อที่โกดัง</h3>
                             {/* <Chart
@@ -172,7 +171,7 @@ class DashBoard extends React.Component {
                                     /> */}
                             <Pie data={this.state.pineChartData}
                                  height='240'/>
-                            <div style={{display:'flex', height:'20px'}}></div>
+                            <div style={{display:'flex'}}></div>
                         </div>
                     </div>
                     <div className="cardContainer">

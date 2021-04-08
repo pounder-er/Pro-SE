@@ -125,6 +125,10 @@
 
 }
 
+.pie {
+    max-height: fit-content;
+}
+
 .rowContainer{
     display: flex;
     width: 95%;
