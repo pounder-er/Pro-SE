@@ -112,6 +112,8 @@
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.15),
                 0 6px 10px 0 rgba(0, 0, 0, 0.15);
     justify-self: flex-start;
+    align-items: center;
+    padding: 3%;
 }
 
 .card {
@@ -134,7 +136,7 @@
 
 .cardContainer {
     display: flex;
-    width: 65%;
+    width: 50%;
     
     /* background-color: #19424b; */
     
@@ -142,7 +144,7 @@
 
 .donutChartContainer {
     display: flex;
-    width: 35%;
+    width: 50%;
     
     /* background-color: #19424b; */
     

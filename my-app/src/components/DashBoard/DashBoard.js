@@ -134,8 +134,7 @@ class DashBoard extends React.Component {
                 <div className="lineChart">
                     <h3 style={{
                         justifySelf: 'flex-start',
-
-                        marginTop: 10
+  
                     }}>จำนวนออร์เดอร์สินค้าเข้า/ออก</h3>
                     {/* <Chart
                                 options={this.state.options}
@@ -156,8 +155,9 @@ class DashBoard extends React.Component {
                         <div className="pineChart">
                             <h3 style={{
                                 justifySelf: 'flex-start',
-                                marginLeft: '5%',
-                                marginTop: 20
+                                marginLeft: '2%',
+             
+                                alignSelf:'flex-start'
                             }}>สัดส่วนเนื้อที่โกดัง</h3>
                             {/* <Chart
                                         options={this.state.pineChartOption}
@@ -171,13 +171,14 @@ class DashBoard extends React.Component {
                                                 marginTop:10}}
                                     /> */}
                             <Pie data={this.state.pineChartData}
-                                height={300} />
+                                 height='240'/>
+                            <div style={{display:'flex', height:'20px'}}></div>
                         </div>
                     </div>
                     <div className="cardContainer">
                         <Card style={{
                             borderColor: "transparent",
-                            width: "97%", marginLeft: '3%'
+                            width: "100%", 
                         }}>
                             <p />
                             <h3 style={{ marginLeft: '2.5%' }}>สินค้าขายดี</h3>
