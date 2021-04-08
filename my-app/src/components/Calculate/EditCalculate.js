@@ -202,7 +202,15 @@ class EditCalculate extends React.Component {
                         console.log(values);
                     }
                     }
-                    
+                    onReset={async (values, { resetForm }) => {
+                        
+                        
+                        this.cal = values;
+
+                       
+                        console.log(values);
+                    }
+                    }
                     initialValues={{
                         D: this.props.product.cal.D,
                         O: this.props.product.cal.O,
@@ -292,7 +300,7 @@ class EditCalculate extends React.Component {
                                         </FormGroup>
                                     </Col>
                                 </Row>
-                                <Row >
+                                <Row form>
                                     <Col md={8} />
                                     <Col md={2} style={{ display: 'flex' }}>
                                         <FormGroup style={{ display: 'flex', flex: 1 }}>
@@ -300,9 +308,8 @@ class EditCalculate extends React.Component {
                                         </FormGroup>
                                     </Col>
                                     <Col md={2} style={{ display: 'flex' }}>
-                                        <FormGroup style={{ display: 'flex', flex: 1 }}>
+                                        <FormGroup  style={{ display: 'flex', flex: 1 }}>
                                             <Button type="submit" color="success" style={{ flex: 1 }}>บันทึก</Button>
-                                            
                                         </FormGroup>
                                     </Col>
                                 </Row>
