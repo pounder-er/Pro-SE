@@ -129,40 +129,40 @@ class DashBoard extends React.Component {
         }
     }
 
-    getCountSellOrderSuccess =(size)=>{
+    getCountSellOrderSuccess = (size) => {
         console.log(size)
         let temp = this.state.lineChartData
         // temp.datasets[1].data.push(size)
         temp.datasets[1].data = size
 
-        this.setState({lineChartData : temp })
+        this.setState({ lineChartData: temp })
 
         console.log(temp)
         console.log('from state : ', this.state.lineChartData)
-        
+
 
     }
 
-    reject(error){
+    reject(error) {
         console.log(error)
     }
 
-    componentDidMount(){
+    componentDidMount() {
         firestore.getCountSellOrderComplete(this.getCountSellOrderSuccess, this.reject)
 
         let currentDate = new Date()
         let temp = this.state.lineChartData
         let m = 0;
-        for(let i=6; i>=0; i--){
-            if(currentDate.getDate()-m > 0){
-                temp.labels[i] = (currentDate.getDate()-m)+"/"+(currentDate.getMonth()+1)
-            }else{
-                
+        for (let i = 6; i >= 0; i--) {
+            if (currentDate.getDate() - m > 0) {
+                temp.labels[i] = (currentDate.getDate() - m) + "/" + (currentDate.getMonth() + 1)
+            } else {
+
             }
-            m++  
+            m++
         }
-        
-        this.setState({lineChartData : temp})
+
+        this.setState({ lineChartData: temp })
 
     }
 
@@ -173,7 +173,7 @@ class DashBoard extends React.Component {
                 <div className="lineChart">
                     <h3 style={{
                         justifySelf: 'flex-start',
-  
+
                     }}>จำนวนออร์เดอร์สินค้าเข้า/ออก</h3>
                     {/* <Chart
                                 options={this.state.options}
@@ -189,16 +189,18 @@ class DashBoard extends React.Component {
                         height={70}
                         redraw />
                 </div>
-                <div style={{display: 'flex', 
-                             marginTop: '1.5%', 
-                             justifyContent: 'center', 
-                             flexDirection: 'row'}}>
+                <div style={{
+                    display: 'flex',
+                    marginTop: '1.5%',
+                    justifyContent: 'center',
+                    flexDirection: 'row'
+                }}>
                     <div className="donutChartContainer">
                         <div className="pineChart">
                             <h3 style={{
                                 justifySelf: 'flex-start',
                                 marginBottom: '2%',
-                                alignSelf:'flex-start'
+                                alignSelf: 'flex-start'
                             }}>สัดส่วนเนื้อที่โกดัง</h3>
                             {/* <Chart
                                         options={this.state.pineChartOption}
@@ -212,15 +214,15 @@ class DashBoard extends React.Component {
                                                 marginTop:10}}
                                     /> */}
                             <Pie data={this.state.pineChartData}
-                                 height='240'/>
-                            <div style={{display:'flex'}}></div>
+                                height='240' />
+                            <div style={{ display: 'flex' }}></div>
                         </div>
                     </div>
                     <div className="cardContainer">
                         <Card style={{
                             borderColor: "transparent",
                             width: "98.5%",
-                        
+
                         }}>
                             <p />
                             <h3 style={{ marginLeft: '2.5%' }}>สินค้าขายดี</h3>
