@@ -133,24 +133,24 @@ class SetStockCheckTime extends Component {
 
     }
 
-    allClear=(e)=>{
+    allClear = (e) => {
         e.preventDefault();
         this.assignProduct = [];
         this.employeeSelected = '';
-        this.state.dataSourceEm.forEach(doc=>{
+        this.state.dataSourceEm.forEach(doc => {
             doc.amountAssignProd = 0;
         })
         this.setState({
-            prodSelected:{},
-            dataSourceProdCopy:this.dataSourceProd,
-            dataSourceEm:[...this.state.dataSourceEm]
+            prodSelected: {},
+            dataSourceProdCopy: this.dataSourceProd,
+            dataSourceEm: [...this.state.dataSourceEm]
         });
         console.log('eeee');
 
     }
 
     onAssignProduct = (e) => {
-        
+
         e.preventDefault();
         let i, num = 0
         for (const property in this.state.prodSelected) {
@@ -240,22 +240,22 @@ class SetStockCheckTime extends Component {
         // console.log(this.state.dataSourceProd);
     }
 
-    onAssign=(e)=>{
-        this.setState({loading:true});
+    onAssign = (e) => {
+        this.setState({ loading: true });
         e.preventDefault();
-        fire_base.addCheckStock(this.assignProduct,this.addCheckStockSuccess,this.unSuccess);
+        fire_base.addCheckStock(this.assignProduct, this.addCheckStockSuccess, this.unSuccess);
         this.allClear(e);
     }
 
-    addCheckStockSuccess=()=>{
+    addCheckStockSuccess = () => {
         console.log('add success');
-        this.setState({loading:false});
-        this.sweetAlert('เสร็จสิ้น','มอบหมายงานเช็คสต๊อกเรียบร้อยแล้ว','success','ตกลง');
+        this.setState({ loading: false });
+        this.sweetAlert('เสร็จสิ้น', 'มอบหมายงานเช็คสต๊อกเรียบร้อยแล้ว', 'success', 'ตกลง');
     }
 
     unSuccess = (error) => {
-        this.setState({loading:false});
-        this.sweetAlert('ล้มเหลว','การเชื่อมต่อผิดพลาด','error','ตกลง');
+        this.setState({ loading: false });
+        this.sweetAlert('ล้มเหลว', 'การเชื่อมต่อผิดพลาด', 'error', 'ตกลง');
         console.log(error)
     }
 
@@ -276,7 +276,7 @@ class SetStockCheckTime extends Component {
                     <ModalBody>
                         <Row>
                             <Col>
-                            
+
                             </Col>
                         </Row>
                         <ReactDataGrid
@@ -344,46 +344,46 @@ class SetStockCheckTime extends Component {
                         </Row>
                     </TabPane>
                     <TabPane tabId="2">
-                    <LoadingOverlay
-                active={this.state.loading}
-                spinner
-                text='กำลังเพิ่มสินค้า...'
-            >
-                        <Row>
-                            <Col >
-                                <br />
-                                <h4>รายชื่อพนักงานที่สามารถมอบหมายได้</h4>
-                                <ReactDataGrid
-                                    onReady={this.setDataGridEmRef}
-                                    i18n={i18n}
-                                    idProperty="id"
-                                    columns={this.columnsEm}
-                                    pagination
-                                    defaultLimit={15}
-                                    defaultSkip={15}
-                                    pageSizes={[10, 15, 30]}
-                                    dataSource={this.state.dataSourceEm}
-                                    defaultFilterValue={filterValueEm}
-                                    showColumnMenuTool={false}
-                                    emptyText="ไม่มีรายการ"
-                                    style={{ minHeight: 550 }}
-                                />
+                        <LoadingOverlay
+                            active={this.state.loading}
+                            spinner
+                            text='กำลังเพิ่มสินค้า...'
+                        >
+                            <Row>
+                                <Col >
+                                    <br />
+                                    <h4>รายชื่อพนักงานที่สามารถมอบหมายได้</h4>
+                                    <ReactDataGrid
+                                        onReady={this.setDataGridEmRef}
+                                        i18n={i18n}
+                                        idProperty="id"
+                                        columns={this.columnsEm}
+                                        pagination
+                                        defaultLimit={15}
+                                        defaultSkip={15}
+                                        pageSizes={[10, 15, 30]}
+                                        dataSource={this.state.dataSourceEm}
+                                        defaultFilterValue={filterValueEm}
+                                        showColumnMenuTool={false}
+                                        emptyText="ไม่มีรายการ"
+                                        style={{ minHeight: 550 }}
+                                    />
 
-                            </Col>
-                        </Row>
-                        <Row style={{ marginTop: 10 }} form>
-                            <Col md={8} />
-                            <Col md={2} style={{ display: 'flex' }} >
-                                <FormGroup style={{ display: 'flex', flex: 1 }}>
-                                    <Button color="secondary" style={{ flex: 1 }} onClick={this.allClear} >เคลียร์</Button>
-                                </FormGroup>
-                            </Col>
-                            <Col md={2} style={{ display: 'flex' }} >
-                                <FormGroup style={{ display: 'flex', flex: 1 }}>
-                                    <Button color="success" style={{ flex: 1 }} onClick={this.onAssign} >มอบหมาย</Button>
-                                </FormGroup>
-                            </Col>
-                        </Row>
+                                </Col>
+                            </Row>
+                            <Row style={{ marginTop: 10 }} form>
+                                <Col md={8} />
+                                <Col md={2} style={{ display: 'flex' }} >
+                                    <FormGroup style={{ display: 'flex', flex: 1 }}>
+                                        <Button color="secondary" style={{ flex: 1 }} onClick={this.allClear} >เคลียร์</Button>
+                                    </FormGroup>
+                                </Col>
+                                <Col md={2} style={{ display: 'flex' }} >
+                                    <FormGroup style={{ display: 'flex', flex: 1 }}>
+                                        <Button color="success" style={{ flex: 1 }} onClick={this.onAssign} >มอบหมาย</Button>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
                         </LoadingOverlay>
                     </TabPane>
                 </TabContent>

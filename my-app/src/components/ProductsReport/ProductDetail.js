@@ -106,7 +106,7 @@ class ProductDetail extends React.Component {
                     d.datePay = "-"
                 let a = d.companyID.get()
                     .then(doc => {
-                        d.companyID = doc.data().companyName
+                        d.companyName = doc.data().companyName
                         return d;
                     })
                 d.productID = this.props.product.idp;

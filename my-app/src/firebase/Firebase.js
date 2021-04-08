@@ -87,6 +87,16 @@ class Firebase {
         reject(error);
       })
   }
+  getAllSellReport = (success, reject) => {
+    firebase.firestore().collection('Buy').where("status", "==", "สำเร็จ")
+      .get()
+      .then(querySnapshot => {
+        success(querySnapshot);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  }
   getAllProduct = (success, reject) => {
     firebase.firestore().collection('Product')
     .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
@@ -124,16 +134,6 @@ class Firebase {
       })
   }
 
-  getAllHistoryInOut = (success, reject) => {
-    firebase.firestore().collection('HistoryInOut')
-      .get()
-      .then(querySnapshot => {
-        success(querySnapshot);
-      })
-      .catch((error) => {
-        reject(error);
-      })
-  }
   getAllSell = (success, reject) => {
     firebase.firestore().collection('Sell')
       .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
