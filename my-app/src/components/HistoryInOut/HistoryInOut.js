@@ -27,6 +27,7 @@ import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons
 import { IoMdTrash } from "react-icons/io";
 
 import * as Yup from 'yup';
+import { i18n } from '../i18n';
 
 const filterValue = [
     { name: 'ID', operator: 'startsWith', type: 'string', value: '' },
@@ -36,59 +37,56 @@ const filterValue = [
 ];
 const columns = [
     { name: 'id', header: 'Id', defaultVisible: false, type: 'number', maxWidth: 40 },
-    { name: 'ID', groupBy: false, defaultFlex: 1, header: 'ID' },
-    { name: 'cDate', groupBy: false, defaultFlex: 1, header: 'วันที่' },
-    { name: 'responsibleP', groupBy: false, defaultFlex: 1, header: 'ผู้รับผิดชอบ' },
+    { name: 'inID', groupBy: false, defaultFlex: 1, header: 'ID' },
+    { name: 'dateIn', groupBy: false, defaultFlex: 1, header: 'วันที่' },
+    { name: 'res', groupBy: false, defaultFlex: 1, header: 'ผู้รับผิดชอบ' },
     { name: 'InOut', groupBy: false, defaultFlex: 1, header: <t>เข้า<MdCallReceived color="#00B09B" size={25} />/ออก<MdCallMade color="#FD3B47" size={25} /></t> },
     { name: 'detail', header: 'รายละเอียด', maxWidth: 109, render: ({data})=><button style={{display:'contents'}}><AiFillFileText color='#00A3FF' size={30} /></button> },
 
 ]
 
-const dataSource = [{ id: '1150', firstName: 'chainan', lastName: 'punsri', email: 'chain@hhh.com' }, { id: '1151', firstName: 'ahainun', lastName: 'vansri', email: 'cain@hhh.com' }]
-const i18n = Object.assign({}, ReactDataGrid.defaultProps.i18n, {
-    sortAsc: 'เรียงน้อยไปมาก',
-    sortDesc: 'เรียงมากไปน้อย',
-    clear: 'ลบ',
-    clearAll: 'ลบทั้งหมด',
-    contains: 'ประกอบด้วย',
-    startsWith: 'เริ่มด้วย',
-    endsWith: 'จบด้วย',
-    neq: 'ไม่เท่ากับ',
-    eq: 'เท่ากับ',
-    notEmpty: 'ไม่ว่าง',
-    empty: 'ว่าง',
-    notContains: 'ไม่ได้ประกอบด้วย',
-    disable: 'ปิดตัวกรอง',
-    enable: 'เปิดตัวกรอง',
-    pageText: 'หน้า ',
-    ofText: ' จาก ',
-    perPageText: 'แสดงรายการทีละ',
-    showingText: 'กำลังแสดงรายการ '
-})
 
 class HistoryInOut extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             searchText: '',
-            dataSource: dataSource
+            dataSource: [],
         }
     }
     setDataGridRef = (ref) => (this.dataGrid = ref)
 
     async componentDidMount() {
-        await fire_base.getAllHistoryInOut(this.getAllHistoryInOutSuccess, this.unSuccess);
+        await fire_base.getAllBuyReport(this.getAllHistoryInSuccess, this.unSuccess);
+        // await fire_base.getAllHistoryOut(this.getAllHistoryOutSuccess, this.unSuccess);
     }
 
-    getAllHistoryInOutSuccess = (querySnapshot) => {
+    getAllHistoryInSuccess = (querySnapshot) => {
         let data = []
         querySnapshot.forEach(doc => {
-            data.push(doc.data());
-            console.log(doc.id, " => ", doc.data());
-        });
-        this.setState({ dataSource: data });
-    }
+            let d = doc.data();
+            d.inID = doc.id
+            console.log(d)
+            if( d.dateIn)
+                d.dateIn = d.dateIn.toDate().getDate()+"/"+(d.dateIn.toDate().getMonth()+1)+"/"+d.dateIn.toDate().getFullYear()
+            else
+                d.dateIn = "-"
 
+            d.companyID.get()
+                    .then(doc => {
+                        d.companyID = doc.id
+                        this.setState({ dataSource: this.state.dataSource.concat(d) });
+                    })
+        });
+        
+    }
+    // getAllHistoryOutSuccess = (querySnapshot) => {
+    //     let data = []
+    //     querySnapshot.forEach(doc => {
+    //         let d = doc.data();
+    //         this.setState({ dataSource: this.state.dataSource.concat(d) });
+    //     });
+    // }
     unSuccess(error) {
         console.log(error);
     }
@@ -96,14 +94,7 @@ class HistoryInOut extends React.Component {
     render() {
         return (
             <Container fluid={true} style={{ backgroundColor: 'wheat' }} >
-                <Row >
-                    <h1 style={{
-                        marginTop: 20,
-                        marginBottom: 20,
-                        width: '100%',
-                        alignSelf: 'center'
-                    }}>ประวัติสินค้าเข้า/ออกคลัง</h1>
-                </Row>
+
                 <Row style={{ marginTop: '20px' }}>
                     <ReactDataGrid alignSelf='center'
                         onReady={this.setDataGridRef}
