@@ -379,6 +379,54 @@ class Firebase {
       })
   }
 
+  addPO=(data, success, reject)=>{
+    data.dateCreate = firebase.firestore.FieldValue.serverTimestamp();
+    var stateRef = firebase.firestore().collection('Buy').doc('state')
+    return firebase.firestore().runTransaction((transaction)=>{
+      return transaction.get(stateRef).then((stateDoc)=>{
+        data.companyID  = firebase.firestore().collection('Company').doc(data.companyID)
+        for(let x of data.log){
+          x.productID = firebase.firestore().collection('Product').doc(x.productID)
+        }
+        if(!stateDoc.exists){
+          throw "Document does not exist!";
+        }
+
+        let state = stateDoc.data().count
+        var newState = parseInt(state)+1
+        
+        if(newState/10 < 1){
+          newState = newState.toString()
+          newState = '000'+newState
+        }else if(newState/100<1){
+          newState = newState.toString()
+          newState = '00'+newState
+        }else if(newState/1000<1){
+          newState = newState.toString()
+          newState = '0'+newState
+        }
+        else{
+          newState = newState.toString()
+        }
+        transaction.update(stateRef, {count : newState})
+        
+        firebase.firestore().collection('Buy').doc("PO"+state)
+        .set(data)
+        .then(()=>{
+          success();
+        })
+        .catch((error)=>{
+          reject(error);
+        });
+      })
+    })
+    .then()
+    .catch((error)=>{
+      console.log(error)
+    });
+  }
+
+
 }
 const fire_base = new Firebase();
 export default fire_base;

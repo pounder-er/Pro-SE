@@ -59,6 +59,8 @@ class BuyDetail extends React.Component {
         console.log(this.props.profile)
         for(let x of this.props.profile.log){
             x.productID.get()
+            // this.props.profile.InID = "00"
+            
             .then(doc=>{
                 let d = doc.data();
                 d.productID = doc.id;
