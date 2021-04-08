@@ -150,7 +150,10 @@ class DashBoard extends React.Component {
 
                         height={70} />
                 </div>
-                <div className="rowContainer">
+                <div style={{display: 'flex', 
+                             marginTop: '1.5%', 
+                             justifyContent: 'center', 
+                             flexDirection: 'row'}}>
                     <div className="donutChartContainer">
                         <div className="pineChart">
                             <h3 style={{
@@ -177,7 +180,8 @@ class DashBoard extends React.Component {
                     <div className="cardContainer">
                         <Card style={{
                             borderColor: "transparent",
-                            width: "100%", 
+                            width: "99%",
+                        
                         }}>
                             <p />
                             <h3 style={{ marginLeft: '2.5%' }}>สินค้าขายดี</h3>
