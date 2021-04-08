@@ -65,10 +65,10 @@ class ProductDetail extends React.Component {
 
     async componentDidMount() {
         //await fire_base.getAllProduct(this.getAllProductSuccess, this.unSuccess);
-        await fire_base.getAllSaleReport(this.getAllSaleReportSuccess, this.unSuccess);
+        await fire_base.getAllBuyReport(this.getAllBuyReportSuccess, this.unSuccess);
     }
 
-    getAllSaleReportSuccess = async (querySnapshot) => {
+    getAllBuyReportSuccess = async (querySnapshot) => {
         let data = []
         await querySnapshot.forEach(async (doc) => {
             if (doc.id != 'state') {
@@ -115,9 +115,9 @@ class ProductDetail extends React.Component {
                         }}>รายละเอียดสินค้า</h1>
                     </Col>
                 </Row>
-                <Row style={{ height: 200 }}>
-                    <Col style={{ backgroundColor: 'green', marginLeft: "20px" }} md={{ size: "2" }}>
-
+                <Row style={{height: 200 }}>
+                    <Col md={4} >
+                        <img src={this.props.product.image} style={{ height: 180, width: 180, borderRadius: 10 }} />
                     </Col>
                     <Col >
                         <Row style={{ height: 80 }}>

@@ -77,8 +77,8 @@ class Firebase {
         reject(error);
       })
   }
-  getAllSaleReport = (success, reject) => {
-    firebase.firestore().collection('Sell').where("status", "==", "สำเร็จ")
+  getAllBuyReport = (success, reject) => {
+    firebase.firestore().collection('Buy').where("status", "==", "สำเร็จ")
       .get()
       .then(querySnapshot => {
         success(querySnapshot);
