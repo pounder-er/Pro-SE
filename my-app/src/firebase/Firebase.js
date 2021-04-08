@@ -283,6 +283,24 @@ class Firebase {
         reject(error);
       });
   }
+
+  addCheckStock = (assignProduct,success, reject) =>{
+    let batch = firebase.firestore().batch(), ref = firebase.firestore().collection('TaskStock');
+    assignProduct.forEach(element => {
+      batch.set(ref.doc(element.id),{person:element.email});
+    });
+    batch.commit()
+    .then(()=>{
+      success();
+    })
+    .catch(error=>{
+      reject(error);
+    })
+
+
+
+  }
+
   addProduct = (product, success, reject) => {
     let db = firebase.firestore(),
       productType = product.productType,

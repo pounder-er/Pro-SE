@@ -1,4 +1,4 @@
-import React, { Component, useState, useCallback  } from 'react';
+import React, { Component, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import {
@@ -37,6 +37,12 @@ import fire_base from '../../firebase/Firebase';
 
 import { i18n } from '../i18n';
 
+import LoadingOverlay from 'react-loading-overlay';
+
+import Resizer from 'react-image-file-resizer';
+
+import swal from 'sweetalert';
+
 import ReactDataGrid from '@inovua/reactdatagrid-community';
 import '@inovua/reactdatagrid-community/base.css';
 import '@inovua/reactdatagrid-community/theme/default-light.css';
@@ -60,6 +66,7 @@ class SetStockCheckTime extends Component {
             dataSourceProdCopy: [],
             modal: false,
             prodSelected: {},
+            loading: false,
         }
         this.assignProduct = []
         this.employeeSelected = ''
@@ -93,14 +100,14 @@ class SetStockCheckTime extends Component {
                         {'มอบหมายสินค้า'}
                     </div>, defaultWidth: 143,
                 render: ({ data }) =>
-                    <button onClick={(e) => { this.toggleModal(e); this.employeeSelected = data.email}} style={{ display: 'contents' }} >
+                    <button onClick={(e) => { this.toggleModal(e); this.employeeSelected = data.email }} style={{ display: 'contents' }} >
                         <AiFillFileText color='#00A3FF' size={30} />
                     </button>,
                 textAlign: 'center'
             }
         ]
         this.columnsProd = [
-            { name: 'id',  defaultFlex: 1, header: 'รหัสสินค้า', type: 'number' },
+            { name: 'id', defaultFlex: 1, header: 'รหัสสินค้า', type: 'number' },
             { name: 'productName', groupBy: false, defaultFlex: 2, header: 'รายการสินค้า' },
             { name: 'productType', groupBy: false, defaultFlex: 1, header: 'ชนิด' },
             { name: 'productWeight', groupBy: false, defaultFlex: 0.7, header: 'น้ำหนัก' },
@@ -111,41 +118,58 @@ class SetStockCheckTime extends Component {
     }
 
     onSelectionChange = ({ selected }) => {
-        if(selected === true){
+        if (selected === true) {
             selected = {};
             // this.state.dataSourceProd
-            this.state.dataSourceProdCopy.forEach((doc)=>{
+            this.state.dataSourceProdCopy.forEach((doc) => {
                 selected[doc.id] = doc
             })
         }
-        
-        this.setState({prodSelected:selected});
+
+        this.setState({ prodSelected: selected });
         // this.setState({})
         // console.log(selected)
         console.log(selected)
-        
-      }
 
-    onAssignProduct=(e)=>{
+    }
+
+    allClear=(e)=>{
         e.preventDefault();
-        let i,num = 0
+        this.assignProduct = [];
+        this.employeeSelected = '';
+        this.state.dataSourceEm.forEach(doc=>{
+            doc.amountAssignProd = 0;
+        })
+        this.setState({
+            prodSelected:{},
+            dataSourceProdCopy:this.dataSourceProd,
+            dataSourceEm:[...this.state.dataSourceEm]
+        });
+        console.log('eeee');
+
+    }
+
+    onAssignProduct = (e) => {
+        
+        e.preventDefault();
+        let i, num = 0
         for (const property in this.state.prodSelected) {
             this.state.prodSelected[property].email = this.employeeSelected
             this.assignProduct.push(this.state.prodSelected[property])
             num++;
         }
-        this.state.dataSourceEm.find((doc,index)=>{
-            if(doc.email == this.employeeSelected){
+        this.state.dataSourceEm.find((doc, index) => {
+            if (doc.email == this.employeeSelected) {
                 i = index
                 return true
             }
         })
         this.state.dataSourceEm[i].amountAssignProd = num;
         this.setState({
-            dataSourceProdCopy:this.state.dataSourceProdCopy.filter(doc=>{
+            dataSourceProdCopy: this.state.dataSourceProdCopy.filter(doc => {
                 let check = true;
                 for (let i in this.assignProduct) {
-                    if(doc.id == this.assignProduct[i].id){
+                    if (doc.id == this.assignProduct[i].id) {
                         check = false;
                     }
                 }
@@ -153,11 +177,12 @@ class SetStockCheckTime extends Component {
             })
         })
         console.log(this.assignProduct);
-        this.setState({dataSourceEm:[...this.state.dataSourceEm]});
-        
+        this.setState({ dataSourceEm: [...this.state.dataSourceEm] });
+        this.setState({ prodSelected: {} });
+
     }
 
-      
+
 
     toggleModal = (e) => {
         e.preventDefault();
@@ -195,13 +220,13 @@ class SetStockCheckTime extends Component {
     getProductCheckStockSuccess = (querySnapshot) => {
 
         let data = [];
-        querySnapshot.forEach(async(doc) => {
+        querySnapshot.forEach(async (doc) => {
             let d;
             d = doc.data();
-            await d.companyID.get().then(doc=>{
+            await d.companyID.get().then(doc => {
                 d.companyID = doc.data().companyName
             })
-            await d.productType.get().then(doc=>{
+            await d.productType.get().then(doc => {
                 d.productType = doc.data().name
             })
             d.id = doc.id;
@@ -214,21 +239,45 @@ class SetStockCheckTime extends Component {
         // console.log(this.state.dataSourceProd);
     }
 
+    onAssign=(e)=>{
+        this.setState({loading:true});
+        e.preventDefault();
+        fire_base.addCheckStock(this.assignProduct,this.addCheckStockSuccess,this.unSuccess);
+        this.allClear(e);
+    }
+
+    addCheckStockSuccess=()=>{
+        console.log('add success');
+        this.setState({loading:false});
+        this.sweetAlert('เสร็จสิ้น','มอบหมายงานเช็คสต๊อกเรียบร้อยแล้ว','success','ตกลง');
+    }
+
     unSuccess = (error) => {
+        this.setState({loading:false});
+        this.sweetAlert('ล้มเหลว','การเชื่อมต่อผิดพลาด','error','ตกลง');
         console.log(error)
+    }
+
+    sweetAlert(title, text, icon, button) {
+        swal({
+            title: title,
+            text: text,
+            icon: icon,
+            button: button,
+        })
     }
 
     render() {
         return (
             <div>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal} backdrop='static' size='lg' >
-                    <ModalHeader toggle={this.toggleModal}>เลือกรายการสินค้าที่จะมอบหมาย</ModalHeader>
+                    <ModalHeader toggle={this.toggleModal} >เลือกรายการสินค้าที่จะมอบหมาย</ModalHeader>
                     <ModalBody>
-                    <Row>
-                        <Col>
-                        
-                        </Col>
-                    </Row>
+                        <Row>
+                            <Col>
+                            
+                            </Col>
+                        </Row>
                         <ReactDataGrid
                             onReady={this.setDataGridProdRef}
                             i18n={i18n}
@@ -246,7 +295,7 @@ class SetStockCheckTime extends Component {
                             showColumnMenuTool={false}
                             emptyText="ไม่มีรายการ"
                             style={{ minHeight: 550 }}
-                            
+
                         />
                         <Row style={{ marginTop: 10 }}>
                             <Col md={8} />
@@ -294,6 +343,11 @@ class SetStockCheckTime extends Component {
                         </Row>
                     </TabPane>
                     <TabPane tabId="2">
+                    <LoadingOverlay
+                active={this.state.loading}
+                spinner
+                text='กำลังเพิ่มสินค้า...'
+            >
                         <Row>
                             <Col >
                                 <br />
@@ -316,15 +370,20 @@ class SetStockCheckTime extends Component {
 
                             </Col>
                         </Row>
-                        <Row style={{ marginTop: 10 }}>
+                        <Row style={{ marginTop: 10 }} form>
                             <Col md={8} />
-                            <Col md={2} />
                             <Col md={2} style={{ display: 'flex' }} >
-
-                                <Button color="success" style={{ flex: 1 }} >มอบหมาย</Button>
-
+                                <FormGroup style={{ display: 'flex', flex: 1 }}>
+                                    <Button color="secondary" style={{ flex: 1 }} onClick={this.allClear} >เคลียร์</Button>
+                                </FormGroup>
+                            </Col>
+                            <Col md={2} style={{ display: 'flex' }} >
+                                <FormGroup style={{ display: 'flex', flex: 1 }}>
+                                    <Button color="success" style={{ flex: 1 }} onClick={this.onAssign} >มอบหมาย</Button>
+                                </FormGroup>
                             </Col>
                         </Row>
+                        </LoadingOverlay>
                     </TabPane>
                 </TabContent>
             </div>
