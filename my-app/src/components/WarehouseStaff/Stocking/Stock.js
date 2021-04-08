@@ -17,6 +17,9 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-pro-sidebar/dist/css/styles.css';
 
+import { connect } from 'react-redux';
+import { addSession, addUserProfile } from '../../../redux/actions';
+
 // ------ Example object for collects of work form server ----- // 
 import checkList from './checkList.json'
 // ------------------------------------------------ // 
@@ -32,30 +35,57 @@ class Stock extends React.Component {
             date: "1/1/2564",
             time: "",
             input: "",
-            checkList: []
+            checkList: [],
+            // taskOrder: ["310000"]
         }
-        firestore.getData(this.success, this.reject)
+
+        // let uid = ["310000", "300000"]
+        firestore.getTaskStock(this.task, this.reject, this.props.userProfile.email)
+
     }
 
+
     success = (doc) => {
-        // console.log('success')
+        console.log("in herre")
         doc.forEach(doc => {
-            let array = doc.data()
+            if (doc.id != "state") {
+                let array = doc.data()
 
-            array.id = doc.id
-            array.balance = 0
-            array.damage = 0
-            array.report = ''
+                array.id = doc.id
+                array.balance = 0
+                array.damage = 0
+                array.report = ''
 
-            console.log(typeof(doc.id))
+                // console.log(doc.data())
 
-            this.setState({ checkList: this.state.checkList.concat(array) })
+                this.setState({ checkList: this.state.checkList.concat(array) })
+            }
         })
-        // console.log(this.state.checkList);
+    }
+
+    task = (doc) => {
+        let array = []
+
+        doc.forEach(doc => {
+            let id = doc.id
+            array.push(id)
+        })
+
+        firestore.getData(this.success, this.reject, array)
+        
     }
 
     reject = (error) => {
         console.log(error)
+    }
+
+    confirmTask = () => {
+        // console.log(this.state.checkList)
+        // let day = new Date
+        // console.log(day.getDate()+"/"+(day.getMonth()+1)+"/"+day.getFullYear())
+        
+        if(this.state.checkList.length > 0)
+            firestore.sendTask(this.state.checkList,this.props.userProfile)
     }
 
     //----------------------------- GetTextFunction from Input -----------------------------
@@ -73,7 +103,7 @@ class Stock extends React.Component {
                     // console.log(typeof(num))
                     // console.log(isNaN(num))
 
-                    if(isNaN(num)){
+                    if (isNaN(num)) {
                         this.state.checkList[i].balance = 0
                     }
                     else
@@ -92,7 +122,7 @@ class Stock extends React.Component {
 
                     let num = parseInt(text.target.value, 10)
 
-                    if(isNaN(num)){
+                    if (isNaN(num)) {
                         this.state.checkList[i].damage = 0
                     }
                     else
@@ -182,7 +212,7 @@ class Stock extends React.Component {
 
 
                     <div className="ButtonStocking">
-                        <Button style={{ height: 40, width: 80, background: "#00B046" }}>บันทึก</Button>
+                        <Button style={{ height: 40, width: 80, background: "#00B046" }} onClick={this.confirmTask}>บันทึก</Button>
                     </div>
 
                 </body>
@@ -191,4 +221,12 @@ class Stock extends React.Component {
     }
 }
 
-export default Stock;
+const mapStateToProps = (state) => {
+    return {
+        session: state.session,
+        userProfile: state.userProfile
+    }
+}
+
+
+export default connect(mapStateToProps)(Stock);
