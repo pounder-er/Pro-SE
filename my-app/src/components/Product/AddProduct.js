@@ -80,10 +80,9 @@ class AddProduct extends Component {
             elementProductType: [],
             elementPartnerCompany: []
         }
-        this.loading = false;
         this.product = null;
         this.hiddenFileInputRef = React.createRef();
-
+        this.id = '';
 
     }
 
@@ -113,7 +112,9 @@ class AddProduct extends Component {
     }
 
     unSuccess = (error) => {
-        console.log(error)
+        console.log(error);
+        this.sweetAlret('ไม่สำเร็จ','การเชื่อมต่อมีปัญหากรุณาลองใหม่อีกครั้ง','error','ตกลง');
+        this.setState({loading:false});
     }
 
     toggleModalImage = (e) => {
@@ -142,6 +143,22 @@ class AddProduct extends Component {
         })
     }
 
+    addProductSuccess=async(id)=>{
+        this.id = await id;
+        await fire_base.uploadImage('product/'+id,this.product.image,this.uploadImageSuccess,this.unSuccess);
+    }
+
+    uploadImageSuccess=async(url)=>{
+        await fire_base.updateProduct(this.id,{image:url},this.updateProductSuccess,this.unSuccess);
+    }
+
+    updateProductSuccess=()=>{
+        this.sweetAlret('สำเร็จ','เพิ่มสินค้าเรียบร้อยแล้ว ไอเหี้ยยย','success','ตกลง');
+        this.setState({loading:false});
+        console.log('add product success');
+    }
+
+
 
     render() {
         console.log(typeof 1);
@@ -155,9 +172,11 @@ class AddProduct extends Component {
                 <Formik
                     validationSchema={fromProductSchema}
                     onSubmit={async(values, { resetForm }) => {
-
-                        await fire_base.addProduct(values);
+                        this.product = values;
+                        await this.setState({loading:true});
+                        await fire_base.addProduct(values,this.addProductSuccess,this.unSuccess);
                         //resetForm();
+                        
                         console.log(values)
                     }}
                     initialValues={{
@@ -300,7 +319,7 @@ class AddProduct extends Component {
                                             type="text"
                                             name="productName"
                                             id="productName"
-                                            placeholder="ข้าวหอมมะลิ"
+                                            placeholder="ข้าว... ตรา..."
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.productName}
