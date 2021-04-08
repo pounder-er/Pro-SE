@@ -117,11 +117,17 @@ class Sell extends React.PureComponent {
             d.InID = doc.id;
             d.dateCreate = d.dateCreate.toDate().getDate()+"/"+(d.dateCreate.toDate().getMonth()+1)+"/"+d.dateCreate.toDate().getFullYear()
             if( d.dateIn)
-            d.dateIn = d.dateIn.toDate().getDate()+"/"+(d.dateIn.toDate().getMonth()+1)+"/"+d.dateIn.toDate().getFullYear()
+                d.dateIn = d.dateIn.toDate().getDate()+"/"+(d.dateIn.toDate().getMonth()+1)+"/"+d.dateIn.toDate().getFullYear()
+            else
+                d.dateIn = "-"
             if(d.dateOut)
-            d.dateOut = d.dateOut.toDate().getDate()+"/"+(d.dateOut.toDate().getMonth()+1)+"/"+d.dateOut.toDate().getFullYear()
+                d.dateOut = d.dateOut.toDate().getDate()+"/"+(d.dateOut.toDate().getMonth()+1)+"/"+d.dateOut.toDate().getFullYear()
+            else
+                d.dateOut = "-"
             if(d.datePay)
-            d.datePay = d.datePay.toDate().getDate()+"/"+(d.datePay.toDate().getMonth()+1)+"/"+d.datePay.toDate().getFullYear()
+                d.datePay = d.datePay.toDate().getDate()+"/"+(d.datePay.toDate().getMonth()+1)+"/"+d.datePay.toDate().getFullYear()
+            else
+                d.datePay = "-"
 
             let a = d.branchID.get()
             .then(doc=>{

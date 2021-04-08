@@ -258,7 +258,7 @@ console.log(formattedNumber);
               <Switch>
                 <Route exact path={this.props.match.path + "/historyInOut"} component={HistoryInOut} />
                 <Route exact path={this.props.match.path + "/salesReport"} component={SalesReport} />
-                <Route exact path={this.props.match.path + "/productsReport"} component={ProductsReport} />
+                {/* <Route exact path={this.props.match.path + "/productsReport"} component={ProductsReport} /> */}
                 <Route exact path={this.props.match.path + "/productsReport/productDetail"} component={ProductDetail} />
                 <Route exact path={this.props.match.path + "/list_employee"} component={ListEmployee} />
                 <Route exact path={this.props.match.path + "/add_employee"} component={AddEmployee} />
