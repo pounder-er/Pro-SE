@@ -94,16 +94,16 @@ class Buy extends React.Component {
                 d.datePay = "-"
             let a = d.companyID.get()
             .then(doc=>{
+                // this.setState({dataSource:this.state.dataSource.concat(doc)});
                 d.companyID = doc.data().companyName
+                this.setState({dataSource:this.state.dataSource.concat(d)});
                 return d;
             })
-            a.then(doc=>{
-                // console.log(doc)
-                this.setState({dataSource:this.state.dataSource.concat(doc)});
-            })
+            // this.setState({dataSource:this.state.dataSource.concat(d)});
+            
             }
         });
-         await this.setState({dataSource: data });
+        //  await this.setState({dataSource: data });
         
         
     }

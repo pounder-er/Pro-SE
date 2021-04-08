@@ -40,17 +40,12 @@ import { BiImageAdd } from "react-icons/bi";
 
 const formPo = Yup.object().shape({
     companyID: Yup.string()
-      .length(7, 'หมายเลขบริษัท')
-    //   .matches(/^[0-9]{7}$/, 'หมายเลขสินค้าไม่ถูกต้าง')
       .required('ต้องกรอก'),
     
       productID: Yup.string()
-      .length(7, 'หมายเลขสินค้า')
-    //   .matches(/^[0-9]{7}$/, 'หมายเลขสินค้าไม่ถูกต้อง')
       .required('ต้องกรอก'),
-      volume: Yup.string()
-      .length(7, 'จำนวน')
-      .matches(/^[0-9]{7}$/, 'จำนวนไม่ถูกต้อง')
+
+      volume: Yup.number()
       .required('ต้องกรอก'),
     
   
@@ -83,10 +78,12 @@ class Po extends React.Component {
             elementPartnerCompany: [],
             elementProduct: [],
             dataSource: [],
+            log : [],
+            companyCheck : false,
             
         }
         this.product = []
-        let log = []
+        
         this.companyID = ""
     }
 
@@ -104,7 +101,7 @@ class Po extends React.Component {
             element.push(e);
         })
         this.setState({ elementPartnerCompany: element });
-        console.log(element);
+        // console.log(element);
     }
 
     getAllProductSuccess = (querySnapshot) => {
@@ -120,14 +117,39 @@ class Po extends React.Component {
             let e = <option key={doc.id} value={doc.id}>{doc.id + ' : ' + doc.data().productName}</option>
             element.push(e);
         })
-        console.log(data);
+        // console.log(data);
         this.product = data;
         this.setState({ elementProduct: element });
-        console.log(element);
+        // console.log(element);
     }
 
     unSuccess = (error) => {
         // console.log(error)
+    }
+
+    addPOSuccess=()=>{
+
+    }
+
+    uploadTodb =()=>{
+        let data = {
+            log : this.state.log,
+            status : 'รอใบเสนอราคา',
+            companyID : this.companyID,
+        }
+        // let llog = []
+        console.log(this.state.log)
+        // for(let x of this.state.log){           
+        //     let b = this.product.find((doc,index)=>{
+        //         if(doc.id == x.productID){
+        //             return true;
+        //         }
+        //     });
+            
+        //     llog.push(b)
+        // }
+        
+        fire_base.addPO(data,this.addPOSuccess, this.unSuccess)
     }
 
     render() {
@@ -137,19 +159,46 @@ class Po extends React.Component {
                 <Formik
                     validationSchema={formPo}
                     onSubmit={async(values, { resetForm }) => {
+                        this.state.companyCheck = true
+                        let g = true
+                        if(this.state.log)
+                        {
+                            for(let x of this.state.log)
+                            {
+                                if(x.productID == values.productID)
+                                {
+                                    x.volume += values.volume
+                                    g = !g
+                                    this.setState({log : this.state.log.concat([])})
+                                }
+                            }
+                        }
+                        if(g)
+                        {
+                            console.log(values.productID)   
+                            let a ={},
+                            b = this.product.find((doc,index)=>{
+                                if(doc.id == values.productID){
+                                    return true;
+                                }
+                            });
+                            // console.log('kkk',b)
+                            a.productName = b.productName
+                            a.volume = values.volume
+                            a.productID = values.productID
+                            a.productPrice = '-'
+                            a.disCount = '-'
+                            this.setState({log : this.state.log.concat(a)})
+                        }
 
-                        console.log(values)
                         
                     }}
                     initialValues={{
-                        image: '',
                         productName: '',
                         productID: '300000',
-                        productPrice: '',
-                        productWeight: 1,
-                        productDetail: '',
+                        productPrice: '0',
                         companyID: '00',
-                        detail:''
+                        volume:1
                     }}
                 >
                     {({
@@ -172,6 +221,8 @@ class Po extends React.Component {
                                     <FormGroup>
                                         <Label for="companyID">บริษัท</Label>
                                         <Input
+                                        disabled={this.state.companyCheck}
+                                            readOnly = {this.state.companyCheck}
                                             type="select"
                                             name="companyID"
                                             id="companyID"
@@ -180,6 +231,7 @@ class Po extends React.Component {
                                                 let element = []
                                                 let d = this.product.filter(doc=>{
                                                     if(doc.companyID == e.target.value){
+                                                        this.companyID = e.target.value;
                                                         return true;
                                                     }
                                                 })
@@ -208,6 +260,7 @@ class Po extends React.Component {
                                             type="select"
                                             name="productID"
                                             id="productID"
+
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.productID}
@@ -223,17 +276,19 @@ class Po extends React.Component {
                                     <FormGroup>
                                         <Label for="volume">จำนวน</Label>
                                         <Input
-                                            type="select"
-                                            name="productID"
-                                            id="productID"
+                                            type="number"
+                                            name="volume"
+                                            id="volume"
+                                            min={1}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
-                                            value={values.productID}
-                                            invalid={errors.productID && touched.productID}
+                                            value={values.volume}
+                                            onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9]/, ''); handleChange(e); }}
+                                            invalid={errors.volume && touched.volume}
                                         >
-                                            {this.state.elementProduct}
+                                            {/* {this.state.elementProduct} */}
                                         </Input>
-                                        <FormFeedback >*{errors.productID}</FormFeedback>
+                                        <FormFeedback >*{errors.volume}</FormFeedback>
                                     </FormGroup>
                                 </Col>
                                 {/* <Col>
@@ -251,11 +306,11 @@ class Po extends React.Component {
                                         <FormFeedback >*{errors.detail}</FormFeedback>
                                     </FormGroup>
                                 </Col> */}
-                                <Col md={8} />
+                                {/* <Col md={8} /> */}
                                 
                                 <Col md={2} style={{ display: 'flex' }}>
                                     <FormGroup style={{ display: 'flex', flex: 1 }}>
-                                        <Button type="submit" color="success" style={{ flex: 1 }}>บันทึก</Button>
+                                        <Button type="submit" color="success" style={{ flex: 1,height :40, marginTop: '30px'  }}>บันทึก</Button>
                                     </FormGroup>
                                 </Col>
                             </Row>
@@ -277,12 +332,26 @@ class Po extends React.Component {
                         defaultLimit={15}
                         defaultSkip={15}
                         pageSizes={[10, 15, 30]}
-                        dataSource={this.state.dataSource}
+                        dataSource={this.state.log}
                         defaultFilterValue={filterValue}
                         showColumnMenuTool={true}
                         emptyText="ไม่มีรายการ"
+                        style={{ minHeight: 400 }}
                     />
                 </Row>
+                <Row form style={{ marginTop:'30px' }}>
+                                <Col md={8} />
+                                <Col md={2} style={{ display: 'flex' }}>
+                                    <FormGroup style={{ display: 'flex', flex: 1 }}>
+                                        <Button type="reset" color="secondary" style={{ flex: 1 }}>เคลียร์</Button>
+                                    </FormGroup>
+                                </Col>
+                                <Col md={2} style={{ display: 'flex' }}>
+                                    <FormGroup style={{ display: 'flex', flex: 1 }}>
+                                        <Button onClick={this.uploadTodb} type="submit" color="success" style={{ flex: 1 }}>บันทึก</Button>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
                 {/* <Row>
                     <Col md={6} >
                         <FormGroup>
