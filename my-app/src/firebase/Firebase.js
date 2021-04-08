@@ -230,6 +230,18 @@ class Firebase {
       })
   }
 
+  updateProduct=(idp,product,success,reject)=>{
+    firebase.firestore().collection('Product').doc(idp)
+      .update(product)
+      .then(() => {
+        success();
+      })
+      .catch((error) => {
+        reject(error);
+      })
+
+  }
+
   uploadImageProfile = async (uid, image, success, reject) => {
     let ref = await firebase
       .storage()
