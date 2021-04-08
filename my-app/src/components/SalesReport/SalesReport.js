@@ -113,14 +113,7 @@ class SalesReport extends React.Component {
     render() {
         return (
             <Container fluid={true} style={{ backgroundColor: 'wheat' }} >
-                <Row >
-                    <h1 style={{
-                        marginTop: 20,
-                        marginBottom: 20,
-                        width: '100%',
-                        alignSelf: 'center'
-                    }}>ยอดขายสินค้า</h1>
-                </Row>
+               
                 <Row >
                     <Col sm="1">
                         Date
@@ -145,18 +138,6 @@ class SalesReport extends React.Component {
                             id="exampleDate"
                             placeholder="date placeholder"
                         />
-                    </Col>
-                    <Col>
-                        <InputGroup >
-                            <Input placeholder="รหัสสินค้า" />
-                            <InputGroupAddon addonType="append">
-                                <InputGroupText><MdSearch color="#1F1F1F" size={22} /></InputGroupText>
-                            </InputGroupAddon>
-                        </InputGroup>
-
-                    </Col>
-                    <Col md="auto">
-                        <Button color="info" style={{ width: 200 }}>fillter</Button>
                     </Col>
                 </Row >
                 <Row style={{ marginTop: '20px' }}>
