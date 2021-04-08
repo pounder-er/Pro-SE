@@ -61,7 +61,7 @@ class ProductDetail extends React.Component {
             { name: 'volume', groupBy: false, defaultFlex: 0.7, header: 'ยอดที่รับเข้า' },
             { name: 'productID', groupBy: false, defaultFlex: 1, header: 'ที่เก็บสินค้า' },
             {
-                name: 'volume1', header:
+                name: 'detail1', header:
                     <div style={{ display: 'inline-block' }}>
                         {'รายละเอียด'}
                     </div>, defaultWidth: 109,
@@ -76,7 +76,7 @@ class ProductDetail extends React.Component {
 
     }
     toggleModalmodal = () => {
-        console.log(11111111111)
+        
         this.setState({ modal: !this.state.modal });
     }
     setDataGridRef = (ref) => (this.dataGrid = ref)
@@ -124,9 +124,9 @@ class ProductDetail extends React.Component {
         return (
             <Container fluid={true} style={{ backgroundColor: 'wheat' }} >
                 <Modal isOpen={this.state.modal} toggle={this.toggleModalmodal} backdrop='static' size='lg' >
-                    <ModalHeader toggle={this.toggleModalmodal}>รายละเอียด</ModalHeader>
+                    <ModalHeader toggle={this.toggleModalmodal}>รายละเอียดการคำนวน</ModalHeader>
                     <ModalBody>
-                        <SellDetail profile={this.product} />
+                        <SellDetail product={this.product}/>
                     </ModalBody>
                 </Modal>
                 <Row >
