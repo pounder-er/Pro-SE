@@ -179,6 +179,7 @@ class SetStockCheckTime extends Component {
         console.log(this.assignProduct);
         this.setState({ dataSourceEm: [...this.state.dataSourceEm] });
         this.setState({ prodSelected: {} });
+        this.toggleModal(e);
 
     }
 
