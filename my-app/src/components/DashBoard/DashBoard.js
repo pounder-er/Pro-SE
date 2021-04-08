@@ -50,9 +50,10 @@ import {
 } from "react-icons/ai";
 
 import Chart from "react-apexcharts";
-import { Line, Pie } from '@reactchartjs/react-chart.js'
+// import { Line, Pie } from '@reactchartjs/react-chart.js'
+import { Line, Pie } from 'react-chartjs-2';
 
-
+import firestore from '../../firebase/Firestore'
 
 
 class DashBoard extends React.Component {
@@ -64,14 +65,17 @@ class DashBoard extends React.Component {
                 datasets: [
                     {
                         label: 'สินค้าเข้า',
-                        data: [10, 20, 30, 30, 50, 30, 20],
+                        data: [0, 0, 0, 0, 0, 0, 0],
+                        // data: [10, 20, 30, 30, 50, 30, 20],
                         fill: false,
                         backgroundColor: 'rgb(255, 99, 132)',
                         borderColor: 'rgba(255, 99, 132, 0.6)',
                     },
                     {
                         label: 'สินค้าออก',
-                        data: [40, 70, 60, 20, 40, 50, 60],
+                        // data: [40, 70, 60, 20, 40, 50, 60],
+                        data: [0, 0, 0, 0, 0, 0, 0],
+                        // data: [],
                         fill: false,
                         backgroundColor: 'rgb(44, 232, 143)',
                         borderColor: 'rgba(44, 232, 143, 0.6)',
@@ -125,7 +129,42 @@ class DashBoard extends React.Component {
         }
     }
 
+    getCountSellOrderSuccess =(size)=>{
+        console.log(size)
+        let temp = this.state.lineChartData
+        // temp.datasets[1].data.push(size)
+        temp.datasets[1].data = size
 
+        this.setState({lineChartData : temp })
+
+        console.log(temp)
+        console.log('from state : ', this.state.lineChartData)
+        
+
+    }
+
+    reject(error){
+        console.log(error)
+    }
+
+    componentDidMount(){
+        firestore.getCountSellOrderComplete(this.getCountSellOrderSuccess, this.reject)
+
+        let currentDate = new Date()
+        let temp = this.state.lineChartData
+        let m = 0;
+        for(let i=6; i>=0; i--){
+            if(currentDate.getDate()-m > 0){
+                temp.labels[i] = (currentDate.getDate()-m)+"/"+(currentDate.getMonth()+1)
+            }else{
+                
+            }
+            m++  
+        }
+        
+        this.setState({lineChartData : temp})
+
+    }
 
     render() {
         return (
@@ -147,8 +186,8 @@ class DashBoard extends React.Component {
                             /> */}
                     <Line data={this.state.lineChartData}
                         options={this.state.options}
-
-                        height={70} />
+                        height={70}
+                        redraw />
                 </div>
                 <div style={{display: 'flex', 
                              marginTop: '1.5%', 

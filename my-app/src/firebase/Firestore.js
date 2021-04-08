@@ -186,16 +186,58 @@ class Firestore {
       });
     }
 
-    getCountSaleOrderComplete=()=>{
-      //let date = firebase.firestore.FieldValue.serverTimestamp()
-      let date = new Date('2021-04-07')
-      firebase.firestore().collection('Sell').where('dateOut', '==', date)
-      .get()
-      .then(function(querySnapshot){
-        console.log(querySnapshot.size)
-      })
-      .catch();
+    getCountSellOrderComplete=(success, reject)=>{
+      let day = []
+      let ts_currentDate = firebase.firestore.Timestamp.now()
+
+      let currentDate = ts_currentDate.toDate()
+      currentDate.setHours(0)
+      currentDate.setMinutes(0)
+      currentDate.setSeconds(0)
+      currentDate.setMilliseconds(0)
+      console.log(currentDate)
+
+      let currentDate_end = ts_currentDate.toDate()
+      currentDate_end.setHours(0)
+      currentDate_end.setMinutes(0)
+      currentDate_end.setSeconds(0)
+      currentDate_end.setMilliseconds(0)
+      console.log(currentDate_end)
+
+      let i_start = 1
+      let i_end = -1;
+      for(let i=1; i>=-5; i--){
+        currentDate.setDate(currentDate.getDate()+i_start);
+        currentDate_end.setDate(currentDate_end.getDate()+i_end);
+
+        if(i_start == 1)
+          i_start = -1
+
+        console.log('start : ' + currentDate)
+        console.log('stop : ' + currentDate_end)
+
+        let ts = firebase.firestore.Timestamp.fromDate(currentDate);
+        let ts_end = firebase.firestore.Timestamp.fromDate(currentDate_end);
+        // console.log(ts.toDate().toString())
+        firebase.firestore().collection('Sell')
+        .where('dateOut', '<', ts)
+        .where('dateOut', '>', ts_end)
+        .get()
+        .then(function(querySnapshot){
+          console.log(querySnapshot.size)
+          day.push(querySnapshot.size)
+          // success(querySnapshot.size)
+          success(day.reverse())
+        })
+        .catch();
+
+      }
+
+      console.log(day)
+      
     }
+
+    
 }
 const firestore = new Firestore();
 export default firestore
