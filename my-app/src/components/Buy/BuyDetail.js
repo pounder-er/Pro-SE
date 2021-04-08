@@ -76,6 +76,7 @@ class BuyDetail extends React.Component {
     setDataGridRef = (ref) => (this.dataGrid = ref)
 
     render() {
+        console.log('1111111',this.props.profile)
         return (
             <Container fluid={false} style={{ backgroundColor: 'while'}} >
                 <Row style={{ height: 50 }}>

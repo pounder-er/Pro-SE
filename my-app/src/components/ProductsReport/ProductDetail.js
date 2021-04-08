@@ -31,7 +31,7 @@ import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons
 import { IoMdTrash } from "react-icons/io";
 import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
-import SellDetail from '../Sell/SellDetail';
+import BuyDetail from '../Buy/BuyDetail';
 
 const filterValue = [
     { name: 'ID', operator: 'startsWith', type: 'string', value: '' },
@@ -49,17 +49,18 @@ class ProductDetail extends React.Component {
         super(props);
         this.state = {
             dataSource: [],
-            modal:false,
+            dataSource1: [],
+            modal: false,
             product: {},
         }
 
         this.columns = [
             { name: 'id', header: 'Id', defaultVisible: false, type: 'number', maxWidth: 40 },
-            { name: 'Inid', groupBy: false, defaultFlex: 1, header: 'หมายเลขใบ INV.' },
-            { name: 'arriveDate', groupBy: false, defaultFlex: 1, header: 'วันผลิด' },
-            { name: 'expireDate', groupBy: false, defaultFlex: 1, header: 'วันหมดอายุ' },
-            { name: 'volume', groupBy: false, defaultFlex: 0.7, header: 'ยอดที่รับเข้า' },
-            { name: 'productID', groupBy: false, defaultFlex: 1, header: 'ที่เก็บสินค้า' },
+            { name: 'InID', groupBy: false, defaultFlex: 1, header: 'หมายเลขใบ INV.' },
+            { name: 'aarriveDate', groupBy: false, defaultFlex: 1, header: 'วันผลิด' },
+            { name: 'aexpireDate', groupBy: false, defaultFlex: 1, header: 'วันหมดอายุ' },
+            { name: 'avolume', groupBy: false, defaultFlex: 0.7, header: 'ยอดที่รับเข้า' },
+            { name: 'aproductID', groupBy: false, defaultFlex: 1, header: 'ที่เก็บสินค้า' },
             {
                 name: 'detail1', header:
                     <div style={{ display: 'inline-block' }}>
@@ -76,45 +77,90 @@ class ProductDetail extends React.Component {
 
     }
     toggleModalmodal = () => {
-        
+
         this.setState({ modal: !this.state.modal });
     }
     setDataGridRef = (ref) => (this.dataGrid = ref)
 
     async componentDidMount() {
         //await fire_base.getAllProduct(this.getAllProductSuccess, this.unSuccess);
-        await fire_base.getAllBuyReport(this.getAllBuyReportSuccess, this.unSuccess);
+        //await fire_base.getAllBuy(this.getAllBuySuccess, this.unSuccess);
+        await fire_base.getAllBuyReport(this.getAllBuySuccess, this.unSuccess);
     }
 
-    getAllBuyReportSuccess = async (querySnapshot) => {
-        let data = []
-        await querySnapshot.forEach(async (doc) => {
-            if (doc.id != 'state') {
+    getAllBuySuccess = async (querySnapshot) => {
 
+        await querySnapshot.forEach((doc) => {
+            if (doc.id != 'state') {
                 let d = doc.data();
-                d.Inid = doc.id
-                console.log(d.log)
+                d.InID = doc.id
+                console.log(d)
+                d.dateCreate = d.dateCreate.toDate().getDate() + "/" + (d.dateCreate.toDate().getMonth() + 1) + "/" + d.dateCreate.toDate().getFullYear()
+                if (d.dateIn != undefined)
+                    d.dateIn = d.dateIn.toDate().getDate() + "/" + (d.dateIn.toDate().getMonth() + 1) + "/" + d.dateIn.toDate().getFullYear()
+                else
+                    d.dateIn = "-"
+                if (d.datePay != undefined)
+                    d.datePay = d.datePay.toDate().getDate() + "/" + (d.datePay.toDate().getMonth() + 1) + "/" + d.datePay.toDate().getFullYear()
+                else
+                    d.datePay = "-"
+                let a = d.companyID.get()
+                    .then(doc => {
+                        d.companyID = doc.data().companyName
+                        return d;
+                    })
                 d.productID = this.props.product.idp;
                 for (let x of d.log) {
                     x.productID.get()
                         .then(doc => {
-                            x.productID = doc.id
-                            if(x.productID == d.productID){
-                                d.volume = x.volume
-                                d.expireDate = x.expireDate
-                                d.arriveDate = x.arriveDate
+                            x.aproductID = doc.id
+                            if (x.aproductID == d.productID) {
+                                d.avolume = x.volume
+                                d.aexpireDate = x.expireDate
+                                d.aarriveDate = x.arriveDate
                                 console.log(x.volume)
                                 this.setState({ dataSource: this.state.dataSource.concat(d) });
                             }
-                            
+
                         });
                 }
-                
 
-                }
-            });
+
+            }
+        });
+
 
     }
+
+    // getAllBuyReportSuccess = async (querySnapshot) => {
+    //     let data = []
+    //     await querySnapshot.forEach(async (doc) => {
+    //         if (doc.id != 'state') {
+
+    //             let d = doc.data();
+    //             d.InID = doc.id
+    //             console.log(d)
+    //             d.productID = this.props.product.idp;
+    //             for (let x of d.log) {
+    //                 x.productID.get()
+    //                     .then(doc => {
+    //                         x.aproductID = doc.id
+    //                         if(x.aproductID == d.productID){
+    //                             d.avolume = x.volume
+    //                             d.aexpireDate = x.expireDate
+    //                             d.aarriveDate = x.arriveDate
+    //                             console.log(x.volume)
+    //                             this.setState({ dataSource: this.state.dataSource.concat(d) });
+    //                         }
+
+    //                     });
+    //             }
+
+
+    //             }
+    //         });
+
+    // }
 
     unSuccess(error) {
         console.log(error);
@@ -126,7 +172,7 @@ class ProductDetail extends React.Component {
                 <Modal isOpen={this.state.modal} toggle={this.toggleModalmodal} backdrop='static' size='lg' >
                     <ModalHeader toggle={this.toggleModalmodal}>รายละเอียดการคำนวน</ModalHeader>
                     <ModalBody>
-                        <SellDetail product={this.product}/>
+                        <BuyDetail profile={this.product} />
                     </ModalBody>
                 </Modal>
                 <Row >
@@ -139,7 +185,7 @@ class ProductDetail extends React.Component {
                         }}>รายละเอียดสินค้า</h1>
                     </Col>
                 </Row>
-                <Row style={{height: 200 }}>
+                <Row style={{ height: 200 }}>
                     <Col md={4} >
                         <img src={this.props.product.image} style={{ height: 180, width: 180, borderRadius: 10 }} />
                     </Col>
