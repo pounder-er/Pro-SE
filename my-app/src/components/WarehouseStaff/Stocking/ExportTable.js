@@ -18,89 +18,97 @@ import 'react-pro-sidebar/dist/css/styles.css';
 
 import './Style/ExportTable.css';
 
-class ExportTable extends React.Component{
-    constructor(props){
+class ExportTable extends React.Component {
+    constructor(props) {
         super(props)
         this.state = {
-            lot:"100100",
-            channel:"A1"
+            lot: this.props.location.lot,
+            channel: this.props.location.channel,
+            exportDetail: this.props.location.data,
+            checkCount:this.props.location.data.length
+        }
+        // console.log(this.state.exportDetail)
+    }
+
+    onCheckChange =(event)=>{
+        if(event.target.checked == true){
+            this.setState({checkCount:(this.state.checkCount-=1)})
+            console.log(event.target.checked)
+            // console.log(this.state.checkCount)
+        }
+        else{
+            this.setState({checkCount:(this.state.checkCount+=1)})
+            console.log(event.target.checked)
+            // console.log(this.state.checkCount)
         }
     }
 
-    render(){
-        return(
-            <div className = "ContainerTable">
+    onSaveOrder =()=>{
+        if(this.state.checkCount == 0){
+            console.log("Success")
+        }
+        else if(this.state.checkCount != 0){
+            console.log("Unsuadadw ccess")
+        }
+    }
 
-                <body className = "ContentTable">
+    render() {
+        let i = 0
+        const listItems = this.state.exportDetail.map((data) => {
+            i++
+            return (
+                <tr>
+                    <th scope="row">{i}</th>
+                    <td>{data.productID}</td>
+                    <td>{data.oldNew}</td>
+                    <td>{data.comName}</td>
+                    <td>{data.productName}</td>
+                    <td>{data.productWeight}</td>
+                    <td>{data.total}</td>
+                    <td>
+                        <InputGroup>
+                            <Input addon type="checkbox" style={{ width: 20, height: 20 }} onChange = {this.onCheckChange}/>
+                        </InputGroup>
+                    </td>
+                </tr>
+            )
+        }
+        );
 
-                    <h1 style={{width:'100%', alignSelf:'center', marginTop:60, marginBottom:20}}>รายการนำสินค้าออกคลัง</h1>
-                    <h3 style={{width:'100%', alignSelf:'center', marginTop:10}}>หมายเลขล็อต : {this.state.lot}</h3>
-                    <h3 style={{width:'100%', alignSelf:'center', marginTop:10, marginBottom:20}}>ช่องขนส่ง : {this.state.channel}</h3>
-                    
-                    <Table hover style={{width:'100%', alignSelf:'center', marginTop:20, marginBottom:20 ,background:"#f1f1f1"}}>
+        return (
+            <div className="ContainerTable">
 
-                            {/* -------------------------- This is header for table  --------------------------*/}
-                            <thead>
-                                <tr style ={{textAlign:'center'}}>
-                                    <th>ลำดับ</th>
-                                    <th>รหัสสินค้า</th>
-                                    <th>เก่า/ใหม่</th>
-                                    <th>ชื่อบริษัท</th>
-                                    <th>ชื่อสินค้า</th>
-                                    <th>น้ำหนัก</th>
-                                    <th>จำนวน</th>
-                                </tr>
-                            </thead>
+                <body className="ContentTable" style={{ border: '2px solid gray' }}>
 
-                            {/* -------------------------- This is datafrom for table  --------------------------*/}
-                            {/* Example */}
-                            <tbody>
-                                <tr style ={{textAlign:'center'}}>
-                                    <th scope="row">1</th>
-                                    <td>11323</td>
-                                    <td>ใหม่</td>
-                                    <td>สส.จำกัด</td>
-                                    <td>ข้าวหอมมะลิ ตราสส</td>
-                                    <td>5</td>
-                                    <td>20</td>
-                                    <td>
-                                        <InputGroup>
-                                            <Input addon type="checkbox" style = {{width:20,height:20}} />
-                                        </InputGroup>
-                                    </td>
-                                </tr>
-                            </tbody>
+                    <h1 style={{ width: '95%', alignSelf: 'center', marginTop: 60, marginBottom: 20 }}>รายการนำสินค้าออกคลัง</h1>
+                    <h3 style={{ width: '95%', alignSelf: 'center', marginTop: 10 }}>หมายเลขล็อต : {this.state.lot} | ช่องขนส่ง : {this.state.channel}</h3>
+                    {/* <h3 style={{width:'95%', alignSelf:'center', marginTop:10, marginBottom:20}}>ช่องขนส่ง : {this.state.channel}</h3> */}
+
+                    <Table hover style={{ width: '95%', alignSelf: 'center', marginTop: 20, marginBottom: 20, background: "#f1f1f1" }}>
+
+                        {/* -------------------------- This is header for table  --------------------------*/}
+                        <thead>
+                            <tr style={{ textAlign: 'center' }}>
+                                <th>ลำดับ</th>
+                                <th>รหัสสินค้า</th>
+                                <th>เก่า/ใหม่</th>
+                                <th>ชื่อบริษัท</th>
+                                <th>ชื่อสินค้า</th>
+                                <th>น้ำหนัก</th>
+                                <th>จำนวน</th>
+                            </tr>
+                        </thead>
+
+                        {/* -------------------------- This is datafrom for table  --------------------------*/}
+                        {/* Example */}
+                        <tbody style={{ textAlign: 'center' }}>
+                            {listItems}
+                        </tbody>
                     </Table>
 
-                    {/* <body className = 'PaginationTable'>
-                        <Pagination aria-label="Page navigation example" style={{justifyContent:'center', marginTop:10}}>
-                            <PaginationItem>
-                                <PaginationLink first href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                 <PaginationLink previous href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">1</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">2</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">3</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink next href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink last href="#" />
-                            </PaginationItem>
-                        </Pagination>
-                    </body> */}
-
-                    <body className = "ButtonTable">
-                        <Button style = {{height:40, width:80, background:"#FF0000"}}>ยกเลิก</Button>
-                        <Button style = {{height:40, width:80, background:"#00B046", marginRight: 20}}>บันทึก</Button>
+                    <body className="ButtonTable">
+                        <Button style={{ height: 40, width: 80, background: "#FF0000" }} onClick={() => this.props.history.goBack()}>กลับ</Button>
+                        <Button style={{ height: 40, width: 80, background: "#00B046", marginRight: 20 }} onClick={this.onSaveOrder}>บันทึก</Button>
                     </body>
 
                 </body>

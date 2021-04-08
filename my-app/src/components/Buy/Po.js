@@ -1,190 +1,310 @@
-import React from 'react';
-
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import ReactDataGrid from '@inovua/reactdatagrid-community'
+import {i18n} from '../i18n';
 import {
-    Button,
-    InputGroup,
-    InputGroupAddon,
-    InputGroupText,
+    Form,
+    FormGroup,
+    Label,
     Input,
-    Table,
-    Row,
+    FormFeedback,
+    FormText,
+    CardBody,
+    Card,
+    Button,
     Col,
-    Pagination,
-    PaginationItem,
-    PaginationLink
+    Row,
+    Modal,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+    CustomInput
 } from 'reactstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { 
-    Switch, 
-    Route, 
-    Link, 
-    NavLink, 
-    withRouter } from 'react-router-dom';
-import {
-    ProSidebar,
-    Menu,
-    MenuItem,
-    SubMenu
-} from 'react-pro-sidebar';
-import 'react-pro-sidebar/dist/css/styles.css';
 
-import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
-import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons/md";
-import { IoMdTrash } from "react-icons/io";
 import { Formik, Field, ErrorMessage } from 'formik';
 
 import * as Yup from 'yup';
 
-const formEmployeeSchema = Yup.object().shape({
-    id_company: Yup.string()
+import AvatarEditor from 'react-avatar-editor';
+
+import fire_base from '../../firebase/Firebase';
+
+import LoadingOverlay from 'react-loading-overlay';
+
+import Resizer from 'react-image-file-resizer';
+
+import swal from 'sweetalert';
+
+import { BsImage } from "react-icons/bs";
+import { BiImageAdd } from "react-icons/bi";
+
+const formPo = Yup.object().shape({
+    companyID: Yup.string()
       .length(7, 'หมายเลขบริษัท')
-      .matches(/^[0-9]{7}$/, 'หมายเลขสินค้าไม่ถูกต้าง')
+    //   .matches(/^[0-9]{7}$/, 'หมายเลขสินค้าไม่ถูกต้าง')
       .required('ต้องกรอก'),
     
-    id_item: Yup.string()
+      productID: Yup.string()
       .length(7, 'หมายเลขสินค้า')
-      .matches(/^[0-9]{7}$/, 'หมายเลขสินค้าไม่ถูกต้อง')
+    //   .matches(/^[0-9]{7}$/, 'หมายเลขสินค้าไม่ถูกต้อง')
+      .required('ต้องกรอก'),
+      volume: Yup.string()
+      .length(7, 'จำนวน')
+      .matches(/^[0-9]{7}$/, 'จำนวนไม่ถูกต้อง')
       .required('ต้องกรอก'),
     
   
   })
 
+  const filterValue = [
+    { name: 'productID', operator: 'startsWith', type: 'string', },
+    { name: 'productName', operator: 'startsWith', type: 'string', },
+    { name: 'productPrice', operator: 'startsWith', type: 'string', },
+    { name: 'volume', operator: 'startsWith', type: 'string', },
+    { name: 'disCount', operator: 'startsWith', type: 'string', },
+
+
+];
+
+const columns = [
+    { name: 'productID', header: 'หมายเลขสินค้า', defaultVisible: true, groupBy: false },
+    { name: 'productName', groupBy: false, defaultFlex: 1, header: 'รายการสินค้า' },
+    { name: 'productPrice', groupBy: false, defaultFlex: 1, header: 'ราคาสินค้าต่อหน่วย' },
+    { name: 'volume', groupBy: false, defaultFlex: 1, header: 'จำนวน' },
+    { name: 'disCount', groupBy: false, defaultFlex: 1, header: 'ส่วนลด' },
+    { name: 'summary', groupBy: false, defaultFlex: 1, header: 'ลบ' },
+
+]
+
 class Po extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            elementPartnerCompany: [],
+            elementProduct: [],
+            dataSource: [],
+            
         }
+        this.product = []
+        let log = []
+        this.companyID = ""
     }
+
+    async componentDidMount() {
+        await fire_base.getAllCompany(this.getCompanySuccess, this.unSuccess)
+        await fire_base.getAllProduct(this.getAllProductSuccess, this.unSuccess);
+    
+
+    }
+
+    getCompanySuccess = (querySnapshot) => {
+        let element = [];
+        querySnapshot.forEach((doc) => {
+            let e = <option key={doc.id} value={doc.id}>{doc.id + ' : ' + doc.data().companyName}</option>
+            element.push(e);
+        })
+        this.setState({ elementPartnerCompany: element });
+        console.log(element);
+    }
+
+    getAllProductSuccess = (querySnapshot) => {
+        let element = [],data=[]
+        querySnapshot.forEach((doc) => {
+            let p;
+            p = doc.data()
+            p.id = doc.id
+            p.companyID.get().then(doc=>{
+                p.companyID = doc.id
+                data.push(p)
+            })
+            let e = <option key={doc.id} value={doc.id}>{doc.id + ' : ' + doc.data().productName}</option>
+            element.push(e);
+        })
+        console.log(data);
+        this.product = data;
+        this.setState({ elementProduct: element });
+        console.log(element);
+    }
+
+    unSuccess = (error) => {
+        // console.log(error)
+    }
+
     render() {
-        console.log(new Date().toLocaleDateString());
+        
         return (
-            <div className="Container">
+            <div>
+                <Formik
+                    validationSchema={formPo}
+                    onSubmit={async(values, { resetForm }) => {
 
+                        console.log(values)
+                        
+                    }}
+                    initialValues={{
+                        image: '',
+                        productName: '',
+                        productID: '300000',
+                        productPrice: '',
+                        productWeight: 1,
+                        productDetail: '',
+                        companyID: '00',
+                        detail:''
+                    }}
+                >
+                    {({
+                        checked,
+                        handleSubmit,
+                        handleChange,
+                        handleBlur,
+                        setFieldValue,
+                        handleReset,
+                        values,
+                        touched,
+                        isValid,
+                        errors,
+                    }) => (
+                        <Form onSubmit={handleSubmit} onReset={(e) => { e.preventDefault(); handleReset(e); }} >
 
-                <div className="Content">
-                    <body className="Body">
-                        <h1 style={{
-                            marginTop: 20,
-                            marginBottom: 20,
-                            width: '95%',
-                            alignSelf: 'center'
-                        }}>ใบสั่งซื้อสินค้า</h1>
-                        <h4 style={{
-                            marginTop: 20,
-                            marginBottom: 20,
-                            width: '95%',
-                            alignSelf: 'center'
-                        }}>หมายเลขใบสั่งสินค้า : 100012  วันที่ : 3/15/2021 เวลา 16.00 น
-                        </h4>
+                            <Row form>
+                                
+                                <Col md={6} >
+                                    <FormGroup>
+                                        <Label for="companyID">บริษัท</Label>
+                                        <Input
+                                            type="select"
+                                            name="companyID"
+                                            id="companyID"
+                                            onChange={(e)=>{
+                                                handleChange(e);
+                                                let element = []
+                                                let d = this.product.filter(doc=>{
+                                                    if(doc.companyID == e.target.value){
+                                                        return true;
+                                                    }
+                                                })
+                                                // console.log(e.target.value)
+                                                d.forEach(doc=>{
+                                                    element.push(<option key={doc.id} value={doc.id}>{doc.id + ' : ' + doc.productName}</option>);
+                                                })
+                                                this.setState({elementProduct:element});
+                                                // console.log(values.companyID)
+                                            
+                                            }}
+                                            onBlur={handleBlur}
+                                            value={values.companyID}
+                                            invalid={errors.companyID && touched.companyID}
+                                        >
+                                            {this.state.elementPartnerCompany}
+                                        </Input>
+                                        <FormFeedback >*{errors.companyID}</FormFeedback>
+                                    </FormGroup>
+                                </Col>
+                                <Col md={6}/>
+                                <Col md={4} >
+                                    <FormGroup>
+                                        <Label for="productID">สินค้า</Label>
+                                        <Input
+                                            type="select"
+                                            name="productID"
+                                            id="productID"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.productID}
+                                            invalid={errors.productID && touched.productID}
+                                        >
+                                            {this.state.elementProduct}
+                                        </Input>
+                                        <FormFeedback >*{errors.productID}</FormFeedback>
+                                    </FormGroup>
+                                </Col>
+
+                                <Col md={4} >
+                                    <FormGroup>
+                                        <Label for="volume">จำนวน</Label>
+                                        <Input
+                                            type="select"
+                                            name="productID"
+                                            id="productID"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.productID}
+                                            invalid={errors.productID && touched.productID}
+                                        >
+                                            {this.state.elementProduct}
+                                        </Input>
+                                        <FormFeedback >*{errors.productID}</FormFeedback>
+                                    </FormGroup>
+                                </Col>
+                                {/* <Col>
+                                    <FormGroup>
+                                        <Label for="detail">รายละเอียด</Label>
+                                        <Input
+                                            type="textarea"
+                                            name="detail"
+                                            id="detail"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.detail}
+                                            invalid={errors.detail && touched.detail}
+                                        />
+                                        <FormFeedback >*{errors.detail}</FormFeedback>
+                                    </FormGroup>
+                                </Col> */}
+                                <Col md={8} />
+                                
+                                <Col md={2} style={{ display: 'flex' }}>
+                                    <FormGroup style={{ display: 'flex', flex: 1 }}>
+                                        <Button type="submit" color="success" style={{ flex: 1 }}>บันทึก</Button>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            
+                                
+                            
+                        </Form>
                         
 
-
-                       
-                        <Input className="Search_Button" style={{ width: '95%' }} placeholder="บริษัท" />
-                        <div className="Search_Button">
+                    )}
+                </Formik>
+                <Row style={{ marginTop: '20px' }}>
+                    <ReactDataGrid
+                        onReady={this.setDataGridRef}
+                        i18n={i18n}
+                        idProperty="id"
+                        columns={columns}
+                        pagination
+                        defaultLimit={15}
+                        defaultSkip={15}
+                        pageSizes={[10, 15, 30]}
+                        dataSource={this.state.dataSource}
+                        defaultFilterValue={filterValue}
+                        showColumnMenuTool={true}
+                        emptyText="ไม่มีรายการ"
+                    />
+                </Row>
+                {/* <Row>
+                    <Col md={6} >
+                        <FormGroup>
+                            <Label>บริษัท</Label>
+                                <Input type="select">
+                                    {this.state.elementPartnerCompany}
+                                </Input>
                             
-                            <InputGroup style={{ width: 700 }}>
-                                <Input placeholder="หมายเลขสินค้า" />
-                                <Input placeholder="จำนวน" />
-                                <Button color="info" style={{ width: 150 }}>เพิ่มรายการ</Button>
-                                <InputGroupAddon addonType="append">
-                                </InputGroupAddon>
-                            </InputGroup>
-                            {/* <InputGroup style={{ width: 200 }}>
-                                <Input placeholder="จำนวน" />
-                                <InputGroupAddon addonType="append">
-                                </InputGroupAddon>
-                            </InputGroup> */}
+                        </FormGroup>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col md={6} >
+                        <FormGroup>
+                            <Label>สินค้า</Label>
+                            <Input type="select">
+                                {this.state.elementPartnerCompany}
+                            </Input>
                             
-
-                        </div>
-
-                        <Table striped style={{ width: '95%', alignSelf: 'center', marginTop: 20 }}>
-                            <thead>
-                                <tr>
-                                    <th>ลำดับที่</th>
-                                    <th>หมายเลขสินค้า</th>
-                                    <th>รายการสินค้า</th>
-                                    <th>จำนวน</th>
-                                    <th>ราคาต่อหน่วย</th>
-                                    <th>รวม</th>
-                                    <th>รายละเอียด</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {/* {/* <tr>
-                                    <th scope="row">1</th>
-                                    <td>สส.จำกัด</td>
-                                    <td>100012</td>
-                                    <td>01/01/2564</td>
-                                    <td>ประยา จันชุด</td>
-                                    <td>รอใบเสนอขาย</td>
-                                    <td className="CenterTd"><MdDescription color="#00A3FF" size={25} /></td>
-                                </tr> */}
-                                <tr>
-                                    <th scope="row"></th>
-                                    <td style={{ size: '40'}}></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr> 
-                                {/* <tr>
-                                    <th scope="row">3</th>
-                                    <td>100012</td>
-                                    <td>01/01/2564</td>
-                                    <td>ประยา จันชุด</td>
-                                    <td>เข้า</td>
-                                    <td className="CenterTd"><MdDescription color="#00A3FF" size={25} /></td>
-                                </tr> */}
-
-
-
-                            </tbody>
-                        </Table>
-                        <Pagination aria-label="Page navigation example"
-                            style={{
-                                justifyContent: 'center',
-                                marginTop: 10
-                            }}>
-                            <PaginationItem>
-                                <PaginationLink first href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink previous href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">1</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">2</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">3</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink next href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink last href="#" />
-                            </PaginationItem>
-                        </Pagination>
-                        <Row>
-                            <Col lg="6" md="6"></Col>
-                            <Col lg="6" md="6" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                <Button color= "info" style={{ width: 150 ,marginright: 105 }}>ยกเลิก</Button>
-
-                                <Button color= "info" style={{ width: 150 ,marginright: 105}}>บันทึก</Button>
-                            </Col>
-
-
-                        </Row>
-                        
-                    </body>
-                    
-                </div>
+                        </FormGroup>
+                    </Col>
+                </Row> */}
                 
             </div>
         );

@@ -43,7 +43,7 @@ const fromProductSchema = Yup.object().shape({
         .required('กรุณาระบุข้อมูล'),
     productType: Yup.string()
         .required('กรุณาระบุข้อมูล'),
-    isNew: Yup.number(),
+    
     productPrice: Yup.number()
         .required('กรุณาระบุข้อมูล'),
     productWeight: Yup.number(),
@@ -80,10 +80,9 @@ class AddProduct extends Component {
             elementProductType: [],
             elementPartnerCompany: []
         }
-        this.loading = false;
         this.product = null;
         this.hiddenFileInputRef = React.createRef();
-
+        this.id = '';
 
     }
 
@@ -113,7 +112,9 @@ class AddProduct extends Component {
     }
 
     unSuccess = (error) => {
-        console.log(error)
+        console.log(error);
+        this.sweetAlret('ไม่สำเร็จ','การเชื่อมต่อมีปัญหากรุณาลองใหม่อีกครั้ง','error','ตกลง');
+        this.setState({loading:false});
     }
 
     toggleModalImage = (e) => {
@@ -142,28 +143,46 @@ class AddProduct extends Component {
         })
     }
 
+    addProductSuccess=async(id)=>{
+        this.id = await id;
+        await fire_base.uploadImage('product/'+id,this.product.image,this.uploadImageSuccess,this.unSuccess);
+    }
+
+    uploadImageSuccess=async(url)=>{
+        await fire_base.updateProduct(this.id,{image:url},this.updateProductSuccess,this.unSuccess);
+    }
+
+    updateProductSuccess=()=>{
+        this.sweetAlret('สำเร็จ','เพิ่มสินค้าเรียบร้อยแล้ว ไอเหี้ยยย','success','ตกลง');
+        this.setState({loading:false});
+        console.log('add product success');
+    }
+
+
 
     render() {
+        console.log(typeof 1);
         return (
             <LoadingOverlay
                 active={this.state.loading}
                 spinner
-                text='กำลังเพิ่มพนักงาน...'
+                text='กำลังเพิ่มสินค้า...'
             >
 
                 <Formik
                     validationSchema={fromProductSchema}
                     onSubmit={async(values, { resetForm }) => {
-
-                        await fire_base.addProduct(values);
+                        this.product = values;
+                        await this.setState({loading:true});
+                        await fire_base.addProduct(values,this.addProductSuccess,this.unSuccess);
                         //resetForm();
+                        
                         console.log(values)
                     }}
                     initialValues={{
                         image: '',
                         productName: '',
                         productType: '1',
-                        isNew: 1,
                         productPrice: '',
                         productWeight: 1,
                         productDetail: '',
@@ -264,7 +283,7 @@ class AddProduct extends Component {
                                             this.setState({ disabledButtonDefault: false });
                                         }}>
                                         แก้ไข/บันทึก
-                    </Button>
+                                    </Button>
                                     {' '}
                                     <Button color="secondary" onClick={this.toggleModalImage}>ยกเลิก</Button>
                                 </ModalFooter>
@@ -300,7 +319,7 @@ class AddProduct extends Component {
                                             type="text"
                                             name="productName"
                                             id="productName"
-                                            placeholder="ข้าวหอมมะลิ"
+                                            placeholder="ข้าว... ตรา..."
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.productName}
@@ -364,24 +383,6 @@ class AddProduct extends Component {
                                     </FormGroup>
                                 </Col>
                                 <Col md={6} >
-                                    <FormGroup tag="fieldset">
-                                        <Label for="type">ใหม่/เก่า</Label>
-                                        <Input
-                                            type="select"
-                                            name="isNew"
-                                            id="isNew"
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            value={values.isNew}
-                                            invalid={errors.isNew && touched.isNew}
-                                        >
-                                            <option value={1}>ใหม่</option>
-                                            <option value={0}>เก่า</option>
-                                        </Input>
-                                        <FormFeedback >*{errors.isNew}</FormFeedback>
-                                    </FormGroup>
-                                </Col>
-                                <Col md={6} >
                                     <FormGroup>
                                         <Label for="companyID">บริษัท</Label>
                                         <Input
@@ -398,6 +399,7 @@ class AddProduct extends Component {
                                         <FormFeedback >*{errors.companyID}</FormFeedback>
                                     </FormGroup>
                                 </Col>
+                                <Col md={6}/>
                                 <Col>
                                     <FormGroup>
                                         <Label for="detail">รายละเอียด</Label>

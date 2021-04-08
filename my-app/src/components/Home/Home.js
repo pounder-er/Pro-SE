@@ -72,7 +72,8 @@ import AddProduct from '../Product/AddProduct';
 import HistoryInOut from '../HistoryInOut/HistoryInOut'
 import SalesReport from '../SalesReport/SalesReport'
 import ProductsReport from '../ProductsReport/ProductReport'
-import ProductDetail from '../ProductDetail/ProductDetail'
+import ProductDetail from '../ProductsReport/ProductDetail'
+import Calculate from '../Calculate/Calculate'
 import PartnerList from '../Company/PartnerList'
 import BranchList from '../Branch/BranchList'
 import DashBoard from '../DashBoard/DashBoard'
@@ -81,6 +82,16 @@ import Sell from '../Sell/Sell';
 import So from '../Sell/So';
 import Buy from '../Buy/Buy';
 import Po from '../Buy/Po';
+
+// ------------ setting componemt -------------//
+import SetStockCheckTime from '../Setting/SetStockCheckTime'
+
+// ------------- staff component ------------- //
+import StockCheck from '../WarehouseStaff/Stocking/Stock'
+import ImportProduct from '../WarehouseStaff/Stocking/Import'
+import ExportProduct from '../WarehouseStaff/Stocking/Export'
+import ImportProductTB from '../WarehouseStaff/Stocking/ImportTable'
+import ExportProductTB from '../WarehouseStaff/Stocking/ExportTable'
 
 class Home extends React.Component {
   constructor(props) {
@@ -92,7 +103,7 @@ class Home extends React.Component {
     }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     // this.props.userProfile.test.get().then(doc=>{
     //   if (doc.exists) {
     //     console.log(doc.data());
@@ -101,7 +112,7 @@ class Home extends React.Component {
     //   }
     //   console.log(doc.data());
     // })
-    
+
   }
 
   toggleProfile = () => {
@@ -127,7 +138,7 @@ class Home extends React.Component {
     if (this.props.userProfile.jobTitle == 'ผู้จัดการ' || this.props.userProfile.jobTitle == 'ผู้ดูแลระบบ') {
       menu = menu.concat([
         <MenuItem key='1' icon={<BsFillGrid1X2Fill />}>
-         
+
           Dashboard
           <Link to={this.props.match.url + "/DashBoard"} onClick={() => this.setState({ headerTitle: 'Dashboard' })} />
         </MenuItem>,
@@ -148,8 +159,14 @@ class Home extends React.Component {
         </MenuItem>,
 
         <SubMenu key='4' title="ตั้งค่า" icon={<IoMdSettings size={18} />}>
-          <MenuItem suffix={<IoMdCalculator size={18} />} >คำนวนการสั่งซื้อสินค้า</MenuItem>
-          <MenuItem suffix={<IoAlarmSharp size={18} />} >ตั้งเวลาเช็คสต็อก</MenuItem>
+          <MenuItem suffix={<IoMdCalculator size={18} />} >
+            คำนวนการสั่งซื้อสินค้า
+            <Link to={this.props.match.url + "/calculate"} onClick={() => this.setState({ headerTitle: 'คำนวนจุดสั่งซื้อ' })} />
+          </MenuItem>
+          <MenuItem suffix={<IoAlarmSharp size={18} />} >
+            <Link to={this.props.match.url + "/set_stock_check_time"} onClick={() => this.setState({ headerTitle: 'ตั้งเวลาเช็คสต็อก' })} />
+            ตั้งเวลาเช็คสต็อก
+            </MenuItem>
         </SubMenu>
       ])
     }
@@ -161,11 +178,11 @@ class Home extends React.Component {
 
           <SubMenu key='5' title="จัดการสินค้า" icon={<BsFillArchiveFill />}>
             <MenuItem suffix={<HiViewGridAdd size={20} />} >เพิ่มสินค้า<Link to={this.props.match.url + "/add_product"} onClick={() => this.setState({ headerTitle: 'เพิ่มสินค้าใหม่' })} /></MenuItem>
-            <MenuItem suffix={<FaThList style={{marginRight:2}}  size={15} />} >
+            <MenuItem suffix={<FaThList style={{ marginRight: 2 }} size={15} />} >
               รายการสินค้า
             <Link to={this.props.match.url + "/productsReport"} onClick={() => this.setState({ headerTitle: 'ตรวจสอบสินค้า' })} />
             </MenuItem>
-            <MenuItem suffix={<GiBuyCard style={{marginRight:2}}  size={18} />} >รายการซื้อสินค้า<Link to={this.props.match.url + "/buy"} onClick={() => this.setState({ headerTitle: 'รายการซื้อสินค้า' })} /></MenuItem>
+            <MenuItem suffix={<GiBuyCard style={{ marginRight: 2 }} size={18} />} >รายการซื้อสินค้า<Link to={this.props.match.url + "/buy"} onClick={() => this.setState({ headerTitle: 'รายการซื้อสินค้า' })} /></MenuItem>
             <MenuItem>รายการขายสินค้า<Link to={this.props.match.url + "/sell"} onClick={() => this.setState({ headerTitle: 'รายการขายสินค้า' })} /></MenuItem>
           </SubMenu>,
           <SubMenu key='6' title="คลังสินค้า" icon={<FaWarehouse />}>
@@ -186,18 +203,25 @@ class Home extends React.Component {
     if (this.props.userProfile.jobTitle == 'พนักงานคลัง') {
       menu = menu.concat(
         [
-          <MenuItem key='8' >เช็คสต๊อกสินค้า<Link onClick={() => this.setState({ headerTitle: 'เช็คสต๊อกสินค้า' })} /></MenuItem>,
-          <MenuItem key='9' >นำสินค้าออกจากคลัง<Link onClick={() => this.setState({ headerTitle: 'นำสินค้าออกจากคลัง' })} /></MenuItem>,
-          <MenuItem key='10' >นำสินค้าเข้าคลัง<Link onClick={() => this.setState({ headerTitle: 'นำสินค้าเข้าคลัง' })} /></MenuItem>,
+          <MenuItem key='8'>เช็คสต๊อกสินค้า<Link to={this.props.match.url + "/stock_check"} onClick={() => this.setState({ headerTitle: 'เช็คสต๊อกสินค้า' })} /></MenuItem>,
+          <MenuItem key='9'>นำสินค้าออกจากคลัง<Link to={this.props.match.url + "/export_product"} onClick={() => this.setState({ headerTitle: 'นำสินค้าออกจากคลัง' })} /></MenuItem>,
+          <MenuItem key='10'>นำสินค้าเข้าคลัง<Link to={this.props.match.url + "/import_product"} onClick={() => this.setState({ headerTitle: 'นำสินค้าเข้าคลัง' })} /></MenuItem>,
         ])
     }
     return menu;
   }
 
   render() {
-    var myNumber = 15;
-var formattedNumber = ("0" + myNumber).slice(-2);
-console.log(formattedNumber);
+    var myNumber = 1;
+    var formattedNumber = ("0" + myNumber).slice(-2);
+    console.log(formattedNumber);
+
+    // if(undefined){
+    //   console.log('ppp')
+    // }else{
+    //   console.log('hhh')
+    // }
+    // console.log(!undefined);
     return (
       <ContainerHome>
         <Sidebar>
@@ -244,10 +268,11 @@ console.log(formattedNumber);
               <Switch>
                 <Route exact path={this.props.match.path + "/historyInOut"} component={HistoryInOut} />
                 <Route exact path={this.props.match.path + "/salesReport"} component={SalesReport} />
-                <Route exact path={this.props.match.path + "/productsReport"} component={ProductsReport} />
+                {/* <Route exact path={this.props.match.path + "/productsReport"} component={ProductsReport} /> */}
                 <Route exact path={this.props.match.path + "/productsReport/productDetail"} component={ProductDetail} />
                 <Route exact path={this.props.match.path + "/list_employee"} component={ListEmployee} />
                 <Route exact path={this.props.match.path + "/add_employee"} component={AddEmployee} />
+                <Route exact path={this.props.match.path + "/calculate"} component={Calculate} />
                 <Route exact path={this.props.match.path + "/add_product"} component={AddProduct} />
                 <Route exact path={this.props.match.path + "/sell"} component={Sell} />
                 <Route exact path={this.props.match.path + "/sell/so"} component={So} />
@@ -256,6 +281,14 @@ console.log(formattedNumber);
                 <Route exact path={this.props.match.path + "/PartnerList"} component={PartnerList} />
                 <Route exact path={this.props.match.path + "/BranchList"} component={BranchList} />
                 <Route exact path={this.props.match.path + "/DashBoard"} component={DashBoard} />
+
+                <Route exact path={this.props.match.path + "/set_stock_check_time"} component={SetStockCheckTime} />
+
+                <Route exact path={this.props.match.path + "/stock_check"} component={StockCheck} />
+                <Route exact path={this.props.match.path + "/import_product"} component={ImportProduct} />
+                <Route exact path={this.props.match.path + "/export_product"} component={ExportProduct} />
+                <Route exact path={this.props.match.path + "/import_product/import_product_tb"} component={ImportProductTB} />
+                <Route exact path={this.props.match.path + "/export_product/export_product_tb"} component={ExportProductTB} />
 
               </Switch>
             </Container>
