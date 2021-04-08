@@ -53,7 +53,8 @@ class ProductReport extends React.Component {
         this.state = {
             searchText: '',
             dataSource: [],
-            modal:false
+            modal:false,
+            product: {},
         }
         this.columns = [
             { name: 'id', header: 'Id', defaultVisible: false, type: 'number', maxWidth: 40 },
@@ -66,7 +67,7 @@ class ProductReport extends React.Component {
             { name: 'productStatus', groupBy: false, defaultFlex: 0.7, header: 'สถานะ' },
             { name: 'productTotal', groupBy: false, defaultFlex: 1, header: 'ยอดคงเหลือ' },
             {
-                name: 'detail', header:
+                name: 'detail1', header:
                     <div style={{ display: 'inline-block' }}>
                         {'รายละเอียด'}
                     </div>, defaultWidth: 109,

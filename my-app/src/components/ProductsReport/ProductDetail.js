@@ -13,7 +13,9 @@ import {
     Table,
     Pagination,
     PaginationItem,
-    PaginationLink, Row, Col, Container
+    PaginationLink, Row, Col, Container, Modal,
+    ModalHeader,
+    ModalBody,
 } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AiFillFileText } from "react-icons/ai";
@@ -29,6 +31,7 @@ import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons
 import { IoMdTrash } from "react-icons/io";
 import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
+import SellDetail from '../Sell/SellDetail';
 
 const filterValue = [
     { name: 'ID', operator: 'startsWith', type: 'string', value: '' },
@@ -45,7 +48,9 @@ class ProductDetail extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            dataSource: []
+            dataSource: [],
+            modal:false,
+            product: {},
         }
 
         this.columns = [
@@ -55,12 +60,25 @@ class ProductDetail extends React.Component {
             { name: 'expireDate', groupBy: false, defaultFlex: 1, header: 'วันหมดอายุ' },
             { name: 'volume', groupBy: false, defaultFlex: 0.7, header: 'ยอดที่รับเข้า' },
             { name: 'productID', groupBy: false, defaultFlex: 1, header: 'ที่เก็บสินค้า' },
-            { name: 'กก', groupBy: false, defaultFlex: 1, header: 'รายละเอียด' },
+            {
+                name: 'volume1', header:
+                    <div style={{ display: 'inline-block' }}>
+                        {'รายละเอียด'}
+                    </div>, defaultWidth: 109,
+                render: ({ data }) =>
+                    <button onClick={(e) => { this.toggleModalmodal(e); this.product = data; }} style={{ display: 'contents' }}>
+                        <AiFillFileText color='#00A3FF' size={30} />
+                    </button>,
+                textAlign: 'center'
+            },
 
         ]
 
     }
-
+    toggleModalmodal = () => {
+        console.log(11111111111)
+        this.setState({ modal: !this.state.modal });
+    }
     setDataGridRef = (ref) => (this.dataGrid = ref)
 
     async componentDidMount() {
@@ -105,6 +123,12 @@ class ProductDetail extends React.Component {
     render() {
         return (
             <Container fluid={true} style={{ backgroundColor: 'wheat' }} >
+                <Modal isOpen={this.state.modal} toggle={this.toggleModalmodal} backdrop='static' size='lg' >
+                    <ModalHeader toggle={this.toggleModalmodal}>รายละเอียด</ModalHeader>
+                    <ModalBody>
+                        <SellDetail profile={this.product} />
+                    </ModalBody>
+                </Modal>
                 <Row >
                     <Col >
                         <h1 style={{
