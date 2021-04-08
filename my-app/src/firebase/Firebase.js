@@ -167,7 +167,8 @@ class Firebase {
 
   getProductCheckStock=(success, reject)=>{
     firebase.firestore().collection('Product')
-    .where('productTotal', '>', 0)
+    .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
+    // .where('productTotal', '>', 0)
     .get()
     .then(querySnapshot => {
       success(querySnapshot);
