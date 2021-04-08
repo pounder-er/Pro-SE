@@ -185,6 +185,17 @@ class Firestore {
         console.log(error)
       });
     }
+
+    getCountSaleOrderComplete=()=>{
+      //let date = firebase.firestore.FieldValue.serverTimestamp()
+      let date = new Date('2021-04-07')
+      firebase.firestore().collection('Sell').where('dateOut', '==', date)
+      .get()
+      .then(function(querySnapshot){
+        console.log(querySnapshot.size)
+      })
+      .catch();
+    }
 }
 const firestore = new Firestore();
 export default firestore
