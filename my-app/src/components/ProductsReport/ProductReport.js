@@ -103,7 +103,10 @@ class ProductReport extends React.Component {
                 }else{
                     d.newOld = 'เก่า'
                 }
-                
+                d.companyID.get()
+                    .then(doc => {
+                        d.companyName = doc.data().companyName
+                    })
                 let a = await d.productType.get()
                     .then(doc => {
                         d.productType = doc.data().name
