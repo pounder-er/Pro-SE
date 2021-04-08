@@ -27,6 +27,7 @@ import AvatarEditor from 'react-avatar-editor';
 
 import fire_base from '../../firebase/Firebase';
 
+
 import LoadingOverlay from 'react-loading-overlay';
 
 import axios from 'axios';
@@ -43,108 +44,7 @@ import {
 var checkZip = false;
 var subDistrictFilter = [];
 const formEmployeeSchema = Yup.object().shape({
-    nameTitle: Yup.string()
-        .required('กรุณาเลือกข้อมูล'),
-    firstName: Yup.string()
-        .matches(/^[ก-๏]+$/, 'กรอกด้วยตัวอักษรภาษาไทยและไม่มีช่องว่าง')
-        .max(40, 'กรอกได้ไม่เกิน 40 ตัวอักษร')
-        .required('กรุณาระบุข้อมูล'),
-    lastName: Yup.string()
-        .matches(/^[ก-๏]+$/, 'กรอกด้วยตัวอักษรภาษาไทยและไม่มีช่องว่าง')
-        .max(40, 'กรอกได้ไม่เกิน 40 ตัวอักษร')
-        .required('กรุณาระบุข้อมูล'),
-    nationalID: Yup.string()
-        .matches(/^[0-9]+$/, 'ต้องเป็นตัวเลขเท่านั้น')
-        .required('กรุณาระบุข้อมูล')
-        .length(13, 'ไม่ครบ 13 หลัก')
-        .test('checkNationalID', 'เลขบัตรประชาชนไม่ถูกต้อง', (value) => {
-            if (value != null && value.length == 13) {
-                let sum = 0;
-                for (let i = 0; i < 12; i++) {
-                    sum += parseInt(value[i]) * (13 - i)
-                }
-                let ans = sum % 11
-                if (ans <= 1) {
-                    ans = 1 - ans;
-                } else {
-                    ans = 11 - ans;
-                }
-                //console.log(ans);
-                if (ans == parseInt(value[12])) {
 
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }),
-    phoneNumber: Yup.string()
-        .length(10, 'หมายเลขโทรศัพท์ไม่ครบ 10 หลัก')
-        .required('กรุณาระบุข้อมูล')
-        .matches(/^[0-9]{10}$/, 'หมายเลขโทรศัพท์ไม่ถูกต้อง')
-    // .transform((value, originalvalue)=>{
-    //   console.log(originalvalue.replace(/[^0-9]/,''));
-    //     return originalvalue.replace(/^[^0-9]{10}$/,'');
-    // })
-    ,
-    birthDate: Yup.date()
-        .max((new Date().getFullYear() - 18) + "-12-01", 'ต้องกรอกก่อน 2003-12-01')
-        .required('กรุณาระบุข้อมูล'),
-    jobTitle: Yup.string()
-        .required('กรุณาเลือกข้อมูล')
-        .matches(/^[ก-๏]+$/, 'กรุณาเลือกข้อมูล'),
-    address: Yup.string().required('กรุณาระบุข้อมูล'),
-    subdistrict: Yup.string()
-        .required('กรุณาเลือกข้อมูล')
-        .matches(/^[ก-๏]+$/, 'กรุณาเลือกข้อมูล'),
-    // city: Yup.string()
-    //   .required('ต้องกรอก')
-    //   .matches(/^[ก-๏]+$/, 'กรอกด้วยตัวอักษรภาษาไทยและไม่มีช่องว่าง'),
-    // state: Yup.string()
-    //   .required('ต้องกรอก')
-    //   .matches(/^[ก-๏]+$/, 'กรอกด้วยตัวอักษรภาษาไทยและไม่มีช่องว่าง'),
-    zipCode: Yup.string()
-        .required('กรุณาระบุข้อมูล')
-        .length(5, 'รหัสไปรษณีย์ไม่ครบ')
-        .matches(/^[0-9]{5}$/, 'ต้องเป็นตัวเลข')
-        .test('test', 'รหัสไปรษณีย์ไม่ถูกต้อง',
-            (value) => {
-                if (value != null && value.length == 5) {
-                    if (checkZip) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                    // let filter = data.address.filter((data) => {
-                    //   return data.zipCode == Number(value)
-                    // });
-
-                    // if (filter.length > 0) {
-                    // subDistrictFilter = [];
-                    // let n = 0;
-                    // filter.forEach(element => {
-                    //   subDistrictFilter.push(<option key={n}>{element.district}</option>);
-                    //   n++;
-                    // });
-                    // console.log(subDistrictFilter);
-                    // cityFilter = filter[0].amphoe;
-                    // stateFilter = filter[0].province;
-                    // console.log(cityFilter);
-                    // console.log(stateFilter);
-                    //   return true;
-                    // } else {
-                    //   return false;
-                    // }
-                }
-            }),
-    imageProfile: Yup.string(),
-
-    email: Yup.string()
-        .email('อีเมลไม่ถูกต้อง')
-        .required('กรุณาระบุอีเมล')
-    ,
-    password: Yup.string()
-        .required('กรุณาระบุรหัสผ่าน'),
 
 })
 
@@ -155,15 +55,35 @@ class EditCalculate extends React.Component {
         super(props);
         this.state = {
             loading: false,
-            cal:[],
+
         }
         this.loading = false;
+        this.cal = null;
+    
     }
-   
-    handleSubmit = event => {
-        console.log(1);
-        event.preventDefault()
-      };
+    
+    updateCalSuccess = () => {
+        this.setState({ loading: false });
+        console.log("update success");
+        this.sweetAlret("เสร็จสิ้น", "แก้ไขข้อมูลเรียบรอยแล้ว", "success", "ตกลง");
+        this.props.closeTogle();
+    }
+
+    unSuccess = (error) => {
+        console.log(error);
+        this.sweetAlret("ไม่สำเร็จ", "อีเมลซ้ำหรือการเชื่อมต่อมีปัญหา", "error", "ตกลง");
+        this.setState({ loading: false });
+        this.props.closeTogle();
+    }
+
+    sweetAlret(title, text, icon, button) {
+        swal({
+            title: title,
+            text: text,
+            icon: icon,
+            button: button,
+        })
+    }
     render() {
         return (
 
@@ -193,24 +113,17 @@ class EditCalculate extends React.Component {
                 </Row>
                 <Formik
                     validationSchema={formEmployeeSchema}
-                    onSubmit={async (values, { resetForm }) => {
+                    onSubmit={async (values) => {
                         this.setState({ loading: true });
-                        
-                        this.cal = values;
+                        this.cal = values
+                        console.log(this.cal);
+                        await fire_base.updateCal(this.props.product.productID,{cal:this.cal}, this.updateCalSuccess, this.unSuccess);
 
-                        resetForm();
-                        console.log(values);
+                        
                     }
                     }
-                    onReset={async (values, { resetForm }) => {
-                        
-                        
-                        this.cal = values;
 
-                       
-                        console.log(values);
-                    }
-                    }
+
                     initialValues={{
                         D: this.props.product.cal.D,
                         O: this.props.product.cal.O,
@@ -242,12 +155,12 @@ class EditCalculate extends React.Component {
                                         <FormGroup>
                                             <Label for="D">D :</Label>
                                             <Input
-                                                type="tel"
+                                                type="number"
                                                 name="D"
                                                 id="D"
                                                 placeholder="D"
 
-                                                onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/, ''); handleChange(e); }}
+                                                onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/); handleChange(e); }}
                                                 value={values.D}
                                             />
                                         </FormGroup>
@@ -257,12 +170,12 @@ class EditCalculate extends React.Component {
                                             <Label for="O">O :</Label>
                                             <Input
 
-                                                type="tel"
+                                                type="number"
                                                 name="O"
                                                 id="O"
                                                 placeholder="O"
 
-                                                onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/, ''); handleChange(e); }}
+                                                onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/); handleChange(e); }}
                                                 value={values.O}
                                             />
                                         </FormGroup>
@@ -274,12 +187,12 @@ class EditCalculate extends React.Component {
                                             <Label for="U">U :</Label>
                                             <Input
 
-                                                type="tel"
+                                                type="number"
                                                 name="U"
                                                 id="U"
                                                 placeholder="U"
 
-                                                onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/, ''); handleChange(e); }}
+                                                onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/); handleChange(e); }}
                                                 value={values.U}
                                             />
                                         </FormGroup>
@@ -289,13 +202,45 @@ class EditCalculate extends React.Component {
                                             <Label for="C">C :</Label>
                                             <Input
 
-                                                type="tel"
+                                                type="number"
                                                 name="C"
                                                 id="C"
                                                 placeholder="C"
 
-                                                onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/, ''); handleChange(e); }}
-                                                value={values.C}
+                                                onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/); handleChange(e); }}
+                                                value = {values.C}
+                                            />
+                                        </FormGroup>
+                                    </Col>
+                                </Row>
+                                <Row form>
+                                    <Col style={{ backgroundColor: 'wheat' }}>
+                                        <FormGroup>
+                                            <Label for="L">L :</Label>
+                                            <Input
+
+                                                type="number"
+                                                name="L"
+                                                id="L"
+                                                placeholder="L"
+
+                                                onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/); handleChange(e); }}
+                                                value={values.L}
+                                            />
+                                        </FormGroup>
+                                    </Col>
+                                    <Col style={{ backgroundColor: 'wheat' }}>
+                                        <FormGroup>
+                                            <Label for="d">d :</Label>
+                                            <Input
+
+                                                type="number"
+                                                name="d"
+                                                id="d"
+                                                placeholder="d"
+
+                                                onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/); handleChange(e); }}
+                                                value = {values.d}
                                             />
                                         </FormGroup>
                                     </Col>
@@ -308,7 +253,7 @@ class EditCalculate extends React.Component {
                                         </FormGroup>
                                     </Col>
                                     <Col md={2} style={{ display: 'flex' }}>
-                                        <FormGroup  style={{ display: 'flex', flex: 1 }}>
+                                        <FormGroup style={{ display: 'flex', flex: 1 }}>
                                             <Button type="submit" color="success" style={{ flex: 1 }}>บันทึก</Button>
                                         </FormGroup>
                                     </Col>
@@ -323,7 +268,8 @@ class EditCalculate extends React.Component {
 }
 
 EditCalculate.propTypes = {
-    product: PropTypes.object
+    product: PropTypes.object,
+    closeTogle:PropTypes.func
 };
 
 export default EditCalculate;

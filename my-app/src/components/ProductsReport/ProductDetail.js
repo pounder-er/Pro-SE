@@ -1,6 +1,6 @@
 import React from 'react';
-
-
+import PropTypes from 'prop-types';
+import fire_base from '../../firebase/Firebase';
 import {
     Button,
     InputGroup,
@@ -16,7 +16,12 @@ import {
     PaginationLink, Row, Col, Container
 } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { AiFillFileText } from "react-icons/ai";
 
+import ReactDataGrid from '@inovua/reactdatagrid-community'
+import '@inovua/reactdatagrid-community/base.css'
+import '@inovua/reactdatagrid-community/theme/default-light.css'
+import { i18n } from '../i18n';
 import 'react-pro-sidebar/dist/css/styles.css';
 
 import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
@@ -25,145 +30,78 @@ import { IoMdTrash } from "react-icons/io";
 import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 
-const useSortableData = (items, config = null) => {
-    const [sortConfig, setSortConfig] = React.useState(config);
+const filterValue = [
+    { name: 'ID', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'Inid', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'arriveDate', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'expireDate', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'volume', operator: "gte", type: 'number', },
+    { name: 'newOld', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'productID', operator: 'gte', type: 'number' },
 
-    const sortedItems = React.useMemo(() => {
-        let sortableItems = [...items];
-        if (sortConfig !== null) {
-            sortableItems.sort((a, b) => {
-                if (a[sortConfig.key] < b[sortConfig.key]) {
-                    return sortConfig.direction === "ascending" ? -1 : 1;
-                }
-                if (a[sortConfig.key] > b[sortConfig.key]) {
-                    return sortConfig.direction === "ascending" ? 1 : -1;
-                }
-                return 0;
-            });
-        }
-        return sortableItems;
-    }, [items, sortConfig]);
-
-    const requestSort = (key) => {
-        let direction = "ascending";
-        if (
-            sortConfig &&
-            sortConfig.key === key &&
-            sortConfig.direction === "ascending"
-        ) {
-            direction = "descending";
-        }
-        setSortConfig({ key, direction });
-    };
-
-    return { items: sortedItems, requestSort, sortConfig };
-};
-
-const ProductTable = (props) => {
-    const { items, requestSort, sortConfig } = useSortableData(props.products);
-    const getClassNamesFor = (name) => {
-        if (!sortConfig) {
-            return;
-        }
-        return sortConfig.key === name ? sortConfig.direction : undefined;
-    };
-    return (
-        <Table striped>
-            <thead>
-                <tr>
-                    <th>
-                        <button
-                            type="button"
-                            onClick={() => requestSort("id")}
-                            className={getClassNamesFor("id")}
-                        >
-                            ลำดับที่
-                        </button>
-                    </th>
-                    <th>
-                        <button
-                            type="button"
-                            onClick={() => requestSort("หมายเลขล๊อต")}
-                            className={getClassNamesFor("หมายเลขล๊อต")}
-                        >
-                            หมายเลขล๊อต
-                        </button>
-                    </th>
-                    <th>
-                        <button
-                            type="button"
-                            onClick={() => requestSort("รายการสินค้า")}
-                            className={getClassNamesFor("ผลิต")}
-                        >
-                            ว/ด/ป ผลิต
-              </button>
-                    </th>
-                    <th>
-                        <button
-                            type="button"
-                            onClick={() => requestSort("ชนิด")}
-                            className={getClassNamesFor("หมดอายุ")}
-                        >
-                            ว/ด/ป หมดอายุ
-              </button>
-                    </th>
-                    <th>
-                        <button
-                            type="button"
-                            onClick={() => requestSort("น้ำหนัก")}
-                            className={getClassNamesFor("จำนวนที่รับเข้า")}
-                        >
-                            จำนวนที่รับเข้า
-              </button>
-                    </th>
-                    <th>
-                        <button
-                            type="button"
-                            onClick={() => requestSort("เวลา")}
-                            className={getClassNamesFor("ยอดคงเหลือ")}
-                        >
-                            ยอดคงเหลือ
-              </button>
-                    </th>
-                    <th>
-                        <button
-                            type="button"
-                            onClick={() => requestSort("ราคาต่อหน่วย")}
-                            className={getClassNamesFor("รายละเอียด")}
-                        >
-                            รายละเอียด
-              </button>
-                    </th>
-
-
-                </tr>
-            </thead>
-            <tbody>
-                {items.map((item) => (
-                    <tr key={item.id}>
-                        <td>{item.id}</td>
-                        <td>{item.หมายเลขล๊อต}</td>
-                        <td>{item.ผลิต}</td>
-                        <td>{item.หมดอายุ}</td>
-                        <td>{item.จำนวนที่รับเข้า}</td>
-                        <td>{item.ยอดคงเหลือ}</td>
-                        <td>{item.รายละเอียด}</td>
-                        
-
-                    </tr>
-                ))}
-            </tbody>
-        </Table>
-    );
-};
+];
 
 class ProductDetail extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            dataSource: []
         }
+
+        this.columns = [
+            { name: 'id', header: 'Id', defaultVisible: false, type: 'number', maxWidth: 40 },
+            { name: 'Inid', groupBy: false, defaultFlex: 1, header: 'หมายเลขใบ INV.' },
+            { name: 'arriveDate', groupBy: false, defaultFlex: 1, header: 'วันผลิด' },
+            { name: 'expireDate', groupBy: false, defaultFlex: 1, header: 'วันหมดอายุ' },
+            { name: 'volume', groupBy: false, defaultFlex: 0.7, header: 'ยอดที่รับเข้า' },
+            { name: 'productID', groupBy: false, defaultFlex: 1, header: 'ที่เก็บสินค้า' },
+            { name: 'กก', groupBy: false, defaultFlex: 1, header: 'รายละเอียด' },
+
+        ]
+
     }
+
+    setDataGridRef = (ref) => (this.dataGrid = ref)
+
+    async componentDidMount() {
+        //await fire_base.getAllProduct(this.getAllProductSuccess, this.unSuccess);
+        await fire_base.getAllSaleReport(this.getAllSaleReportSuccess, this.unSuccess);
+    }
+
+    getAllSaleReportSuccess = async (querySnapshot) => {
+        let data = []
+        await querySnapshot.forEach(async (doc) => {
+            if (doc.id != 'state') {
+
+                let d = doc.data();
+                d.Inid = doc.id
+                console.log(d.log)
+                d.productID = this.props.product.idp;
+                for (let x of d.log) {
+                    x.productID.get()
+                        .then(doc => {
+                            x.productID = doc.id
+                            if(x.productID == d.productID){
+                                d.volume = x.volume
+                                d.expireDate = x.expireDate
+                                d.arriveDate = x.arriveDate
+                                console.log(x.volume)
+                                this.setState({ dataSource: this.state.dataSource.concat(d) });
+                            }
+                            
+                        });
+                }
+                
+
+                }
+            });
+
+    }
+
+    unSuccess(error) {
+        console.log(error);
+    }
+
     render() {
         return (
             <Container fluid={true} style={{ backgroundColor: 'wheat' }} >
@@ -176,74 +114,58 @@ class ProductDetail extends React.Component {
                             alignSelf: 'center'
                         }}>รายละเอียดสินค้า</h1>
                     </Col>
-                    <Col xs="2">
-                    <Link to={"/home/productsReport"}><Button color="warning" style={{ width: 200, marginTop: 40 }}>ย้อน</Button></Link>
-                    </Col>
-                    <Col xs="2">
-                        <Button color="danger" style={{ width: 200, marginTop: 40 }}>แก้ไข</Button>
-                    </Col>
                 </Row>
                 <Row style={{ height: 200 }}>
-                    <Col style={{ backgroundColor:'green',marginLeft:"50px" }} md={{size:"2"}}></Col>
+                    <Col style={{ backgroundColor: 'green', marginLeft: "20px" }} md={{ size: "2" }}>
+
+                    </Col>
                     <Col >
                         <Row style={{ height: 80 }}>
-                            <Col md={{ size: '3'}}>รหัสสินค้า:110100</Col>
-                            <Col md="3">รายการสินค้า:ข้าวหอมมะลิ ตราสส</Col>
-                            <Col md="3">ขนิด:ข้าวหอมมะลิ</Col>
-                            <Col md="3">น้ำหนัก:5 กก.</Col>
+                            <Col >รหัสสินค้า:{this.props.product.idp}</Col>
+                            <Col >รายการสินค้า:{this.props.product.productName}</Col>
+
+                        </Row>
+                        <Row style={{ height: 80 }}>
+                            <Col>ขนิด:{this.props.product.productType}</Col>
+                            <Col >น้ำหนัก:{this.props.product.productWeight}</Col>
+                        </Row>
+                        <Row style={{ height: 80 }}>
+                            <Col >ราคาต่อหน่วย:{this.props.product.productPrice}</Col>
+                            <Col>บริษัท:{this.props.product.companyName}</Col>
                         </Row>
                         <Row style={{ height: 60 }}>
-                            <Col md={{ size: '3'}}>ราคาต่อหน่วย:250</Col>
-                            <Col md="3">บริษัท:บริษัทสส จำกัด</Col>
-                            <Col md="3">สถานะ:ปกติ</Col>
-                            <Col md="3">เก่า/ใหม่:ใหม่</Col>
+
+                            <Col >สถานะ:{this.props.product.productStatus}</Col>
+                            <Col >เก่า/ใหม่:{this.props.product.newOld}</Col>
                         </Row>
                     </Col>
-
                 </Row>
-                <ProductTable
-                    products={[
-                        { id: 1, หมายเลขล๊อต: "110100", ผลิต: "12/08/2554", หมดอายุ: "12/08/2554", จำนวนที่รับเข้า: 250, สถานะ: "ปกติ", ยอดคงเหลือ: 50, รายละเอียด: "" }
-
-
-
-                    ]}
-                />
-
-
-                <Pagination aria-label="Page navigation example"
-                    style={{
-                        justifyContent: 'center',
-                        marginTop: 10
-                    }}>
-                    <PaginationItem>
-                        <PaginationLink first href="#" />
-                    </PaginationItem>
-                    <PaginationItem>
-                        <PaginationLink previous href="#" />
-                    </PaginationItem>
-                    <PaginationItem>
-                        <PaginationLink href="#">1</PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                        <PaginationLink href="#">2</PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                        <PaginationLink href="#">3</PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                        <PaginationLink next href="#" />
-                    </PaginationItem>
-                    <PaginationItem>
-                        <PaginationLink last href="#" />
-                    </PaginationItem>
-                </Pagination>
-
+                <Row style={{ marginTop: '20px' }}>
+                    <ReactDataGrid alignSelf='center'
+                        onReady={this.setDataGridRef}
+                        i18n={i18n}
+                        idProperty="id"
+                        columns={this.columns}
+                        pagination
+                        defaultLimit={15}
+                        defaultSkip={15}
+                        pageSizes={[10, 15, 30]}
+                        dataSource={this.state.dataSource}
+                        defaultFilterValue={filterValue}
+                        showColumnMenuTool={true}
+                        emptyText="ไม่มีรายการ"
+                        style={{ minHeight: 550 }}
+                    />
+                </Row>
 
             </Container>
         );
     }
 }
 
+ProductDetail.propTypes = {
+    product: PropTypes.object,
+
+};
 
 export default ProductDetail;

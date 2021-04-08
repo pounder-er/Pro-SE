@@ -13,7 +13,7 @@ import {
     Table,
     Pagination,
     PaginationItem,
-    PaginationLink, Row, Col, Container,Modal,
+    PaginationLink, Row, Col, Container, Modal,
     ModalHeader,
     ModalBody,
 } from 'reactstrap';
@@ -39,7 +39,7 @@ const filterValue = [
     { name: 'calculate', operator: 'startsWith', type: 'string', value: '' },
 ];
 
-const dataSource = [{ id: '1150', firstName: 'chainan', lastName: 'punsri', email: 'chain@hhh.com' }, { id: '1151', firstName: 'ahainun', lastName: 'vansri', email: 'cain@hhh.com' }]
+//const dataSource = [{ id: '1150', firstName: 'chainan', lastName: 'punsri', email: 'chain@hhh.com' }, { id: '1151', firstName: 'ahainun', lastName: 'vansri', email: 'cain@hhh.com' }]
 
 class Calculate extends React.Component {
     constructor(props) {
@@ -47,8 +47,8 @@ class Calculate extends React.Component {
         this.state = {
             searchText: '',
             dataSource: [],
-            dataSourceProduct: [],
-            modalCalculate:false,
+            modalCalculate: false,
+            product: {},
         }
         this.columns = [
             { name: 'id', header: 'Id', defaultVisible: false, type: 'number', maxWidth: 40 },
@@ -56,7 +56,6 @@ class Calculate extends React.Component {
             { name: 'productType', groupBy: false, defaultFlex: 1, header: 'ชนิด' },
             { name: 'productName', groupBy: false, defaultFlex: 1, header: 'รายการสินค้า' },
             { name: 'sum', groupBy: false, defaultFlex: 1, header: 'EOQ(ถุง)' },
-            { name: 'volume', groupBy: false, defaultFlex: 1, header: 'แก้ไขสูตร' },
             {
                 name: 'volume', header:
                     <div style={{ display: 'inline-block' }}>
@@ -68,52 +67,85 @@ class Calculate extends React.Component {
                     </button>,
                 textAlign: 'center'
             },
-            
+
         ]
     }
 
     setDataGridRef = (ref) => (this.dataGrid = ref)
 
     async componentDidMount() {
-        await fire_base.getAllProduct(this.getAllCalculateSuccess, this.unSuccess);
+        fire_base.listeningCal(this.listeningProfileSuccess, this.unSuccess);
     }
-    getAllCalculateSuccess = (querySnapshot) => {
-        let data = []
-        querySnapshot.forEach(async(doc) => {
-            if (doc.id != 'state') {
+    // getAllCalculateSuccess = (querySnapshot) => {
+    //     let data = []
+    //     querySnapshot.forEach(async (doc) => {
+    //         if (doc.id != 'state') {
 
-                let d = doc.data();
-                
-                d.productID = doc.id
-                d.sum =  Math.round(Math.sqrt((2*d.cal.O*d.cal.D)/(d.cal.U*d.cal.C)));
-                console.log(d.sum)
-                await d.productType.get()
-                    .then(async(doc) => {
-                        d.productType = doc.data().name
-                        this.setState({ dataSource: this.state.dataSource.concat(d) });
-                    })
-                    console.log( "=>>",d)
+    //             let d = doc.data();
+
+    //             d.productID = doc.id
+    //             d.sum = Math.round(Math.sqrt((2 * d.cal.O * d.cal.D) / (d.cal.U * d.cal.C)));
+    //             console.log(d.sum)
+    //             await d.productType.get()
+    //                 .then(async (doc) => {
+    //                     d.productType = doc.data().name
+    //                     this.setState({ dataSource: this.state.dataSource.concat(d) });
+    //                 })
+    //             console.log("=>>", d.cal, "==>sum:", d.sum)
+    //         }
+
+    //     });
+    // }
+    listeningProfileSuccess = async (snapshot) => {
+        let data = this.state.dataSource;
+        // let data1=[]
+        console.log('0')
+        await snapshot.docChanges().forEach(async (change) => {
+            let d = change.doc.data();
+            d.productID = change.doc.id
+            d.sum = Math.round(Math.sqrt((2 * d.cal.O * d.cal.D) / (d.cal.U * d.cal.C)));
+           
+            await d.productType.get()
+                .then(async (doc) => {
+                    d.productType = doc.data().name
+                    await d.companyID.get()
+                        .then(async (doc) => {
+                            d.companyID = doc.data().companyName
+
+                        })
+                })
+            console.log('1')
+            if (change.type === "added") {
+                //d.no = data.length+1;
+                data.push(d);
+                console.log('2')
+
             }
-            
-        });
+            if (change.type === "modified") {
+                data[data.findIndex((obj => obj.productID == d.productID))] = d;
+                console.log('3')
+            }
+            this.setState({ dataSource: [...data] });
+        })
+       
+
     }
-  
     unSuccess(error) {
         console.log(error);
     }
 
-    toggleModalmodalCalculate = (e) => {
-        e.preventDefault();
+    toggleModalmodalCalculate = () => {
+        
         this.setState({ modalCalculate: !this.state.modalCalculate });
     }
 
     render() {
         return (
             <Container fluid={true} style={{ backgroundColor: 'wheat' }} >
-               <Modal isOpen={this.state.modalCalculate} toggle={this.toggleModalmodalCalculate} backdrop='static' size='lg' >
+                <Modal isOpen={this.state.modalCalculate} toggle={this.toggleModalmodalCalculate} backdrop='static' size='lg' >
                     <ModalHeader toggle={this.toggleModalmodalCalculate}>รายละเอียดการคำนวน</ModalHeader>
                     <ModalBody>
-                        <EditCalculate product={this.product} />
+                        <EditCalculate product={this.product} closeTogle={this.toggleModalmodalCalculate}/>
                     </ModalBody>
                 </Modal>
                 <Row style={{ marginTop: '20px' }}>
