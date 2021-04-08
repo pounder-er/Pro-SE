@@ -102,6 +102,7 @@ class Firebase {
  
   getAllProductType = (success, reject) => {
     firebase.firestore().collection('ProductType')
+    .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
       .get()
       .then(querySnapshot => {
         success(querySnapshot);

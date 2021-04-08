@@ -166,7 +166,7 @@ class AddProduct extends Component {
             <LoadingOverlay
                 active={this.state.loading}
                 spinner
-                text='กำลังเพิ่มสิ้นค้า...'
+                text='กำลังเพิ่มสินค้า...'
             >
 
                 <Formik
@@ -283,7 +283,7 @@ class AddProduct extends Component {
                                             this.setState({ disabledButtonDefault: false });
                                         }}>
                                         แก้ไข/บันทึก
-                    </Button>
+                                    </Button>
                                     {' '}
                                     <Button color="secondary" onClick={this.toggleModalImage}>ยกเลิก</Button>
                                 </ModalFooter>

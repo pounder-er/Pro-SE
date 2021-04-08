@@ -4,7 +4,7 @@ import fire_base from '../../firebase/Firebase';
 import {
     Link,
 } from 'react-router-dom';
-
+import { AiFillFileText } from "react-icons/ai";
 import {
     Button,
     Row,
@@ -43,19 +43,20 @@ const columns = [
 
 ]
 
-class SellDetail extends React.Component {
+class BuyDetail extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             searchText: '',
             dataSource: [],
+
         }
         this.sum = 0
     }
     
     componentDidMount() {
         //await fire_base.getAllSell(this.getAllSellSuccess, this.unSuccess);
-        //console.log(this.props.profile.log[0].productPrice)
+        console.log(this.props.profile)
         for(let x of this.props.profile.log){
             x.productID.get()
             .then(doc=>{
@@ -64,10 +65,11 @@ class SellDetail extends React.Component {
                 d.productPrice = x.productPrice
                 d.disCount = x.disCount
                 d.volume = x.volume
-                d.summary = d.volume*d.productPrice-d.disCount
+                if(d.disCount && d.volume && d.productPrice)
+                    d.summary = d.volume*d.productPrice-d.disCount
                 this.sum += d.summary
                 this.setState({dataSource:this.state.dataSource.concat(d)});
-                console.log(this.state.dataSource)
+                // console.log(this.state.dataSource)
             })
         }
     }
@@ -76,17 +78,6 @@ class SellDetail extends React.Component {
     render() {
         return (
             <Container fluid={false} style={{ backgroundColor: 'while'}} >
-                <Row style={{ height: 25 }}>
-                    <Col >
-                    </Col>
-                    <Col >
-                    </Col >
-                    <Col style={{display:'flex',flexDirection:'row',justifyContent: 'flex-end'}} >
-                        <Button color="info" style={{ width: 100 ,marginRight: 15}}>บันทึก</Button>
-                        {' '}
-                        <Button color="danger" style={{ width: 100 }}>ยกเลิก</Button>
-                    </Col>
-                </Row>
                 <Row style={{ height: 50 }}>
                     <Col md = {4}>
                         <Label>หมายเลขใบแจ้งหนี้: {this.props.profile.InID}</Label>
@@ -120,6 +111,32 @@ class SellDetail extends React.Component {
                     <Col >
                     </Col>
                 </Row>
+                <Row style={{ height: 50 }}>
+                    <Col md={2} >
+                    <Label>ใบสั่งซื้อ: </Label>
+                    <button onClick={(e)=>{window.open(this.props.profile.po, "_blank"); e.preventDefault();}} style={{display:'contents'}}>
+                    <AiFillFileText color='#00A3FF' size={30} />
+                    </button> 
+                    </Col>
+                    <Col md={3} >
+                    <Label>ใบเสนอราคา: </Label>
+                    <button onClick={(e)=>{window.open(this.props.profile.so, "_blank"); e.preventDefault();}} style={{display:'contents'}}>
+                    <AiFillFileText color='#00A3FF' size={30} />
+                    </button> 
+                    </Col>
+                    <Col md={2} >
+                    <Label>ใบแจ้งหนี้: </Label>
+                    <button onClick={(e)=>{window.open(this.props.profile.in, "_blank"); e.preventDefault();}} style={{display:'contents'}}>
+                    <AiFillFileText color='#00A3FF' size={30} />
+                    </button> 
+                    </Col>
+                    <Col md={2} >
+                    <Label>ใบเสร็จ: </Label>
+                    <button onClick={(e)=>{window.open(this.props.profile.receipt, "_blank"); e.preventDefault();}} style={{display:'contents'}}>
+                    <AiFillFileText color='#00A3FF' size={30} />
+                    </button> 
+                    </Col>
+                </Row>
                 <Row style={{ marginTop: '20px' }}>
                     <ReactDataGrid
                         onReady={this.setDataGridRef}
@@ -142,7 +159,18 @@ class SellDetail extends React.Component {
                     <Col className="text-center text-md-right">
                     <Label > ยอดรวม: {this.sum} บาท</Label>
                     </Col>
-                </Row>   
+                </Row>
+                <Row style={{ height: 25 }}>
+                    <Col >
+                    </Col>
+                    <Col >
+                    </Col >
+                    <Col style={{display:'flex',flexDirection:'row',justifyContent: 'flex-end'}} >
+                        <Button color="info" style={{ width: 100 ,marginRight: 15}}>บันทึก</Button>
+                        {' '}
+                        <Button color="danger" style={{ width: 100 }}>ยกเลิก</Button>
+                    </Col>
+                </Row>
             </Container>
 
             
@@ -150,8 +178,8 @@ class SellDetail extends React.Component {
     }
 }
 
-SellDetail.propTypes = {
+BuyDetail.propTypes = {
     profile: PropTypes.object
   };
 
-export default SellDetail;
+export default BuyDetail;
