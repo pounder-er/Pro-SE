@@ -134,6 +134,9 @@ class DashBoard extends React.Component {
         let temp = this.state.lineChartData
         // temp.datasets[1].data.push(size)
         temp.datasets[1].data = size
+        if(size.length == 7){
+            temp.datasets[1].data.reverse()
+        }
 
         this.setState({ lineChartData: temp })
 

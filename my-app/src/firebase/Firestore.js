@@ -227,7 +227,7 @@ class Firestore {
           console.log(querySnapshot.size)
           day.push(querySnapshot.size)
           // success(querySnapshot.size)
-          success(day.reverse())
+          success(day)
         })
         .catch();
 
