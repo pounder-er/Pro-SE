@@ -91,58 +91,67 @@ class ProductReport extends React.Component {
     async componentDidMount() {
         await fire_base.getAllProduct2(this.getAllProductSuccess, this.unSuccess);
     }
-
-    getAllProductSuccess = (querySnapshot) => {
-        let data = []
-        querySnapshot.forEach(async (doc) => {
-            if (doc.id != 'state') {
-
-                let d = doc.data();
-                if(d.productStatus != 'ยกเลิก'){
-                    if(d.productTotal <= d.cal.R && d.productTotal >= d.cal.R*(50/100)){
-                        d.productStatus ="ใกล้หมด"
-                        // fire_base.updateProduct11(d.id,,this.updateProductSuccess, this.unSuccess);
-                    }
-                    else if(d.productTotal > d.cal.R && d.productTotal <= d.cal.R*(150/100)){
-                        d.productStatus ="ปกติ"
-                    }
-                    else if(d.productTotal > d.cal.R*(150/100)){
-                        d.productStatus ="ล้นคลัง"
-                    }
-                    else if(d.productTotal < d.cal.R*(50/100) && d.productTotal > 0){
-                        d.productStatus ="ของขาด"
-                    }
-                    else{
-                        d.productStatus ="หมด"
-                    }
+    getAllProductSuccess = async (snapshot) => {
+        let data = this.state.dataSource;
+        // let data1=[]
+        console.log('0')
+        await snapshot.docChanges().forEach(async (change) => {
+            let d = change.doc.data();
+            d.idp = change.doc.id
+            if(d.productStatus != 'ยกเลิก'){
+                if(d.productTotal <= d.cal.R && d.productTotal >= d.cal.R*(50/100)){
+                    d.productStatus ="ใกล้หมด"
+                    // fire_base.updateProduct11(d.id,,this.updateProductSuccess, this.unSuccess);
                 }
-                
-                d.idp = doc.id;
-                if(d.idp[1]=='1'){
-                    d.newOld = 'ใหม่'
-                }else{
-                    d.newOld = 'เก่า'
+                else if(d.productTotal > d.cal.R && d.productTotal <= d.cal.R*(150/100)){
+                    d.productStatus ="ปกติ"
                 }
-                await d.companyID.get()
-                    .then(doc => {
-                        d.companyName = doc.data().companyName
-                    })
-                await d.productType.get()
-                    .then(doc => {
-                        d.productType = doc.data().name
-                        data.push(d);
-                        
-                    })
-                
+                else if(d.productTotal > d.cal.R*(150/100)){
+                    d.productStatus ="ล้นคลัง"
+                }
+                else if(d.productTotal < d.cal.R*(50/100) && d.productTotal > 0){
+                    d.productStatus ="ของขาด"
+                }
+                else{
+                    d.productStatus ="หมด"
+                }
             }
             
+            if(change.doc.id[1]=='1'){
+                d.newOld = 'ใหม่'
+            }else{
+                d.newOld = 'เก่า'
+            }
+            await d.companyID.get()
+            .then(doc => {
+                d.companyName = doc.data().companyName
+            })
+            await d.productType.get()
+            .then(doc => {
+                d.productType = doc.data().name
+                
+                
+            })
+            if (change.type === "added") {
+                //d.no = data.length+1;
+                data.push(d);
+
+            }
+            if (change.type === "modified") {
+                data[data.findIndex((obj => obj.idp == d.idp))] = d;
+                console.log('3')
+            }
+            this.setState({ dataSource: [...data] });
+            setTimeout(
+                ()=>this.setState({dataSource:data})
+                ,
+                500
+              );
         })
-        setTimeout(
-            ()=>this.setState({dataSource:data})
-            ,
-            500
-          );
+       
+
     }
+   
 
     unSuccess(error) {
         console.log(error);
