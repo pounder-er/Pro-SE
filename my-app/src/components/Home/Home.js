@@ -214,7 +214,7 @@ class Home extends React.Component {
   render() {
     var myNumber = 1;
     var formattedNumber = ("0" + myNumber).slice(-2);
-    // console.log(formattedNumber);
+    console.log(formattedNumber);
 
     // if(undefined){
     //   console.log('ppp')

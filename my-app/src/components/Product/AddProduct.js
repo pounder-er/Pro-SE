@@ -414,17 +414,17 @@ class AddProduct extends Component {
                                 <Col md={6}/>
                                 <Col>
                                     <FormGroup>
-                                        <Label for="productDetail">รายละเอียด</Label>
+                                        <Label for="detail">รายละเอียด</Label>
                                         <Input
                                             type="textarea"
-                                            name="productDetail"
-                                            id="productDetail"
+                                            name="detail"
+                                            id="detail"
                                             onChange={handleChange}
                                             onBlur={handleBlur}
-                                            value={values.productDetail}
-                                            invalid={errors.productDetail && touched.productDetail}
+                                            value={values.detail}
+                                            invalid={errors.detail && touched.detail}
                                         />
-                                        <FormFeedback >*{errors.productDetail}</FormFeedback>
+                                        <FormFeedback >*{errors.detail}</FormFeedback>
                                     </FormGroup>
                                 </Col>
 

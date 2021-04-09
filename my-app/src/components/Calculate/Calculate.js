@@ -128,11 +128,7 @@ class Calculate extends React.Component {
                 data[data.findIndex((obj => obj.productID == d.productID))] = d;
                 console.log('3')
             }
-            setTimeout(
-                ()=>this.setState({ dataSource: [...data] })
-                ,500
-              );
-            
+            this.setState({ dataSource: [...data] });
             
         })
        
