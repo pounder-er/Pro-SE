@@ -111,7 +111,7 @@ class Sell extends React.PureComponent {
     getAllSellSuccess = async(querySnapshot) => {
         
         await querySnapshot.forEach((doc) => { 
-            let d = doc.data();
+            let d = doc.data(); 
             d.InLog = d.log;
             d.InID = doc.id;
             if( d.dateCreate)
