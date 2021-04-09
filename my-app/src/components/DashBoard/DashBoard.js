@@ -101,7 +101,7 @@ class DashBoard extends React.Component {
                 datasets: [
                     {
                         label: 'สัดส่วนโกดัง',
-                        data: [12, 19, 3, 5, 2, 3],
+                        data: [],
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
                             'rgba(54, 162, 235, 0.2)',
@@ -124,8 +124,60 @@ class DashBoard extends React.Component {
             },
 
             productTypeID : [],
-         
+            dataSource : []
         }
+    }
+    getAllSellSuccess = async (querySnapshot) => {
+
+        await querySnapshot.forEach((doc) => {
+            let z =[]
+            if (doc.id != 'state') {
+                let d = doc.data();
+                d.InID = doc.id
+                // console.log('Sell', d)
+                d.avolume = 0;
+                d.dateCreate = d.dateCreate.toDate().getDate() + "/" + (d.dateCreate.toDate().getMonth() + 1) + "/" + d.dateCreate.toDate().getFullYear()
+                if (d.dateIn != undefined)
+                    d.dateIn = d.dateIn.toDate().getDate() + "/" + (d.dateIn.toDate().getMonth() + 1) + "/" + d.dateIn.toDate().getFullYear()
+                else
+                    d.dateIn = "-"
+                if (d.datePay != undefined)
+                    d.datePay = d.datePay.toDate().getDate() + "/" + (d.datePay.toDate().getMonth() + 1) + "/" + d.datePay.toDate().getFullYear()
+                else
+                    d.datePay = "-"
+                d.branchID.get()
+                    .then(doc => {
+                        d.branchName = doc.data().branchName
+                        return d;
+                    })
+                // console.log(' datas', this.state.dataSource)
+                for (let a of this.state.dataSource) {
+                    a.avolume = Number(0)
+                    a.totalPrice = 0
+                    for (let x of d.log) {
+                        // console.log('sell LOG', x)
+                        x.productID.get()
+                            .then(doc => {
+                                x.aproductID = doc.id
+                                if (x.aproductID == a.idp) {
+                                    a.avolume += x.volume
+                                    a.totalPrice += (x.productPrice * x.volume) - x.disCount
+                                     
+                                    this.setState({ dataSource: this.state.dataSource.concat(z) });
+                                    console.log('ZZZZZZZZZZZZZZZZZZZZZZ', z)
+                                }
+
+                            });
+                    }
+                }
+
+            }
+        });
+        console.log('---DATA SOURCE---', this.state.dataSource)
+        let temp_dataSource = this.state.dataSource
+        temp_dataSource.sort((a, b) => (a.volume > b.volume) ? 1 : -1)
+        console.log('---TEMP DATA SOURCE---', temp_dataSource)
+
     }
 
     getProductSuccess=(q)=>{
@@ -200,11 +252,12 @@ class DashBoard extends React.Component {
         console.log(error)
     }
 
-    componentDidMount() {
-        firestore.getCountSellOrderComplete(this.getCountSellOrderSuccess, this.reject)
-        firestore.getCountBuyOrderComplete(this.getCountBuyOrderSuccess, this.reject)
+    async componentDidMount() {
+        await firestore.getCountSellOrderComplete(this.getCountSellOrderSuccess, this.reject)
+        await firestore.getCountBuyOrderComplete(this.getCountBuyOrderSuccess, this.reject)
         // fire_base.getAllProduct(this.getProductSuccess, this.reject);
-        fire_base.getAllProductType(this.getProductTypeSuccess, this.reject)
+        await fire_base.getAllProductType(this.getProductTypeSuccess, this.reject)
+        await fire_base.getAllSellReport(this.getAllSellSuccess, this.reject);
 
         let currentDate = new Date()
         let temp = this.state.lineChartData
