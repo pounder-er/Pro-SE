@@ -20,6 +20,8 @@ import './Style/ExportTable.css';
 
 import firestore from './Firebase/Firestore'
 
+import swal from 'sweetalert';
+
 class ExportTable extends React.Component {
     constructor(props) {
         super(props)
@@ -27,32 +29,46 @@ class ExportTable extends React.Component {
             lot: this.props.location.lot,
             channel: this.props.location.channel,
             exportDetail: this.props.location.data,
-            checkCount:this.props.location.data.length
+            checkCount: this.props.location.data.length,
+            branch: this.props.location.branch,
+            branchName: "" 
         }
-        // console.log(this.state.exportDetail[0].productID.path)
-        // firestore.getProductNameByRef(this.state.exportDetail[0].productID)
+
+        firestore.getBranchNameByRef(this.state.branch, this.getBranchName)
     }
 
-    onCheckChange =(event)=>{
-        if(event.target.checked == true){
-            this.setState({checkCount:(this.state.checkCount-=1)})
+    getBranchName =(name)=> {
+        this.setState({branchName: name.data().branchName})
+    }
+
+    onCheckChange = (event) => {
+        if (event.target.checked == true) {
+            this.setState({ checkCount: (this.state.checkCount -= 1) })
             console.log(event.target.checked)
             // console.log(this.state.checkCount)
         }
-        else{
-            this.setState({checkCount:(this.state.checkCount+=1)})
+        else {
+            this.setState({ checkCount: (this.state.checkCount += 1) })
             console.log(event.target.checked)
             // console.log(this.state.checkCount)
         }
     }
 
-    onSaveOrder =()=>{
-        if(this.state.checkCount == 0){
+    onSaveOrder = () => {
+        if (this.state.checkCount == 0) {
+            firestore.onSaveSO(this.state.lot, this.taskEnd)
+            swal("บันทึกเสร็จสิ้น", "กด OK เพื่อออก", "success");
+            this.props.history.goBack()
             console.log("Success")
         }
-        else if(this.state.checkCount != 0){
+        else if (this.state.checkCount != 0) {
+            swal("ผิดพลาด", "กรุณาติ้กช่องยืนยันให้ครบ", "error");
             console.log("Unsuadadw ccess")
         }
+    }
+
+    taskEnd = (doc) => {
+        console.log("Document successfully deleted!");
     }
 
     render() {
@@ -70,7 +86,7 @@ class ExportTable extends React.Component {
                     <td>{data.volume}</td>
                     <td>
                         <InputGroup>
-                            <Input addon type="checkbox" style={{ width: 20, height: 20 }} onChange = {this.onCheckChange}/>
+                            <Input addon type="checkbox" style={{ width: 20, height: 20 }} onChange={this.onCheckChange} />
                         </InputGroup>
                     </td>
                 </tr>
@@ -84,7 +100,7 @@ class ExportTable extends React.Component {
                 <body className="ContentTable" style={{ border: '2px solid gray' }}>
 
                     <h1 style={{ width: '95%', alignSelf: 'center', marginTop: 60, marginBottom: 20 }}>รายการนำสินค้าออกคลัง</h1>
-                    <h3 style={{ width: '95%', alignSelf: 'center', marginTop: 10 }}>หมายเลขล็อต : {this.state.lot} | ช่องขนส่ง : {this.state.channel}</h3>
+                    <h3 style={{ width: '95%', alignSelf: 'center', marginTop: 10 }}>สาขา : {this.state.branchName} | หมายเลขล็อต : {this.state.lot} | ช่องขนส่ง : {this.state.channel}</h3>
                     {/* <h3 style={{width:'95%', alignSelf:'center', marginTop:10, marginBottom:20}}>ช่องขนส่ง : {this.state.channel}</h3> */}
 
                     <Table hover style={{ width: '95%', alignSelf: 'center', marginTop: 20, marginBottom: 20, background: "#f1f1f1" }}>

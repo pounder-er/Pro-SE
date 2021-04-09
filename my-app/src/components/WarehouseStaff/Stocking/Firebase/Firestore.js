@@ -133,7 +133,7 @@ class Firestore {
             console.error("Error updating document: ", error);
         });
 
-        let docID = firebase.firestore.FieldPath.documentId()
+        // let docID = firebase.firestore.FieldPath.documentId()
 
         firebase.firestore().collection("ImportOrder").doc(idPO).delete()
         .then(function (querySnapshot) {
@@ -166,6 +166,67 @@ class Firestore {
                 reject(error);
             });
     }
+
+    onSaveSO =(idSO, taskDel)=> {
+        firebase.firestore().collection('Sell').doc(idSO).update({
+            status: "กำลังจัดส่ง"
+            // ----- คำสั่งตัวอย่าง -----
+            // status: "รอชำระเงิน"
+        })
+        .then(() => {
+            console.log("Document successfully updated!");
+        })
+        .catch((error) => {
+            // The document probably doesn't exist.
+            console.error("Error updating document: ", error);
+        });
+
+        // let docID = firebase.firestore.FieldPath.documentId()
+
+        firebase.firestore().collection("ExportOrder").doc(idSO).delete()
+        .then(function (querySnapshot) {
+            taskDel(querySnapshot)
+
+        }).catch(function (error) {
+            console.error("Error removing document: ", error);
+        });
+    }
+    //-------------------------- get Ref -------------------------- //
+
+    getBranchNameByRef =(ref, changeName)=> {
+        console.log(ref)
+        console.log(ref.id)
+        console.log(ref.parent.id)
+
+        return firebase.firestore().collection(ref.parent.id).doc(ref.id).get()
+            .then(function (querySnapshot) {
+                // console.log(querySnapshot.data().companyName)
+                // return querySnapshot.data().companyName
+                changeName(querySnapshot)
+
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    }
+
+    getCompanyNameByRef =(ref, changeName)=> {
+        console.log(ref)
+        console.log(ref.id)
+        console.log(ref.parent.id)
+
+        return firebase.firestore().collection(ref.parent.id).doc(ref.id).get()
+            .then(function (querySnapshot) {
+                // console.log(querySnapshot.data().companyName)
+                // return querySnapshot.data().companyName
+                changeName(querySnapshot)
+
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    }
+
     getProductNameByRef =(ref)=> {
         console.log(ref)
         console.log(ref.id)
