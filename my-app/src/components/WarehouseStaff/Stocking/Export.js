@@ -19,71 +19,31 @@ import 'react-pro-sidebar/dist/css/styles.css';
 
 import { FiFileText } from 'react-icons/fi'
 
-import firestore from './Firebase/Firestore'
-
-import { connect } from 'react-redux';
-import { addSession, addUserProfile } from '../../../redux/actions';
-
 import exportList from './exportList'
 
 class Export extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            exportList: [],
+            checkList: exportList,
+            // test:"ad1345135135hn123523jnawdab"
         }
-        firestore.getTaskSell(this.task, this.reject, this.props.userProfile.email)
-        // console.log(this.props.userProfile.email)
-    }
-
-    task = (doc) => {
-        let array = []
-
-        doc.forEach(doc => {
-            let id = doc.id
-            array.push(id)
-        })
-
-        // console.log(array)
-
-        firestore.getSO(this.success, this.reject, array)
-    }
-
-    success = (doc) => {
-        console.log("in SO Collection")
-        doc.forEach(doc => {
-            let array = doc.data()
-            array.id = doc.id
-            array.channel = "A1"
-            // console.log(doc.data().log[0].productID.id)
-
-            this.setState({ exportList: this.state.exportList.concat(array) })
-
-        })
-
-        // console.log(this.state.exportList)
-    }
-
-    reject = (error) => {
-        console.log("error is : " + error)
     }
 
     render() {
         let i = 0
-        const listItems = this.state.exportList.map((data) => {
+        const listItems = this.state.checkList.map((data) => {
             i++
-            // console.log(data)
             return (
                 <tr style={{ textAlign: 'center' }}>
                     <th scope="row">{i}</th>
-                    <td>{data.id}</td>
+                    <td>{data.lot}</td>
                     <td>{data.channel}</td>
                     <td onClick={() => this.props.history.push({
                         pathname : this.props.match.url + "/export_product_tb",
-                        lot: data.id,
+                        lot: data.lot,
                         channel: data.channel,
-                        data : data.log,
-                        branch : data.branchID
+                        data : data.detail
                     })}>
                         <FiFileText style={{ color: "#00A3FF" }} />
                     </td>
@@ -129,12 +89,5 @@ class Export extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        session: state.session,
-        userProfile: state.userProfile
-    }
-}
-
-export default connect(mapStateToProps)(Export)
+export default Export
 
