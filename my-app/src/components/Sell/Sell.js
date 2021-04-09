@@ -1,6 +1,7 @@
 import React from 'react';
 
 import fire_base from '../../firebase/Firebase';
+// import './Company.css';
 import {
     Link,
 } from 'react-router-dom';
@@ -30,26 +31,16 @@ import {i18n} from '../i18n';
 import SellDetail from './SellDetail';
 
 
+
+
 const filterValue = [
-    { name: 'InID', operator: 'startsWith', type: 'string', },
-    { name: 'branchID', operator: 'startsWith', type: 'string', },
-    {
-        name: 'dateCreate',
-        operator: 'before',
-        type: 'date',
-        value: ''
-      },
-    //   {
-    //     name: 'dateIn',
-    //     operator: 'before',
-    //     type: 'date',
-
-    //   },
-    { name: 'dateCreate', operator: 'startsWith', type: 'string', },
-    { name: 'dateIn', operator: 'startsWith', type: 'string', },
-    { name: 'res', operator: 'startsWith', type: 'string', },
-    { name: 'status', operator: 'startsWith', type: 'string', },
-
+    { name: 'InID', operator: 'startsWith', type: 'string',  },
+    { name: 'branchID', operator: 'startsWith', type: 'string',  },
+    { name: 'dateCreate', operator: 'startsWith', type: 'string',  },
+    { name: 'dateIn', operator: 'startsWith', type: 'string',  },
+    { name: 'Res', operator: 'startsWith', type: 'string',  },
+    { name: 'status', operator: 'startsWith', type: 'string',  },
+    
 ];
 
 
@@ -176,9 +167,9 @@ class Sell extends React.PureComponent {
                         emptyText="ไม่มีรายการ"
                         style={{ minHeight: 400 }}
                     />
-                </Row>
-
-            </Container>
+                    </Row>
+               
+                </Container>
         );
     }
 }
