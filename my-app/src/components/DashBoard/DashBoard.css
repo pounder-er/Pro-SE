@@ -106,7 +106,7 @@
 .pineChart{
     display: flex;
     background-color: white;
-    width: 99%;
+    width: 98.5%;
     border-radius: 5px;
     flex-direction: column;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.15),

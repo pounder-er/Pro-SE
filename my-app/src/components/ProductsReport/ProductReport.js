@@ -17,11 +17,12 @@ import {
     ModalHeader,
     ModalBody,
 } from 'reactstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+
+
 import ReactDataGrid from '@inovua/reactdatagrid-community'
 import '@inovua/reactdatagrid-community/base.css'
 import '@inovua/reactdatagrid-community/theme/default-light.css'
-import 'react-pro-sidebar/dist/css/styles.css';
+
 import { AiFillFileText } from "react-icons/ai";
 
 import { i18n } from '../i18n';
@@ -33,6 +34,7 @@ import * as Yup from 'yup';
 
 import { Link } from 'react-router-dom';
 import ProductDetail from './ProductDetail';
+import Calculate from '../Calculate/Calculate';
 
 const filterValue = [
     { name: 'ID', operator: 'startsWith', type: 'string', value: '' },
@@ -90,40 +92,60 @@ class ProductReport extends React.Component {
         await fire_base.getAllProduct(this.getAllProductSuccess, this.unSuccess);
     }
 
-    getAllProductSuccess = async (querySnapshot) => {
+    getAllProductSuccess = (querySnapshot) => {
         let data = []
-        await querySnapshot.forEach(async (doc) => {
+        querySnapshot.forEach(async (doc) => {
             if (doc.id != 'state') {
 
                 let d = doc.data();
-
+                if(d.productTotal < d.cal.R){
+                    console.log(123456789)
+                    d.productStatus ="ใกล้หมด"
+                    // fire_base.updateProduct11(d.id,,this.updateProductSuccess, this.unSuccess);
+                }
                 d.idp = doc.id;
                 if(d.idp[1]=='1'){
                     d.newOld = 'ใหม่'
                 }else{
                     d.newOld = 'เก่า'
                 }
-                
-                let a = await d.productType.get()
+                await d.companyID.get()
+                    .then(doc => {
+                        d.companyName = doc.data().companyName
+                    })
+                await d.productType.get()
                     .then(doc => {
                         d.productType = doc.data().name
-
-                        this.setState({ dataSource: this.state.dataSource.concat(d) });
+                        data.push(d);
+                        
                     })
+                
             }
-        });
-
+            
+        })
+        setTimeout(
+            ()=>this.setState({dataSource:data})
+            ,
+            500
+          );
     }
 
     unSuccess(error) {
         console.log(error);
     }
 
+    updateProductSuccess = () => {
+        // this.setState({ loading: false });
+        console.log("update success");
+        // this.sweetAlret("เสร็จสิ้น", "แก้ไขข้อมูลเรียบรอยแล้ว", "success", "ตกลง");
+        // this.props.closeTogle();
+    }
     render() {
+        console.log(this.props.product)
         return (
             <Container fluid={true} style={{ backgroundColor: 'wheat' }} >
                 <Modal isOpen={this.state.modal} toggle={this.toggleModalmodal} backdrop='static' size='lg' >
-                    <ModalHeader toggle={this.toggleModalmodal}>รายละเอียดการคำนวน</ModalHeader>
+                    <ModalHeader toggle={this.toggleModalmodal}>รายละเอียดสินค้า</ModalHeader>
                     <ModalBody>
                         <ProductDetail product={this.product}/>
                     </ModalBody>
@@ -150,6 +172,9 @@ class ProductReport extends React.Component {
         );
     }
 }
+ProductReport.propTypes = {
+    product: PropTypes.object,
 
+};
 
 export default ProductReport;

@@ -51,7 +51,7 @@ const fromProductSchema = Yup.object().shape({
     image: Yup.string()
         .required('กรุณาระบุข้อมูล'),
     companyID: Yup.string(),
-    detail: Yup.string(),
+    productDetail: Yup.string(),
 })
 
 const resizeImageFile = (file) => new Promise(resolve => {
@@ -149,7 +149,7 @@ class AddProduct extends Component {
     }
 
     uploadImageSuccess=async(url)=>{
-        await fire_base.updateProduct(this.id,{image:url},this.updateProductSuccess,this.unSuccess);
+        await fire_base.updateNewOldProduct(this.id,{image:url},this.updateProductSuccess,this.unSuccess);
     }
 
     updateProductSuccess=()=>{
@@ -203,7 +203,7 @@ class AddProduct extends Component {
                     }) => (
                         <Form onSubmit={handleSubmit} onReset={(e) => { e.preventDefault(); this.setDefaultImageCrop(); handleReset(e); }} >
                             <Modal isOpen={this.state.ModalImage} toggle={this.toggleModalImage} backdrop='static' >
-                                <ModalHeader >เลือก/แก้ไข รูปโปรไฟล์</ModalHeader>
+                                <ModalHeader >เลือก/แก้ไข รูปสินค้า</ModalHeader>
                                 <ModalBody>
                                     <FormGroup row>
                                         <Col style={{ display: 'flex', justifyContent: 'center' }}>

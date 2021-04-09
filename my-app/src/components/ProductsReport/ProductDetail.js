@@ -16,6 +16,8 @@ import {
     PaginationLink, Row, Col, Container, Modal,
     ModalHeader,
     ModalBody,
+    CardBody,
+  Card,
 } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AiFillFileText } from "react-icons/ai";
@@ -26,12 +28,15 @@ import '@inovua/reactdatagrid-community/theme/default-light.css'
 import { i18n } from '../i18n';
 import 'react-pro-sidebar/dist/css/styles.css';
 
+import EditProduct from './EditProduct';
+
 import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
 import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons/md";
 import { IoMdTrash } from "react-icons/io";
 import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import BuyDetail from '../Buy/BuyDetail';
+
 
 const filterValue = [
     { name: 'ID', operator: 'startsWith', type: 'string', value: '' },
@@ -106,7 +111,7 @@ class ProductDetail extends React.Component {
                     d.datePay = "-"
                 let a = d.companyID.get()
                     .then(doc => {
-                        d.companyID = doc.data().companyName
+                        d.companyName = doc.data().companyName
                         return d;
                     })
                 d.productID = this.props.product.idp;
@@ -168,14 +173,24 @@ class ProductDetail extends React.Component {
 
     render() {
         return (
-            <Container fluid={true} style={{ backgroundColor: 'wheat' }} >
+            <div>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModalmodal} backdrop='static' size='lg' >
                     <ModalHeader toggle={this.toggleModalmodal}>รายละเอียดการคำนวน</ModalHeader>
                     <ModalBody>
                         <BuyDetail profile={this.product} />
                     </ModalBody>
                 </Modal>
-                <Row >
+                <Card >
+                    <CardBody>
+                    <EditProduct product={this.props.product} />
+
+                    </CardBody>
+                </Card>
+            
+                
+                
+                
+                {/* <Row >
                     <Col >
                         <h1 style={{
                             marginTop: 20,
@@ -209,8 +224,10 @@ class ProductDetail extends React.Component {
                             <Col >เก่า/ใหม่:{this.props.product.newOld}</Col>
                         </Row>
                     </Col>
-                </Row>
-                <Row style={{ marginTop: '20px' }}>
+                </Row> */}
+                <Card style={{marginTop:15}} >
+                    <CardBody>
+                    
                     <ReactDataGrid alignSelf='center'
                         onReady={this.setDataGridRef}
                         i18n={i18n}
@@ -226,9 +243,15 @@ class ProductDetail extends React.Component {
                         emptyText="ไม่มีรายการ"
                         style={{ minHeight: 550 }}
                     />
-                </Row>
+               
 
-            </Container>
+                    </CardBody>
+
+                </Card>
+                
+                
+
+            </div>
         );
     }
 }
