@@ -2,6 +2,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
+import { date } from 'yup/lib/locale';
 
 class Firebase {
   constructor() {
@@ -99,7 +100,7 @@ class Firebase {
   }
   getAllProduct = (success, reject) => {
     firebase.firestore().collection('Product')
-    .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
+      .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
       .get()
       .then(querySnapshot => {
         success(querySnapshot);
@@ -109,10 +110,10 @@ class Firebase {
       })
   }
 
- 
+
   getAllProductType = (success, reject) => {
     firebase.firestore().collection('ProductType')
-    .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
+      .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
       .get()
       .then(querySnapshot => {
         success(querySnapshot);
@@ -170,30 +171,30 @@ class Firebase {
       })
   }
 
-  getProductCheckStock=(success, reject)=>{
+  getProductCheckStock = (success, reject) => {
     firebase.firestore().collection('Product')
-    .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
-    // .where('productTotal', '>', 0)
-    .get()
-    .then(querySnapshot => {
-      success(querySnapshot);
-    })
-    .catch((error) => {
-      reject(error);
-    })
+      .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
+      // .where('productTotal', '>', 0)
+      .get()
+      .then(querySnapshot => {
+        success(querySnapshot);
+      })
+      .catch((error) => {
+        reject(error);
+      })
   }
 
-  getUesrCheckStock = (success, reject) =>{
+  getUesrCheckStock = (success, reject) => {
     firebase.firestore().collection('UserProfiles')
-    .where('status', '==', 'ปกติ')
-    .where('jobTitle', '==', 'พนักงานคลัง')
-    .get()
-    .then(querySnapshot => {
-      success(querySnapshot);
-    })
-    .catch((error) => {
-      reject(error);
-    })
+      .where('status', '==', 'ปกติ')
+      .where('jobTitle', '==', 'พนักงานคลัง')
+      .get()
+      .then(querySnapshot => {
+        success(querySnapshot);
+      })
+      .catch((error) => {
+        reject(error);
+      })
   }
 
   getStateChangedUser = (success, reject) => {
@@ -242,7 +243,7 @@ class Firebase {
       })
   }
 
-  updateProduct11=(idp,product,success,reject)=>{
+  updateProduct11 = (idp, product, success, reject) => {
     firebase.firestore().collection('Product').doc(idp)
       .update(product)
       .then(() => {
@@ -253,28 +254,65 @@ class Firebase {
       })
 
   }
-  updateProduct=(id,product,success,reject)=>{
+  updateProduct = (id, product, success, reject) => {
     let product1 = Object.assign({}, product);
     delete product1.productTotal
     delete product1.productStatus
     delete product1.productDetail
     delete product1.productPrice
     let product2 = {
-      productTotal:product.productTotal,
-      productStatus:product.productStatus,
-      productDetail:product.productDetail,
-      productPrice:product.productPrice
+      productTotal: product.productTotal,
+      productStatus: product.productStatus,
+      productDetail: product.productDetail,
+      productPrice: product.productPrice
     }
     let batch = firebase.firestore().batch(), ref = firebase.firestore().collection('Product');
     console.log([id[0], id.slice(2)].join(''));
-    batch.update(ref.doc([id[0], '1',id.slice(2)].join('')), product1);
-    batch.update(ref.doc([id[0], '0',id.slice(2)].join('')), product1);
-    batch.update(ref.doc(id) , product2);
+    batch.update(ref.doc([id[0], '1', id.slice(2)].join('')), product1);
+    batch.update(ref.doc([id[0], '0', id.slice(2)].join('')), product1);
+    batch.update(ref.doc(id), product2);
     batch.commit()
       .then(() => {
         success();
       })
       .catch((error) => {
+        reject(error);
+      })
+
+  }
+
+  updateImageSellBuy = (id, image, success, reject) => {
+    firebase.firestore().collection('Buy').doc(id)
+      .update(image)
+      .then(() => {
+        success();
+      })
+      .catch(error => {
+        reject(error);
+      });
+  }
+
+  updateChangeStatus = (id, log, num, success, reject) => {
+    let update={},date = firebase.firestore.FieldValue.serverTimestamp();
+    
+    if (num == 1) {
+      update.dateInvoice = date;
+      update.status = 'รอชำระเงิน';
+      update.log = log;
+    }
+    else if(num == 2){
+      update.datePay = date;
+      update.status = 'รอรับสินค้า';
+      update.log = log;
+    }
+    else if(num == 3){
+      update.dateIn = date;
+      update.status = 'รอขนเข้าคลัง';
+    }
+    firebase.firestore().collection('Buy').doc(id).update(update)
+      .then(() => {
+        success();
+      }).catch((error) => {
         reject(error);
       })
 
@@ -347,18 +385,18 @@ class Firebase {
       });
   }
 
-  addCheckStock = (assignProduct,success, reject) =>{
+  addCheckStock = (assignProduct, success, reject) => {
     let batch = firebase.firestore().batch(), ref = firebase.firestore().collection('TaskStock');
     assignProduct.forEach(element => {
-      batch.set(ref.doc(element.id),{person:element.email});
+      batch.set(ref.doc(element.id), { person: element.email });
     });
     batch.commit()
-    .then(()=>{
-      success();
-    })
-    .catch(error=>{
-      reject(error);
-    })
+      .then(() => {
+        success();
+      })
+      .catch(error => {
+        reject(error);
+      })
 
 
 
@@ -429,98 +467,98 @@ class Firebase {
 
   }
 
-  addPO=(data, success, reject)=>{
+  addPO = (data, success, reject) => {
     data.dateCreate = firebase.firestore.FieldValue.serverTimestamp();
     var stateRef = firebase.firestore().collection('Buy').doc('state')
-    return firebase.firestore().runTransaction((transaction)=>{
-      return transaction.get(stateRef).then((stateDoc)=>{
-        data.companyID  = firebase.firestore().collection('Company').doc(data.companyID)
-        for(let x of data.log){
+    return firebase.firestore().runTransaction((transaction) => {
+      return transaction.get(stateRef).then((stateDoc) => {
+        data.companyID = firebase.firestore().collection('Company').doc(data.companyID)
+        for (let x of data.log) {
           x.productID = firebase.firestore().collection('Product').doc(x.productID)
         }
-        if(!stateDoc.exists){
+        if (!stateDoc.exists) {
           throw "Document does not exist!";
         }
 
         let state = stateDoc.data().count
-        var newState = parseInt(state)+1
-        
-        if(newState/10 < 1){
+        var newState = parseInt(state) + 1
+
+        if (newState / 10 < 1) {
           newState = newState.toString()
-          newState = '000'+newState
-        }else if(newState/100<1){
+          newState = '000' + newState
+        } else if (newState / 100 < 1) {
           newState = newState.toString()
-          newState = '00'+newState
-        }else if(newState/1000<1){
+          newState = '00' + newState
+        } else if (newState / 1000 < 1) {
           newState = newState.toString()
-          newState = '0'+newState
+          newState = '0' + newState
         }
-        else{
+        else {
           newState = newState.toString()
         }
-        transaction.update(stateRef, {count : newState})
-        
-        firebase.firestore().collection('Buy').doc("PO"+state)
-        .set(data)
-        .then(()=>{
-          success();
-        })
-        .catch((error)=>{
-          reject(error);
-        });
+        transaction.update(stateRef, { count: newState })
+
+        firebase.firestore().collection('Buy').doc("PO" + state)
+          .set(data)
+          .then(() => {
+            success();
+          })
+          .catch((error) => {
+            reject(error);
+          });
       })
     })
-    .then()
-    .catch((error)=>{
-      console.log(error)
-    });
+      .then()
+      .catch((error) => {
+        console.log(error)
+      });
   }
 
-  addSO=(data, success, reject)=>{
+  addSO = (data, success, reject) => {
     data.dateCreate = firebase.firestore.FieldValue.serverTimestamp();
     var stateRef = firebase.firestore().collection('Sell').doc('state')
-    return firebase.firestore().runTransaction((transaction)=>{
-      return transaction.get(stateRef).then((stateDoc)=>{
-        data.branchID  = firebase.firestore().collection('Branch').doc(data.branchID)
-        for(let x of data.log){
+    return firebase.firestore().runTransaction((transaction) => {
+      return transaction.get(stateRef).then((stateDoc) => {
+        data.branchID = firebase.firestore().collection('Branch').doc(data.branchID)
+        for (let x of data.log) {
           x.productID = firebase.firestore().collection('Product').doc(x.productID)
         }
-        if(!stateDoc.exists){
+        if (!stateDoc.exists) {
           throw "Document does not exist!";
         }
 
         let state = stateDoc.data().count
-        var newState = parseInt(state)+1
-        
-        if(newState/10 < 1){
+        var newState = parseInt(state) + 1
+
+        if (newState / 10 < 1) {
           newState = newState.toString()
-          newState = '000'+newState
-        }else if(newState/100<1){
+          newState = '000' + newState
+        } else if (newState / 100 < 1) {
           newState = newState.toString()
-          newState = '00'+newState
-        }else if(newState/1000<1){
+          newState = '00' + newState
+        } else if (newState / 1000 < 1) {
           newState = newState.toString()
-          newState = '0'+newState
+          newState = '0' + newState
         }
-        else{
+        else {
           newState = newState.toString()
         }
-        transaction.update(stateRef, {count : newState})
-        
-        firebase.firestore().collection('Sell').doc("IN"+state)
-        .set(data)
-        .then(()=>{
-          success();
-        })
-        .catch((error)=>{
-          reject(error);
-        });
+        transaction.update(stateRef, { count: newState })
+
+        firebase.firestore().collection('Sell').doc("IN" + state)
+          .set(data)
+          .then(() => {
+            success();
+          })
+          .catch((error) => {
+            reject(error);
+          });
       })
     })
-    .then()
-    .catch((error)=>{
-      console.log(error)
-    });
+      .then()
+      .catch((error) => {
+        console.log(error)
+      });
   }
 
 
