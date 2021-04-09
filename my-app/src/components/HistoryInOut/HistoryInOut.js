@@ -167,6 +167,7 @@ class HistoryInOut extends React.Component {
             })
             a.then(doc=>{
                 console.log(doc)
+                
                 this.setState({dataSourceOUT:this.state.dataSourceOUT.concat(doc)});
             })
         });

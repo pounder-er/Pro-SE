@@ -35,6 +35,9 @@ class Stock extends React.Component {
             date: new Date,
             // input: "",
             checkList: [],
+            checkCount: 0,
+            chechCountChange: 0,
+            noSelect : []
         }
 
         firestore.getTaskStock(this.task, this.reject, this.props.userProfile.email)
@@ -42,7 +45,7 @@ class Stock extends React.Component {
     }
 
     success = (doc) => {
-        console.log("in herre")
+        // console.log("in herre")
         doc.forEach(doc => {
             if (doc.id != "state") {
                 let array = doc.data()
@@ -52,11 +55,16 @@ class Stock extends React.Component {
                 array.damage = 0
                 array.report = ''
 
+                array.statChechk = false
+
                 // console.log(array)
 
                 this.setState({ checkList: this.state.checkList.concat(array) })
             }
         })
+
+        this.setState({ checkCount: this.state.checkList.length })
+        // console.log(this.state.checkCount)
     }
 
     task = (doc) => {
@@ -80,13 +88,25 @@ class Stock extends React.Component {
         // let day = new Date
         // console.log(day.getDate()+"/"+(day.getMonth()+1)+"/"+day.getFullYear())
 
+        let array = []
+        for (let i = 0; i < this.state.checkList.length; i++) {
+            if (this.state.checkList[i].statChechk == true) {
+                array.push(this.state.checkList[i])
+            }
+        }
+        // console.log(array)
         if (this.state.checkList.length > 0)
-            firestore.sendTask(this.state.checkList, this.props.userProfile, this.taskEnd)
-        // this.setState({ input: "3" })
+            firestore.sendTask(array, this.props.userProfile, this.taskEnd)
     }
 
-    taskEnd = (doc) => {
+    // success
 
+    taskEnd = (doc) => {
+        // console.log(doc)
+        doc.forEach(doc => {
+            console.log(doc.data())
+        })
+        
         this.setState({ checkList: [] })
         // console.log(this.state.checkList)
         swal("บันทึกเสร็จสิ้น", "กด OK เพื่อออก", "success");
@@ -94,15 +114,42 @@ class Stock extends React.Component {
 
     }
 
+    onCheckChange = (event, numOrder) => {
+        // console.log(numOrder)
+        if (event.target.checked == true) {
+
+            this.setState({ checkCount: (this.state.checkCount -= 1) })
+            
+            for (let i = 0; i < this.state.checkList.length; i++) {
+                if (this.state.checkList[i].id === numOrder) {
+                    this.state.checkList[i].statChechk = true
+                    break
+                }
+            }
+        }
+        else {
+            this.setState({ checkCount: (this.state.checkCount += 1) })
+
+            for (let i = 0; i < this.state.checkList.length; i++) {
+                if (this.state.checkList[i].id === numOrder) {
+                    this.state.checkList[i].statChechk = false
+                    break
+                }
+            }
+
+        }
+        console.log(this.state.checkList)
+    }
+
     //----------------------------- GetTextFunction from Input -----------------------------
 
     handleChangeText = (text, numOrder, type) => {
 
-        // console.log(numOrder)
+        console.log(numOrder)
 
         if (type == "balance") {
             for (let i = 0; i < this.state.checkList.length; i++) {
-                if (this.state.checkList[i].productID === numOrder) {
+                if (this.state.checkList[i].id === numOrder) {
 
                     let num = parseInt(text.target.value, 10)
                     // console.log(typeof(num))
@@ -123,7 +170,7 @@ class Stock extends React.Component {
         }
         else if (type == "damage") {
             for (let i = 0; i < this.state.checkList.length; i++) {
-                if (this.state.checkList[i].productID === numOrder) {
+                if (this.state.checkList[i].id === numOrder) {
 
                     let num = parseInt(text.target.value, 10)
 
@@ -139,7 +186,7 @@ class Stock extends React.Component {
         }
         else if (type == "report") {
             for (let i = 0; i < this.state.checkList.length; i++) {
-                if (this.state.checkList[i].productID === numOrder) {
+                if (this.state.checkList[i].id === numOrder) {
                     this.state.checkList[i].report = text.target.value
                     break
                 }
@@ -152,6 +199,7 @@ class Stock extends React.Component {
         let i = 0
         const listItems = this.state.checkList.map((data) => {
             i++
+            // console.log(data.id)
             return (
                 <tr>
                     <th scope="row">{i}</th>
@@ -160,19 +208,24 @@ class Stock extends React.Component {
 
                     <td>
                         <InputGroup>
-                            <Input onChange={text => this.handleChangeText(text, data.productID, "balance")} />
+                            <Input onChange={text => this.handleChangeText(text, data.id, "balance")} />
                         </InputGroup>
                     </td>
 
                     <td>
                         <InputGroup>
-                            <Input onChange={text => this.handleChangeText(text, data.productID, "damage")} />
+                            <Input onChange={text => this.handleChangeText(text, data.id, "damage")} />
                         </InputGroup>
                     </td>
 
                     <td>
                         <InputGroup>
-                            <Input onChange={text => this.handleChangeText(text, data.productID, "report")} />
+                            <Input onChange={text => this.handleChangeText(text, data.id, "report")} />
+                        </InputGroup>
+                    </td>
+                    <td>
+                        <InputGroup>
+                            <Input addon type="checkbox" style={{ width: 20, height: 20 }} onChange={(event) =>(this.onCheckChange(event, data.id))} />
                         </InputGroup>
                     </td>
                 </tr>
