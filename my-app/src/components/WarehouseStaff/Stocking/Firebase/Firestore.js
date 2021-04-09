@@ -152,35 +152,6 @@ class Firestore {
             this.updateTotalPruduct(data.productID.id,data.volume)
         })
 
-        let docID = firebase.firestore.FieldPath.documentId()
-        // firebase.firestore().collection('Product').where(docID, "==", )
-
-        // log.forEach((data) => {
-        //     // console.log(data.productID.id)
-        //     firebase.firestore().collection(data.productID.parent.id).doc(data.productID.id).get()
-        //         .then(function (querySnapshot) {
-        //             // console.log(querySnapshot.data())
-        //             firebase.firestore().collection('Pro').doc(idPO).update({
-        //                 status: "เสร็จสิ้น",
-        //                 log: log
-        //             })
-        //                 .then(() => {
-        //                     console.log("Document successfully updated!");
-        //                 })
-        //                 .catch((error) => {
-        //                     // The document probably doesn't exist.
-        //                     console.error("Error updating document: ", error);
-        //                 });
-
-        //         })
-        //         .catch(function (error) {
-        //             console.error(error);
-        //         });
-
-        // })
-
-        // let docID = firebase.firestore.FieldPath.documentId()
-
         firebase.firestore().collection("ImportOrder").doc(idPO).delete()
         .then(function (querySnapshot) {
             taskDel(querySnapshot)
