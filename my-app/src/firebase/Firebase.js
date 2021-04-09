@@ -99,6 +99,18 @@ class Firebase {
   }
   getAllProduct = (success, reject) => {
     firebase.firestore().collection('Product')
+    // .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
+    .where("productStatus", '!=', "ยกเลิก")
+      .get()
+      .then(querySnapshot => {
+        success(querySnapshot);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  }
+  getAllProduct2 = (success, reject) => {
+    firebase.firestore().collection('Product')
     .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
       .get()
       .then(querySnapshot => {
@@ -108,7 +120,6 @@ class Firebase {
         reject(error);
       })
   }
-
  
   getAllProductType = (success, reject) => {
     firebase.firestore().collection('ProductType')

@@ -89,7 +89,7 @@ class ProductReport extends React.Component {
     setDataGridRef = (ref) => (this.dataGrid = ref)
 
     async componentDidMount() {
-        await fire_base.getAllProduct(this.getAllProductSuccess, this.unSuccess);
+        await fire_base.getAllProduct2(this.getAllProductSuccess, this.unSuccess);
     }
 
     getAllProductSuccess = (querySnapshot) => {
@@ -98,16 +98,25 @@ class ProductReport extends React.Component {
             if (doc.id != 'state') {
 
                 let d = doc.data();
-                if(d.productTotal <= d.cal.R && d.productTotal >= d.cal.R*(50/100)){
-                    d.productStatus ="ใกล้หมด"
-                    // fire_base.updateProduct11(d.id,,this.updateProductSuccess, this.unSuccess);
+                if(d.productStatus != 'ยกเลิก'){
+                    if(d.productTotal <= d.cal.R && d.productTotal >= d.cal.R*(50/100)){
+                        d.productStatus ="ใกล้หมด"
+                        // fire_base.updateProduct11(d.id,,this.updateProductSuccess, this.unSuccess);
+                    }
+                    else if(d.productTotal > d.cal.R && d.productTotal <= d.cal.R*(150/100)){
+                        d.productStatus ="ปกติ"
+                    }
+                    else if(d.productTotal > d.cal.R*(150/100)){
+                        d.productStatus ="ล้นคลัง"
+                    }
+                    else if(d.productTotal < d.cal.R*(50/100) && d.productTotal > 0){
+                        d.productStatus ="ของขาด"
+                    }
+                    else{
+                        d.productStatus ="หมด"
+                    }
                 }
-                else if(d.productTotal > d.cal.R && d.productTotal <= d.cal.R*(150/100)){
-                    d.productStatus ="ใกล้หมด"
-                }
-                else if(d.productTotal > d.cal.R*(150/100)){
-                    d.productStatus ="ล้นคลัง"
-                }
+                
                 d.idp = doc.id;
                 if(d.idp[1]=='1'){
                     d.newOld = 'ใหม่'
