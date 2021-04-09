@@ -260,7 +260,7 @@ class DashBoard extends React.Component {
         this.setState({pineChartData : temp_pineChartData})
     }
 
-    getProductTypeSuccess=(q)=>{
+    getProductTypeSuccess=async(q)=>{
         let tempLabels = []
         let tempProductTypeID =[]
         q.forEach(doc => {
@@ -273,7 +273,7 @@ class DashBoard extends React.Component {
         temp_pineChartData.labels = tempLabels;
         this.setState({pineChartData : temp_pineChartData})
         this.setState({productTypeID : tempProductTypeID})
-        fire_base.getAllProduct(this.getProductSuccess, this.reject);
+        await fire_base.getAllProduct(this.getProductSuccess, this.reject);
 
     }
 
