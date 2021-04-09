@@ -190,7 +190,7 @@ class PartnerList extends React.PureComponent {
                                     height:45, 
                                     marginBottom:10}}>เพิ่มบริษัทคู่ค้า</Button>
                     {/* <Button color="success" 
-                            onClick={()=>{firestore.addVender()}}
+                            onClick={()=>{firestore.getCountSaleOrderComplete()}}
                             style={{width:'10%', 
                                     height:45, 
                                     marginBottom:10}}>Test</Button>                 */}
