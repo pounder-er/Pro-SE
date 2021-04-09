@@ -84,12 +84,22 @@ class AddProduct extends Component {
         this.hiddenFileInputRef = React.createRef();
         this.id = '';
 
+        fire_base.getAllProductType(this.getProductTypeSuccess, this.unSuccess);
+        fire_base.getAllCompany(this.getCompanySuccess, this.unSuccess);
+        setTimeout(
+            ()=>console.log(),
+            2000
+        );
+
+
     }
 
-    async componentDidMount() {
-        await fire_base.getAllProductType(this.getProductTypeSuccess, this.unSuccess);
-        await fire_base.getAllCompany(this.getCompanySuccess, this.unSuccess)
-    }
+    
+
+    // async componentDidMount() {
+    //     await fire_base.getAllProductType(this.getProductTypeSuccess, this.unSuccess);
+    //     await fire_base.getAllCompany(this.getCompanySuccess, this.unSuccess)
+    // }
 
     getCompanySuccess = (querySnapshot) => {
         let element = [];
@@ -107,7 +117,9 @@ class AddProduct extends Component {
             let e = <option key={doc.id} value={doc.id}>{doc.data().name}</option>
             element.push(e);
         })
-        this.setState({ elementProductType: element });
+        this.setState({ elementProductType: element })
+        
+        // this.setState({ elementProductType: element })
         console.log(element);
     }
 
