@@ -49,7 +49,6 @@ const formEmployeeSchema = Yup.object().shape({
 })
 
 
-
 class EditCalculate extends React.Component {
     constructor(props) {
         super(props);
@@ -59,9 +58,9 @@ class EditCalculate extends React.Component {
         }
         this.loading = false;
         this.cal = null;
-    
+
     }
-    
+
     updateCalSuccess = () => {
         this.setState({ loading: false });
         console.log("update success");
@@ -97,7 +96,7 @@ class EditCalculate extends React.Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col >EOQ   =   SQR(2DO / UC)</Col>
+                    <Col >ปริมาณการสั่งซื้อที่ประหยัด EOQ = SQR(2DO / UC)</Col>
                 </Row>
                 <Row>
                     <Col >D ความต้องการสินค้าในเวลา 1 ปี</Col>
@@ -111,18 +110,28 @@ class EditCalculate extends React.Component {
                 <Row>
                     <Col >C ค่าใช้จ่ายในการเก็บรักษาสินค้าคิดเป็น % ของมูลค่าสินค้าทั้งปี</Col>
                 </Row>
+                <Row style={{ marginTop: '20px' }}>
+                    <Col >จุดสั่งซื้อใหม่ R = d x L</Col>
+                </Row>
+                <Row>
+                    <Col >d อัตราความต้องการสินค้าคงคลัง ต่อ ปี</Col>
+                </Row>
+                <Row>
+                    <Col >L เวลารอคอย ในการสั่งสินค้า 1 ครั้ง</Col>
+                </Row>
                 <Formik
                     validationSchema={formEmployeeSchema}
                     onSubmit={async (values) => {
                         this.setState({ loading: true });
+                        values.R = values.L * values.d
+                        values.EOQ = this.props.product.sum
                         this.cal = values
                         console.log(this.cal);
-                        await fire_base.updateCal(this.props.product.productID,{cal:this.cal}, this.updateCalSuccess, this.unSuccess);
+                        await fire_base.updateCal(this.props.product.productID, { cal: this.cal }, this.updateCalSuccess, this.unSuccess);
 
-                        
+
                     }
                     }
-
 
                     initialValues={{
                         D: this.props.product.cal.D,
@@ -130,7 +139,8 @@ class EditCalculate extends React.Component {
                         U: this.props.product.cal.U,
                         C: this.props.product.cal.C,
                         L: this.props.product.cal.L,
-                        d: this.props.product.cal.d
+                        d: this.props.product.cal.d,
+                        R: ''
                     }}
                 >
                     {({
@@ -150,7 +160,7 @@ class EditCalculate extends React.Component {
                             text='กำลังเพิ่มพนักงาน...'
                         >
                             <Form onSubmit={handleSubmit} onReset={(e) => { e.preventDefault(); handleReset(e); }}>
-                                <Row form style={{ marginTop: '30px' }}>
+                                <Row form style={{ marginTop: '20px' }}>
                                     <Col style={{ backgroundColor: 'wheat' }}>
                                         <FormGroup>
                                             <Label for="D">D :</Label>
@@ -208,7 +218,7 @@ class EditCalculate extends React.Component {
                                                 placeholder="C"
 
                                                 onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/); handleChange(e); }}
-                                                value = {values.C}
+                                                value={values.C}
                                             />
                                         </FormGroup>
                                     </Col>
@@ -240,9 +250,19 @@ class EditCalculate extends React.Component {
                                                 placeholder="d"
 
                                                 onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9,.]/); handleChange(e); }}
-                                                value = {values.d}
+                                                value={values.d}
                                             />
                                         </FormGroup>
+                                    </Col>
+                                </Row>
+                                <Row form style={{ marginTop: '20px' }}>
+                                    <Col >
+                                        R: {this.props.product.cal.R} ถุง
+                                    </Col>
+                                    <Col >
+                                        EOQ: {this.props.product.sum} ถุง
+                                    </Col>
+                                    <Col >
                                     </Col>
                                 </Row>
                                 <Row form>
@@ -269,7 +289,7 @@ class EditCalculate extends React.Component {
 
 EditCalculate.propTypes = {
     product: PropTypes.object,
-    closeTogle:PropTypes.func
+    closeTogle: PropTypes.func
 };
 
 export default EditCalculate;

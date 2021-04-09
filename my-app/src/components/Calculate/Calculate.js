@@ -1,6 +1,6 @@
 import React from 'react';
 import fire_base from '../../firebase/Firebase';
-
+import PropTypes from 'prop-types';
 import {
     Button,
     InputGroup,
@@ -31,6 +31,9 @@ import { IoMdTrash } from "react-icons/io";
 
 import * as Yup from 'yup';
 import EditCalculate from './EditCalculate';
+
+import ProductsReport from '../ProductsReport/ProductReport';
+
 
 const filterValue = [
     { name: 'date', operator: 'startsWith', type: 'string', value: '' },
@@ -126,6 +129,7 @@ class Calculate extends React.Component {
                 console.log('3')
             }
             this.setState({ dataSource: [...data] });
+            
         })
        
 
@@ -170,6 +174,8 @@ class Calculate extends React.Component {
         );
     }
 }
-
+Calculate.propTypes = {
+    product: PropTypes.object,
+};
 
 export default Calculate;

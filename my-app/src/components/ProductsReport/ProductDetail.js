@@ -16,6 +16,8 @@ import {
     PaginationLink, Row, Col, Container, Modal,
     ModalHeader,
     ModalBody,
+    CardBody,
+  Card,
 } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AiFillFileText } from "react-icons/ai";
@@ -34,6 +36,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import BuyDetail from '../Buy/BuyDetail';
+
 
 const filterValue = [
     { name: 'ID', operator: 'startsWith', type: 'string', value: '' },
@@ -170,15 +173,22 @@ class ProductDetail extends React.Component {
 
     render() {
         return (
-            <Container fluid={true} style={{ backgroundColor: 'wheat' }} >
+            <div>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModalmodal} backdrop='static' size='lg' >
                     <ModalHeader toggle={this.toggleModalmodal}>รายละเอียดการคำนวน</ModalHeader>
                     <ModalBody>
                         <BuyDetail profile={this.product} />
                     </ModalBody>
                 </Modal>
+                <Card >
+                    <CardBody>
+                    <EditProduct product={this.props.product} />
+
+                    </CardBody>
+                </Card>
+            
                 
-                <EditProduct product={this.props.product} />
+                
                 
                 {/* <Row >
                     <Col >
@@ -215,8 +225,9 @@ class ProductDetail extends React.Component {
                         </Row>
                     </Col>
                 </Row> */}
-                
-                <Row style={{ marginTop: '20px' }}>
+                <Card style={{marginTop:15}} >
+                    <CardBody>
+                    
                     <ReactDataGrid alignSelf='center'
                         onReady={this.setDataGridRef}
                         i18n={i18n}
@@ -232,9 +243,15 @@ class ProductDetail extends React.Component {
                         emptyText="ไม่มีรายการ"
                         style={{ minHeight: 550 }}
                     />
-                </Row>
+               
 
-            </Container>
+                    </CardBody>
+
+                </Card>
+                
+                
+
+            </div>
         );
     }
 }

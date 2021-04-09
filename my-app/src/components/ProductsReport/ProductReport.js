@@ -33,6 +33,7 @@ import * as Yup from 'yup';
 
 import { Link } from 'react-router-dom';
 import ProductDetail from './ProductDetail';
+import Calculate from '../Calculate/Calculate';
 
 const filterValue = [
     { name: 'ID', operator: 'startsWith', type: 'string', value: '' },
@@ -96,7 +97,11 @@ class ProductReport extends React.Component {
             if (doc.id != 'state') {
 
                 let d = doc.data();
-
+                if(d.productTotal < d.cal.R){
+                    console.log(123456789)
+                    d.productStatus ="ใกล้หมด"
+                    // fire_base.updateProduct11(d.id,,this.updateProductSuccess, this.unSuccess);
+                }
                 d.idp = doc.id;
                 if(d.idp[1]=='1'){
                     d.newOld = 'ใหม่'
@@ -122,11 +127,18 @@ class ProductReport extends React.Component {
         console.log(error);
     }
 
+    updateProductSuccess = () => {
+        // this.setState({ loading: false });
+        console.log("update success");
+        // this.sweetAlret("เสร็จสิ้น", "แก้ไขข้อมูลเรียบรอยแล้ว", "success", "ตกลง");
+        // this.props.closeTogle();
+    }
     render() {
+        console.log(this.props.product)
         return (
             <Container fluid={true} style={{ backgroundColor: 'wheat' }} >
                 <Modal isOpen={this.state.modal} toggle={this.toggleModalmodal} backdrop='static' size='lg' >
-                    <ModalHeader toggle={this.toggleModalmodal}>รายละเอียดการคำนวน</ModalHeader>
+                    <ModalHeader toggle={this.toggleModalmodal}>รายละเอียดสินค้า</ModalHeader>
                     <ModalBody>
                         <ProductDetail product={this.product}/>
                     </ModalBody>
@@ -153,6 +165,9 @@ class ProductReport extends React.Component {
         );
     }
 }
+ProductReport.propTypes = {
+    product: PropTypes.object,
 
+};
 
 export default ProductReport;
