@@ -49,12 +49,10 @@ const fromProductSchema = Yup.object().shape({
     productDetail: Yup.string(),
     productTotal: Yup.number().required('กรุณาระบุข้อมูล'),
     productStatus: Yup.string()
-    .required('กรุณาระบุข้อมูล'),
+        .required('กรุณาระบุข้อมูล'),
     image: Yup.string(),
-    
-    
-    
-    
+
+
 })
 
 const resizeImageFile = (file) => new Promise(resolve => {
@@ -79,39 +77,12 @@ class EditProduct extends Component {
             loading: false,
             resizeImageUrl: '',
 
-
-            elementProductType: [],
-            elementPartnerCompany: []
         }
         this.product = null;
         this.hiddenFileInputRef = React.createRef();
 
     }
 
-    async componentDidMount() {
-        // await fire_base.getAllProductType(this.getProductTypeSuccess, this.unSuccess);
-        // await fire_base.getAllCompany(this.getCompanySuccess, this.unSuccess)
-    }
-
-    // getCompanySuccess = (querySnapshot) => {
-    //     let element = [];
-    //     querySnapshot.forEach((doc) => {
-    //         let e = <option key={doc.id} value={doc.id}>{doc.id + ' : ' + doc.data().companyName}</option>
-    //         element.push(e);
-    //     })
-    //     this.setState({ elementPartnerCompany: element });
-    //     console.log(element);
-    // }
-
-    // getProductTypeSuccess = (querySnapshot) => {
-    //     let element = []
-    //     querySnapshot.forEach((doc) => {
-    //         let e = <option key={doc.id} value={doc.id}>{doc.data().name}</option>
-    //         element.push(e);
-    //     })
-    //     this.setState({ elementProductType: element });
-    //     console.log(element);
-    // }
 
     unSuccess = (error) => {
         console.log(error);
@@ -145,39 +116,23 @@ class EditProduct extends Component {
         })
     }
 
-    // addProductSuccess = async (id) => {
-    //     this.id = await id;
-    //     await fire_base.uploadImage('product/' + id, this.product.image, this.uploadImageSuccess, this.unSuccess);
-    // }
-
-    // uploadImageSuccess = async (url) => {
-    //     await fire_base.updateProduct(this.id, { image: url }, this.updateProductSuccess, this.unSuccess);
-    // }
-
-    // updateProductSuccess = () => {
-    //     this.sweetAlret('สำเร็จ', 'เพิ่มสินค้าเรียบร้อยแล้ว ไอเหี้ยยย', 'success', 'ตกลง');
-    //     this.setState({ loading: false });
-    //     console.log('add product success');
-    // }
-
-    uploadImageSuccess=(url)=>{
-        if(url){
-            this.product.image = url;
-            fire_base.updateProduct([this.props.product.idp[0], this.props.product.idp.slice(2)].join(''),this.product,this.updateProductSuccess,this.unSuccess);
-        }else{
-            delete this.product.image
-            fire_base.updateProduct([this.props.product.idp[0], this.props.product.idp.slice(2)].join(''),this.product,this.updateProductSuccess,this.unSuccess);
-        }
-    }
-
-    updateProductSuccess=()=>{
+    updateProductSuccess = () => {
+        this.sweetAlret('สำเร็จ', 'แก้ไขสินค้าเรียบร้อยแล้ว ไอเหี้ยยย', 'success', 'ตกลง');
+        this.setState({ loading: false });
         console.log('edit success');
     }
 
+    uploadImageSuccess = async(url) => {
+        if (url) {
+            this.product.image = url;
+        } else {
+            delete this.product.image;
+        }
+        await fire_base.updateProduct(this.props.product.idp, this.product, this.updateProductSuccess, this.unSuccess);
+    }
 
 
     render() {
-        console.log(typeof 1);
         return (
             <LoadingOverlay
                 active={this.state.loading}
@@ -187,19 +142,15 @@ class EditProduct extends Component {
 
                 <Formik
                     validationSchema={fromProductSchema}
-                    onSubmit={async (values, { resetForm }) => {
+                    onSubmit={async(values, { resetForm }) => {
                         this.product = values;
-                        // await this.setState({ loading: true });
-                        if(values.imageProfile){
-                            
-                            await fire_base.uploadImage('product/'+[this.props.product.idp[0], this.props.product.idp.slice(2)].join(''), values.imageProfile, this.uploadImageSuccess, this.unSuccess);
-                        }else{
+                        this.setState({loading:true});
+                        if (values.image) {
+
+                            await fire_base.uploadImage('product/' + [this.props.product.idp[0], this.props.product.idp.slice(2)].join(''), values.image, this.uploadImageSuccess, this.unSuccess);
+                        } else {
                             await this.uploadImageSuccess('');
                         }
-                        // await fire_base.addProduct(values, this.addProductSuccess, this.unSuccess);
-                        //resetForm();
-
-                        console.log(values)
                     }}
                     initialValues={{
                         image: '',
@@ -207,11 +158,10 @@ class EditProduct extends Component {
                         productPrice: this.props.product.productPrice,
                         productDetail: this.props.product.productDetail,
                         productTotal: this.props.product.productTotal,
-                        productStatus: this.props.product.productStatus
+                        productStatus: this.props.product.productStatus,
                     }}
                 >
                     {({
-                        checked,
                         handleSubmit,
                         handleChange,
                         handleBlur,
@@ -222,6 +172,7 @@ class EditProduct extends Component {
                         isValid,
                         errors,
                     }) => (
+                        
                         <Form onSubmit={handleSubmit} onReset={(e) => { e.preventDefault(); this.setDefaultImageCrop(); handleReset(e); }} >
                             <Modal isOpen={this.state.ModalImage} toggle={this.toggleModalImage} backdrop='static' >
                                 <ModalHeader >เลือก/แก้ไข รูปสินค้า</ModalHeader>
@@ -318,25 +269,25 @@ class EditProduct extends Component {
                                     <FormGroup style={{ display: 'flex', justifyContent: 'center' }} >
                                         <Button
                                             onClick={this.toggleModalImage}
-                                            style={{ height: 180, width: 180, borderRadius: 100, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                                    {this.props.product.image && (
-                            <img src={this.props.product.image} style={{ height: 180, width: 180, borderRadius: 100 }} />
-                          )}
-                          {values.image && (
-                            <img src={this.state.resizeImageUrl} style={{ height: 180, width: 180, borderRadius: 100 }} />
-                          )}
-                          {!values.image && !this.props.product.image && (
-                            <div>
-                              <BsImage size={65} />
-                              <h6>คลิกเพื่อเพิ่มรูป</h6>
-                            </div>
-                          )
+                                            style={{ height: 150, width: 150, borderRadius: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                            {this.props.product.image && !values.image && (
+                                                <img src={this.props.product.image} style={{ height: 150, width: 150, borderRadius:10 }} />
+                                            )}
+                                            {values.image && (
+                                                <img src={this.state.resizeImageUrl} style={{ height: 150, width: 150, borderRadius: 10 }} />
+                                            )}
+                                            {!values.image && !this.props.product.image && (
+                                                <div>
+                                                    <BsImage size={65} />
+                                                    <h6>คลิกเพื่อเพิ่มรูป</h6>
+                                                </div>
+                                            )
 
-                          }
+                                            }
 
 
 
-{/* 
+                                            {/* 
                                             {values.image && (
                                                 <img src={this.state.resizeImageUrl} style={{ height: 180, width: 180, borderRadius: 100 }} />
                                             )}
@@ -353,15 +304,14 @@ class EditProduct extends Component {
                                 </Col>
                                 <Col md={9} >
                                     <Row>
-                                    <Col md={6}>
+                                        <Col md={6}>
                                             <FormGroup>
-                                                <Label for="productID">รหัสสินค้า</Label>
+                                                <Label >รหัสสินค้า</Label>
                                                 <Input
                                                     readOnly
-                                                    maxLength={40}
                                                     type="text"
-                                                    name="productID"
-                                                    id="productID"
+                                                    // name="productID"
+                                                    // id="productID"
                                                     value={this.props.product.idp}
                                                 />
                                             </FormGroup>
@@ -370,7 +320,6 @@ class EditProduct extends Component {
                                             <FormGroup>
                                                 <Label for="productName">ชื่อสินค้า</Label>
                                                 <Input
-                                                    maxLength={40}
                                                     type="text"
                                                     name="productName"
                                                     id="productName"
@@ -385,33 +334,33 @@ class EditProduct extends Component {
                                         </Col>
                                         <Col md={6}>
                                             <FormGroup>
-                                                <Label for="productType">ชนิด</Label>
+                                                <Label >ชนิด</Label>
                                                 <Input
-                                                readOnly
-                                                    type="text"
-                                                    name="productType"
-                                                    id="productType"
+                                                    readOnly
+                                                    // type="text"
+                                                    // name="productType"
+                                                    // id="productType"
                                                     // onChange={handleChange}
                                                     // onBlur={handleBlur}
                                                     value={this.props.product.productType}
-                                                    // invalid={errors.productType && touched.productType}
+                                                // invalid={errors.productType && touched.productType}
                                                 />
                                                 {/* <FormFeedback >*{errors.productType}</FormFeedback> */}
                                             </FormGroup>
                                         </Col>
                                         <Col md={6}>
                                             <FormGroup >
-                                                <Label for="productWeight">น้ำหนัก</Label>
+                                                <Label >น้ำหนัก</Label>
                                                 <Input
-                                                readOnly
+                                                    readOnly
                                                     // maxLength={10}
-                                                    type="text"
-                                                    name="productWeight"
-                                                    id="productWeight"
+                                                    // type="text"
+                                                    // name="productWeight"
+                                                    // id="productWeight"
                                                     // onChange={handleChange}
                                                     // onBlur={handleBlur}
                                                     value={this.props.product.productWeight}
-                                                    // invalid={errors.productWeight && touched.productWeight}
+                                                // invalid={errors.productWeight && touched.productWeight}
                                                 />
                                             </FormGroup>
 
@@ -468,32 +417,32 @@ class EditProduct extends Component {
                                         </Col>
                                         <Col md={6} >
                                             <FormGroup>
-                                                <Label for="newOld">ใหม่/เก่า</Label>
+                                                <Label >ใหม่/เก่า</Label>
                                                 <Input
                                                     readOnly
-                                                    type="text"
-                                                    name="newOld"
-                                                    id="newOld"
+                                                    // type="text"
+                                                    // name="newOld"
+                                                    // id="newOld"
                                                     // onChange={handleChange}
                                                     // onBlur={handleBlur}
                                                     value={this.props.product.newOld}
-                                                    // invalid={errors.companyID && touched.companyID}
+                                                // invalid={errors.companyID && touched.companyID}
                                                 />
                                                 {/* <FormFeedback >*{errors.companyID}</FormFeedback> */}
                                             </FormGroup>
                                         </Col>
                                         <Col md={6} >
                                             <FormGroup>
-                                                <Label for="companyID">บริษัท</Label>
+                                                <Label >บริษัท</Label>
                                                 <Input
                                                     readOnly
                                                     type="text"
-                                                    name="companyID"
-                                                    id="companyID"
+                                                    // name="companyID"
+                                                    // id="companyID"
                                                     // onChange={handleChange}
                                                     // onBlur={handleBlur}
                                                     value={this.props.product.companyName}
-                                                    // invalid={errors.companyID && touched.companyID}
+                                                // invalid={errors.companyID && touched.companyID}
                                                 />
                                                 {/* <FormFeedback >*{errors.companyID}</FormFeedback> */}
                                             </FormGroup>
@@ -501,17 +450,17 @@ class EditProduct extends Component {
                                         <Col md={6} />
                                         <Col>
                                             <FormGroup>
-                                                <Label for="detail">รายละเอียด</Label>
+                                                <Label for="productDetail">รายละเอียด</Label>
                                                 <Input
                                                     type="textarea"
-                                                    name="detail"
-                                                    id="detail"
+                                                    name="productDetail"
+                                                    id="productDetail"
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
-                                                    value={values.detail}
-                                                    invalid={errors.detail && touched.detail}
+                                                    value={values.productDetail}
+                                                    invalid={errors.productDetail && touched.productDetail}
                                                 />
-                                                <FormFeedback >*{errors.detail}</FormFeedback>
+                                                <FormFeedback >*{errors.productDetail}</FormFeedback>
                                             </FormGroup>
                                         </Col>
                                     </Row>
@@ -544,7 +493,7 @@ class EditProduct extends Component {
 }
 
 EditProduct.propTypes = {
-    product:PropTypes.object,
+    product: PropTypes.object,
 };
 
 export default EditProduct;
