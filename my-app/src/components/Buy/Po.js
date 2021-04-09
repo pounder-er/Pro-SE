@@ -24,6 +24,7 @@ import {
 import { Formik, Field, ErrorMessage } from 'formik';
 
 import * as Yup from 'yup';
+import { connect } from 'react-redux';
 
 import AvatarEditor from 'react-avatar-editor';
 
@@ -136,6 +137,7 @@ class Po extends React.Component {
             log : this.state.log,
             status : 'รอใบเสนอราคา',
             companyID : this.companyID,
+            res : this.props.userProfile.firstName + " " +  this.props.userProfile.lastName
         }
         // let llog = []
         console.log(this.state.log)
@@ -198,7 +200,7 @@ class Po extends React.Component {
                         productID: '300000',
                         productPrice: '0',
                         companyID: '00',
-                        volume:1
+                        volume: 1
                     }}
                 >
                     {({
@@ -260,7 +262,6 @@ class Po extends React.Component {
                                             type="select"
                                             name="productID"
                                             id="productID"
-
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.productID}
@@ -286,37 +287,18 @@ class Po extends React.Component {
                                             onChange={(e) => { e.target.value = e.target.value.replace(/[^0-9]/, ''); handleChange(e); }}
                                             invalid={errors.volume && touched.volume}
                                         >
-                                            {/* {this.state.elementProduct} */}
                                         </Input>
                                         <FormFeedback >*{errors.volume}</FormFeedback>
                                     </FormGroup>
                                 </Col>
-                                {/* <Col>
-                                    <FormGroup>
-                                        <Label for="detail">รายละเอียด</Label>
-                                        <Input
-                                            type="textarea"
-                                            name="detail"
-                                            id="detail"
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            value={values.detail}
-                                            invalid={errors.detail && touched.detail}
-                                        />
-                                        <FormFeedback >*{errors.detail}</FormFeedback>
-                                    </FormGroup>
-                                </Col> */}
-                                {/* <Col md={8} /> */}
+                                
                                 
                                 <Col md={2} style={{ display: 'flex' }}>
                                     <FormGroup style={{ display: 'flex', flex: 1 }}>
                                         <Button type="submit" color="success" style={{ flex: 1,height :40, marginTop: '30px'  }}>บันทึก</Button>
                                     </FormGroup>
                                 </Col>
-                            </Row>
-                            
-                                
-                            
+                            </Row>   
                         </Form>
                         
 
@@ -329,8 +311,8 @@ class Po extends React.Component {
                         idProperty="id"
                         columns={columns}
                         pagination
-                        defaultLimit={15}
-                        defaultSkip={15}
+                        defaultLimit={10}
+                        defaultSkip={10}
                         pageSizes={[10, 15, 30]}
                         dataSource={this.state.log}
                         defaultFilterValue={filterValue}
@@ -379,6 +361,10 @@ class Po extends React.Component {
         );
     }
 }
-
-
-export default Po;
+const mapStateToProps = (state) => {
+    return {
+      session: state.session,
+      userProfile: state.userProfile
+    }
+}
+export default connect(mapStateToProps)(Po);
