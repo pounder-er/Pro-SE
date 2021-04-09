@@ -18,7 +18,7 @@ import {
     ModalBody,
 } from 'reactstrap';
 
-
+import SelectFilter from '@inovua/reactdatagrid-community/SelectFilter';
 import ReactDataGrid from '@inovua/reactdatagrid-community'
 import '@inovua/reactdatagrid-community/base.css'
 import '@inovua/reactdatagrid-community/theme/default-light.css'
@@ -64,7 +64,12 @@ class ProductReport extends React.Component {
             { name: 'productName', groupBy: false, defaultFlex: 2, header: 'รายการสินค้า' },
             { name: 'productType', groupBy: false, defaultFlex: 1, header: 'ชนิด' },
             { name: 'productWeight', groupBy: false, defaultFlex: 0.7, header: 'น้ำหนัก' },
-            { name: 'newOld', groupBy: false, defaultFlex: 1, header: 'เก่า/ใหม่' },
+            { name: 'newOld', groupBy: false, defaultFlex: 1,filterEditor: SelectFilter,
+            filterEditorProps: {
+                placeholder: 'ทั้งหมด',
+                dataSource: [{ id: 'เก่า', label: 'เก่า' },
+                { id: 'ใหม่', label: 'ใหม่' },]
+            }, header: 'เก่า/ใหม่' },
             { name: 'productPrice', groupBy: false, defaultFlex: 1.2, header: 'ราคาต่อหน่วย' },
             { name: 'productStatus', groupBy: false, defaultFlex: 0.7, header: 'สถานะ' },
             { name: 'productTotal', groupBy: false, defaultFlex: 1, header: 'ยอดคงเหลือ' },
@@ -99,20 +104,20 @@ class ProductReport extends React.Component {
             let d = change.doc.data();
             d.idp = change.doc.id
             if(d.productStatus != 'ยกเลิก'){
-                if(d.productTotal <= d.cal.R && d.productTotal >= d.cal.R*(50/100)){
+                if(d.productTotal <= d.cal.R && d.productTotal >= d.cal.R*(50/100) && d.productTotal != 0){
                     d.productStatus ="ใกล้หมด"
                     // fire_base.updateProduct11(d.id,,this.updateProductSuccess, this.unSuccess);
                 }
-                else if(d.productTotal > d.cal.R && d.productTotal <= d.cal.R*(150/100)){
+                else if(d.productTotal > d.cal.R && d.productTotal <= d.cal.R*(150/100) && d.productTotal != 0){
                     d.productStatus ="ปกติ"
                 }
-                else if(d.productTotal > d.cal.R*(150/100)){
+                else if(d.productTotal > d.cal.R*(150/100) && d.productTotal != 0){
                     d.productStatus ="ล้นคลัง"
                 }
-                else if(d.productTotal < d.cal.R*(50/100) && d.productTotal > 0){
+                else if(d.productTotal < d.cal.R*(50/100) && d.productTotal > 0 && d.productTotal != 0){
                     d.productStatus ="ของขาด"
                 }
-                else{
+                else if(d.productTotal == 0){
                     d.productStatus ="หมด"
                 }
             }
@@ -141,11 +146,9 @@ class ProductReport extends React.Component {
                 data[data.findIndex((obj => obj.idp == d.idp))] = d;
                 console.log('3')
             }
-            this.setState({ dataSource: [...data] });
             setTimeout(
-                ()=>this.setState({dataSource:data})
-                ,
-                500
+                ()=>this.setState({ dataSource: [...data] })
+                ,80
               );
         })
        
@@ -164,6 +167,7 @@ class ProductReport extends React.Component {
         // this.props.closeTogle();
     }
     render() {
+        
         console.log(this.props.product)
         return (
             <Container fluid={true} style={{ backgroundColor: 'wheat' }} >
