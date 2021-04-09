@@ -21,7 +21,7 @@ class Firestore {
         }
     }
 
-    getData = (success, reject, task) => {
+    getProduct = (success, reject, task) => {
         let docID = firebase.firestore.FieldPath.documentId()
         firebase.firestore().collection('Product').where(docID, "in", task).get()
             .then(function (querySnapshot) {
@@ -52,7 +52,7 @@ class Firestore {
             });
     }
 
-    sendTask = (task,profile) => {
+    sendTask = (task, profile, successDelete) => {
 
         let array = []
         task.forEach(task => {
@@ -64,33 +64,75 @@ class Firestore {
 
         let docID = firebase.firestore.FieldPath.documentId()
         let day = new Date()
+        let date = firebase.firestore.FieldValue.serverTimestamp()
 
         firebase.firestore().collection("HistoryStock").add({
             task: task,
             profile: {
-                firstName : profile.firstName,
-                lastName : profile.lastName,
-                date : day.getDate()+"/"+day.getMonth()+"/"+day.getFullYear()
+                firstName: profile.firstName,
+                lastName: profile.lastName,
+                date: date
             }
         })
-        .then(() => {
-            console.log("Document successfully written!");
-        })
-        .catch((error) => {
-            console.error("Error writing document: ", error);
-        });
+            .then(() => {
+                console.log("Document successfully written!");
+            })
+            .catch((error) => {
+                console.error("Error writing document: ", error);
+            });
 
-        // firebase.firestore().collection("TaskStock").where(docID, "in", array).get()
-        //     .then(function (querySnapshot) {
-        //         querySnapshot.forEach(function (doc) {
-        //             doc.ref.delete();
-        //         });
-        //         console.log("Document successfully deleted!");
-        //     }).catch(function (error) {
-        //         console.error("Error removing document: ", error);
-        //     });
+        firebase.firestore().collection("TaskStock").where(docID, "in", array).get()
+            .then(function (querySnapshot) {
+                successDelete(querySnapshot)
+                querySnapshot.forEach(function (doc) {
+                    doc.ref.delete();
+                });
+
+            }).catch(function (error) {
+                console.error("Error removing document: ", error);
+            });
     }
 
+    //-------------------------------- Pre Order Buying ---------------------------------//
+
+    getTaskBuy = (order, reject, email) => {
+        // console.log(email)
+        firebase.firestore().collection('ImportOrder').where("person", "==", email).get()
+            .then(function (querySnapshot) {
+                order(querySnapshot);
+            })
+            .catch(function (error) {
+                reject(error);
+            });
+    }
+
+    getPO = (success, reject, task) => {
+        // console.log("in getPO : " + task)
+        let docID = firebase.firestore.FieldPath.documentId()
+        firebase.firestore().collection('Buy').where(docID, "in", task).get()
+            .then(function (querySnapshot) {
+                success(querySnapshot);
+                // console.log("complete")
+            })
+            .catch(function (error) {
+                reject(error);
+            });
+
+    }
+
+    onSavePO =(idPO, log)=> {
+        firebase.firestore().collection('Buy').doc(idPO).update({
+            status: "เสร็จสิ้น",
+            log: log
+        })
+        .then(() => {
+            console.log("Document successfully updated!");
+        })
+        .catch((error) => {
+            // The document probably doesn't exist.
+            console.error("Error updating document: ", error);
+        });
+    }
 }
 
 const firestore = new Firestore()

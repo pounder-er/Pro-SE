@@ -22,7 +22,8 @@ import { addSession, addUserProfile } from '../../../redux/actions';
 
 // ------ Example object for collects of work form server ----- // 
 import checkList from './checkList.json'
-// ------------------------------------------------ // 
+
+// ------------------------------------------------------------ // 
 
 import firestore from './Firebase/Firestore'
 
@@ -36,14 +37,11 @@ class Stock extends React.Component {
             time: "",
             input: "",
             checkList: [],
-            // taskOrder: ["310000"]
         }
 
-        // let uid = ["310000", "300000"]
         firestore.getTaskStock(this.task, this.reject, this.props.userProfile.email)
 
     }
-
 
     success = (doc) => {
         console.log("in herre")
@@ -56,7 +54,7 @@ class Stock extends React.Component {
                 array.damage = 0
                 array.report = ''
 
-                // console.log(doc.data())
+                // console.log(array)
 
                 this.setState({ checkList: this.state.checkList.concat(array) })
             }
@@ -71,7 +69,7 @@ class Stock extends React.Component {
             array.push(id)
         })
 
-        firestore.getData(this.success, this.reject, array)
+        firestore.getProduct(this.success, this.reject, array)
         
     }
 
@@ -85,13 +83,21 @@ class Stock extends React.Component {
         // console.log(day.getDate()+"/"+(day.getMonth()+1)+"/"+day.getFullYear())
         
         if(this.state.checkList.length > 0)
-            firestore.sendTask(this.state.checkList,this.props.userProfile)
+            firestore.sendTask(this.state.checkList,this.props.userProfile,this.taskEnd)
+        // this.setState({ input: "3" })
+    }
+
+    taskEnd = (doc) =>{
+
+        this.setState({checkList:[]})
+        // console.log(this.state.checkList)
+        console.log("Document successfully deleted!");
+
     }
 
     //----------------------------- GetTextFunction from Input -----------------------------
 
     handleChangeText = (text, numOrder, type) => {
-        this.setState({ input: text.target.value })
 
         // console.log(numOrder)
 

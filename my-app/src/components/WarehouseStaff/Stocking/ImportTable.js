@@ -18,14 +18,17 @@ import 'react-pro-sidebar/dist/css/styles.css';
 
 import './Style/ImportTable.css';
 
+import firestore from './Firebase/Firestore'
+import swal from 'sweetalert';
+
 class ImportTable extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            lot: this.props.location.lot,
+            lot: this.props.location.id,
             channel: this.props.location.channel,
             importDetail: this.props.location.data,
-            checkCount: this.props.location.data.length
+            checkCount: this.props.location.data.length,
         }
         // console.log(this.state.importDetail)
     }
@@ -45,31 +48,51 @@ class ImportTable extends React.Component {
 
     onSaveOrder =()=>{
         if(this.state.checkCount == 0){
+            firestore.onSavePO(this.state.lot, this.state.importDetail)
+            swal("บันทึกเสร็จสิ้น", "กด OK เพื่อออก", "success");
+            this.props.history.goBack()
             console.log("Success")
+            
         }
         else if(this.state.checkCount != 0){
+            swal("ผิดพลาด", "กรุณาติ้กช่องยืนยันให้ครบ", "error");
             console.log("Unsuadadw ccess")
         }
     }
     
     handleChangeText = (text, numOrder, type) => {
 
-        if (type == "createDate") {
+        if (type == "arriveDate") {
+            console.log(typeof(text.target.value))
             for (let i = 0; i < this.state.importDetail.length; i++) {
-                if (this.state.importDetail[i].productID === numOrder) {
-                    this.state.importDetail[i].createDate = text.target.value
-                    console.log(this.state.importDetail[i].createDate)
-                    break
+                if (this.state.importDetail[i].productID.id === numOrder) {
+                    if(text.target.value == "f"){
+                        this.state.importDetail[i].arriveDate = this.state.importDetail[i].expireDate
+                        console.log(this.state.importDetail[i].arriveDate)
+                        break
+                    }
+                    else{
+                        this.state.importDetail[i].arriveDate = text.target.value
+                        console.log(this.state.importDetail[i].arriveDate)
+                        break
+                    }
                 }
 
             }
         }
         else if (type == "expireDate") {
             for (let i = 0; i < this.state.importDetail.length; i++) {
-                if (this.state.importDetail[i].productID === numOrder) {
-                    this.state.importDetail[i].expireDate = text.target.value
-                    console.log(this.state.importDetail[i].expireDate)
-                    break
+                if (this.state.importDetail[i].productID.id === numOrder) {
+                    if(text.target.value == "f"){
+                        this.state.importDetail[i].expireDate = this.state.importDetail[i].expireDate
+                        console.log(this.state.importDetail[i].expireDate)
+                        break
+                    }
+                    else{
+                        this.state.importDetail[i].expireDate = text.target.value
+                        console.log(this.state.importDetail[i].expireDate)
+                        break
+                    }
                 }
             }
         }
@@ -80,28 +103,28 @@ class ImportTable extends React.Component {
         let i = 0
         const listItems = this.state.importDetail.map((data) => {
             i++
+
             return (
 
                 <tr style={{ textAlign: 'center' }}>
                     <th scope="row">{i}</th>
-                    <td>{data.productID}</td>
-                    <td>{data.comName}</td>
+                    <td>{data.productID.id}</td>
                     <td>{data.productName}</td>
 
                     <td>
                         <InputGroup>
-                            <Input onChange={text => this.handleChangeText(text, data.productID, "createDate")}/>
+                            <Input onChange={text => this.handleChangeText(text, data.productID.id, "arriveDate")}/>
                         </InputGroup>
                     </td>
 
                     <td>
                         <InputGroup>
-                            <Input onChange={text => this.handleChangeText(text, data.productID, "expireDate")}/>
+                            <Input onChange={text => this.handleChangeText(text, data.productID.id, "expireDate")}/>
                         </InputGroup>
                     </td>
 
-                    <td>{data.productWeigth}</td>
-                    <td>{data.total}</td>
+                    <td>{data.productPrice}</td>
+                    <td>{data.volume}</td>
                     <td>
                         <InputGroup>
                             <Input addon type="checkbox" style={{ width: 20, height: 20 }} onChange = {this.onCheckChange}/>
@@ -129,11 +152,10 @@ class ImportTable extends React.Component {
                             <tr style={{ textAlign: 'center' }}>
                                 <th>ลำดับ</th>
                                 <th style={{ width: 100 }}>รหัสสินค้า</th>
-                                <th>ชื่อบริษัท</th>
                                 <th>ชื่อสินค้า</th>
                                 <th>วันผลิต</th>
                                 <th>วันหมดอายุ</th>
-                                <th style={{ width: 100 }}>น้ำหนัก</th>
+                                <th style={{ width: 100 }}>ราคา</th>
                                 <th>จำนวน</th>
                             </tr>
                         </thead>
