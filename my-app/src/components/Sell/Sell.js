@@ -5,9 +5,7 @@ import fire_base from '../../firebase/Firebase';
 import {
     Link,
 } from 'react-router-dom';
-import PDFInvoice from "../PDF/PDFInvoice";
-import PDFReceipt from "../PDF/PDFReceipt";
-import PDFPO from "../PDF/PDFPO";
+
 import { AiFillFileText } from "react-icons/ai";
 import {
     Button,
@@ -18,7 +16,6 @@ import {
     ModalHeader, 
     ModalBody, 
 } from 'reactstrap';
-import NewWindow from 'react-new-window'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import ReactDataGrid from '@inovua/reactdatagrid-community'
@@ -32,7 +29,6 @@ import moment from 'moment'
 
 import {i18n} from '../i18n';
 import SellDetail from './SellDetail';
-import { ThemeProvider } from 'styled-components';
 
 
 
@@ -55,7 +51,6 @@ class Sell extends React.PureComponent {
             searchText: '',
             dataSource: [],
             modalSellDetail: false,
-            data:''
         }
         this.profile = {};
         this.columns = [
@@ -143,14 +138,13 @@ class Sell extends React.PureComponent {
         // console.log(error);
     }
     render() {
-        
         return (
             
             <Container fluid={true} style={{ backgroundColor: 'while' }} >
                 <Modal  isOpen={this.state.modalSellDetail} toggle={this.toggleModalSellDetail} backdrop='static' size='lg' >
                 <ModalHeader toggle={this.toggleModalSellDetail}>รายละเอียดการขาย</ModalHeader>
                 <ModalBody>
-                <SellDetail data={this.data}/>
+                <SellDetail profile={this.profile} />
                 </ModalBody>
                 </Modal>
                 <Link to={this.props.match.url + "/so"}>

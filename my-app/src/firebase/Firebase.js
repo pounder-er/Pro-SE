@@ -382,9 +382,20 @@ class Firebase {
             .catch(error => {
                 reject(error);
             })
-
-
-
+    }
+    addImportOrder = (id,email, success, reject) => {
+        let batch = firebase.firestore().batch(),
+            ref = firebase.firestore().collection('ExportOrder');
+        
+            batch.set(ref.doc(id), { person: email });
+        
+        batch.commit()
+            .then(() => {
+                success();
+            })
+            .catch(error => {
+                reject(error);
+            })
     }
 
     addProduct = (product, success, reject) => {
