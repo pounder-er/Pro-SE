@@ -134,6 +134,18 @@ class Firebase {
       })
   }
 
+  getAllBranch = (success, reject) => {
+    firebase.firestore().collection('Branch')
+      .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
+      .get()
+      .then(querySnapshot => {
+        success(querySnapshot);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  }
+
   getAllSell = (success, reject) => {
     firebase.firestore().collection('Sell')
       .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
@@ -463,6 +475,54 @@ class Firebase {
       console.log(error)
     });
   }
+
+  addSO=(data, success, reject)=>{
+    data.dateCreate = firebase.firestore.FieldValue.serverTimestamp();
+    var stateRef = firebase.firestore().collection('Sell').doc('state')
+    return firebase.firestore().runTransaction((transaction)=>{
+      return transaction.get(stateRef).then((stateDoc)=>{
+        data.branchID  = firebase.firestore().collection('Branch').doc(data.branchID)
+        for(let x of data.log){
+          x.productID = firebase.firestore().collection('Product').doc(x.productID)
+        }
+        if(!stateDoc.exists){
+          throw "Document does not exist!";
+        }
+
+        let state = stateDoc.data().count
+        var newState = parseInt(state)+1
+        
+        if(newState/10 < 1){
+          newState = newState.toString()
+          newState = '000'+newState
+        }else if(newState/100<1){
+          newState = newState.toString()
+          newState = '00'+newState
+        }else if(newState/1000<1){
+          newState = newState.toString()
+          newState = '0'+newState
+        }
+        else{
+          newState = newState.toString()
+        }
+        transaction.update(stateRef, {count : newState})
+        
+        firebase.firestore().collection('Sell').doc("IN"+state)
+        .set(data)
+        .then(()=>{
+          success();
+        })
+        .catch((error)=>{
+          reject(error);
+        });
+      })
+    })
+    .then()
+    .catch((error)=>{
+      console.log(error)
+    });
+  }
+
 
 
 }

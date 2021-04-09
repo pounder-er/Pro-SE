@@ -56,21 +56,25 @@ class BuyDetail extends React.Component {
     
     componentDidMount() {
         //await fire_base.getAllSell(this.getAllSellSuccess, this.unSuccess);
-        
+        // console.log(this.props.profile)
         for(let x of this.props.profile.log){
-            x.productID.get()
-            // this.props.profile.InID = "00"
-            
+            x.productID.get()            
             .then(doc=>{
                 let d = doc.data();
                 d.productID = doc.id;
                 d.productPrice = x.productPrice
                 d.disCount = x.disCount
                 d.volume = x.volume
-                if(d.disCount && d.volume && d.productPrice)
+                console.log(d.disCount)
+                if(d.disCount != '-' && d.productPrice != '-')
+                {
+                    d.summary = (d.volume*d.productPrice)-d.disCount
+                    this.sum += d.summary
+                }
+                else
+                    d.summary = '-'
                 
-                    d.summary = d.volume*d.productPrice-d.disCount
-                this.sum += d.summary
+                
                 this.setState({dataSource:this.state.dataSource.concat(d)});
                 // console.log(this.state.dataSource)
             })
@@ -79,9 +83,14 @@ class BuyDetail extends React.Component {
     setDataGridRef = (ref) => (this.dataGrid = ref)
 
     render() {
-       
+        // console.log('1111111',this.props.profile)
         return (
             <Container fluid={false} style={{ backgroundColor: 'while'}} >
+                <Row style={{ height: 50 }}>
+                    <Col md = {8}>
+                        <Label>ผู้รับผิดชอบ: {this.props.profile.res}</Label>
+                    </Col>
+                </Row>   
                 <Row style={{ height: 50 }}>
                     <Col md = {4}>
                         <Label>หมายเลขใบแจ้งหนี้: {this.props.profile.InID}</Label>
@@ -100,7 +109,7 @@ class BuyDetail extends React.Component {
                         {!this.props.profile.datePay && <Label>วันที่ชำระเงิน: -</Label>}
                     </Col >
                     <Col >
-                        
+                    
                     </Col>
                 </Row>
                 <Row style={{ height: 50 }}>
@@ -148,13 +157,14 @@ class BuyDetail extends React.Component {
                         idProperty="id"
                         columns={columns}
                         pagination
-                        defaultLimit={15}
-                        defaultSkip={15}
-                        pageSizes={[10, 15, 30]}
+                        defaultLimit={10}
+                        defaultSkip={10}
+                        pageSizes={[10, 20, 30]}
                         dataSource={this.state.dataSource}
                         defaultFilterValue={filterValue}
                         showColumnMenuTool={true}
                         emptyText="ไม่มีรายการ"
+                        style={{ minHeight: 300 }}
                     />
                 </Row>
                 <Row style={{ marginTop: '20px' }}>

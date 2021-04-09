@@ -130,13 +130,14 @@ class Buy extends React.Component {
                         idProperty="id"
                         columns={this.columns}
                         pagination
-                        defaultLimit={15}
-                        defaultSkip={15}
-                        pageSizes={[10, 15, 30]}
+                        defaultLimit={10}
+                        defaultSkip={10}
+                        pageSizes={[10, 20, 30]}
                         dataSource={this.state.dataSource}
                         defaultFilterValue={filterValue}
                         showColumnMenuTool={true}
                         emptyText="ไม่มีรายการ"
+                        style={{ minHeight: 400 }}
                     />
                 </Row>
 

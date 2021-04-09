@@ -98,10 +98,15 @@ class ProductReport extends React.Component {
             if (doc.id != 'state') {
 
                 let d = doc.data();
-                if(d.productTotal < d.cal.R){
-                    console.log(123456789)
+                if(d.productTotal <= d.cal.R && d.productTotal >= d.cal.R*(50/100)){
                     d.productStatus ="ใกล้หมด"
                     // fire_base.updateProduct11(d.id,,this.updateProductSuccess, this.unSuccess);
+                }
+                else if(d.productTotal > d.cal.R && d.productTotal <= d.cal.R*(150/100)){
+                    d.productStatus ="ใกล้หมด"
+                }
+                else if(d.productTotal > d.cal.R*(150/100)){
+                    d.productStatus ="ล้นคลัง"
                 }
                 d.idp = doc.id;
                 if(d.idp[1]=='1'){

@@ -72,7 +72,7 @@ class Sell extends React.PureComponent {
             //  },
             { name: 'dateCreate', groupBy: false, defaultFlex: 1, header: 'วันที่สร้าง' },
             { name: 'dateIn', groupBy: false, defaultFlex: 1, header: 'วันที่สำเร็จการขาย' },
-            { name: 'Res', groupBy: false, defaultFlex: 1, header: 'ผู้รับผิดชอบ' },
+            { name: 'res', groupBy: false, defaultFlex: 1, header: 'ผู้รับผิดชอบ' },
             { name: 'status', groupBy: false, defaultFlex: 1, header: 'สถานะ' },
             { name: 'detail', groupBy: false, defaultFlex: 1, header: 'รายละเอียด' ,
             render: ({data})=>
@@ -101,10 +101,10 @@ class Sell extends React.PureComponent {
     getAllSellSuccess = async(querySnapshot) => {
         
         await querySnapshot.forEach((doc) => { 
-            let d = doc.data();
-            
+            let d = doc.data(); 
             d.InLog = d.log;
             d.InID = doc.id;
+            if( d.dateCreate)
             d.dateCreate = d.dateCreate.toDate().getDate()+"/"+(d.dateCreate.toDate().getMonth()+1)+"/"+d.dateCreate.toDate().getFullYear()
             if( d.dateIn)
                 d.dateIn = d.dateIn.toDate().getDate()+"/"+(d.dateIn.toDate().getMonth()+1)+"/"+d.dateIn.toDate().getFullYear()
@@ -125,7 +125,7 @@ class Sell extends React.PureComponent {
                 return d;
             })
             a.then(doc=>{
-                console.log(doc)
+                // console.log(doc)
                 this.setState({dataSource:this.state.dataSource.concat(doc)});
             })
             
@@ -135,7 +135,7 @@ class Sell extends React.PureComponent {
     }
 
     unSuccess(error) {
-        console.log(error);
+        // console.log(error);
     }
     render() {
         return (
@@ -157,13 +157,14 @@ class Sell extends React.PureComponent {
                         idProperty="id"
                         columns={this.columns}
                         pagination
-                        defaultLimit={15}
-                        defaultSkip={15}
-                        pageSizes={[10, 15, 30]}
+                        defaultLimit={10}
+                        defaultSkip={10}
+                        pageSizes={[10, 20, 30]}
                         dataSource={this.state.dataSource}
                         defaultFilterValue={filterValue}
                         showColumnMenuTool={true}
                         emptyText="ไม่มีรายการ"
+                        style={{ minHeight: 400 }}
                     />
                     </Row>
                
