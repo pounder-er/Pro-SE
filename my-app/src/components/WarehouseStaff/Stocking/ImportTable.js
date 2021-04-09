@@ -29,9 +29,15 @@ class ImportTable extends React.Component {
             channel: this.props.location.channel,
             importDetail: this.props.location.data,
             checkCount: this.props.location.data.length,
-            companyID: this.props.location.company
+            company: this.props.location.company,
+            companyName: ""
         }
-        console.log(this.state.conpanyID)
+        // console.log(this.state.company.id)
+        firestore.getCompanyNameByRef(this.state.company,this.getCompanyName)
+    }
+
+    getCompanyName =(name)=> {
+        this.setState({companyName: name.data().companyName})
     }
 
     onCheckChange =(event)=>{
@@ -151,7 +157,7 @@ class ImportTable extends React.Component {
                 <body className="ContentTable" style={{ border: '2px solid gray' }}>
 
                     <h1 style={{ width: '95%', alignSelf: 'center', marginTop: 60, marginBottom: 20 }}>รายการนำสินค้าเข้าคลัง</h1>
-                    <h3 style={{ width: '95%', alignSelf: 'center', marginTop: 10 }}>บริษัท : {this.state.companyID} หมายเลขล็อต : {this.state.lot} | ช่องขนส่ง : {this.state.channel}</h3>
+                    <h3 style={{ width: '95%', alignSelf: 'center', marginTop: 10 }}>บริษัท : {this.state.companyName} | หมายเลขล็อต : {this.state.lot} | ช่องขนส่ง : {this.state.channel}</h3>
                     {/* <h3 style={{width:'95%', alignSelf:'center', marginTop:10, marginBottom:20}}>ช่องขนส่ง : {this.state.channel}</h3> */}
 
                     <Table hover style={{ width: '95%', alignSelf: 'center', marginTop: 20, marginBottom: 20, background: "#f1f1f1" }}>

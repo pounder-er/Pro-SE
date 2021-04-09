@@ -75,6 +75,7 @@ class Import extends React.Component {
         let i = 0
         const listItems = this.state.importList.map((data) => {
             i++
+            // console.log(data.companyID.id)
             return (
 
                 <tr style={{ textAlign: 'center' }}>
@@ -86,7 +87,7 @@ class Import extends React.Component {
                         id: data.id,
                         channel: data.channel,
                         data: data.log,
-                        company: data.companyID.id
+                        company: data.companyID
                     })}>
                         <FiFileText style={{ color: "#00A3FF" }} />
                     </td>
