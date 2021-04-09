@@ -430,7 +430,7 @@ class EditEmployee extends React.Component {
                             onClick={this.toggleModalProfileImage}
                             style={{ height: 180, width: 180, borderRadius: 100, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
 
-                            {this.props.profile.imageProfile && (
+                            {this.props.profile.imageProfile && !values.imageProfile &&(
                               <img src={this.props.profile.imageProfile} style={{ height: 180, width: 180, borderRadius: 100 }} />
                             )}
                             {values.imageProfile && (

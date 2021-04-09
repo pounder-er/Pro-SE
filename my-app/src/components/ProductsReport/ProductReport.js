@@ -17,11 +17,12 @@ import {
     ModalHeader,
     ModalBody,
 } from 'reactstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+
+
 import ReactDataGrid from '@inovua/reactdatagrid-community'
 import '@inovua/reactdatagrid-community/base.css'
 import '@inovua/reactdatagrid-community/theme/default-light.css'
-import 'react-pro-sidebar/dist/css/styles.css';
+
 import { AiFillFileText } from "react-icons/ai";
 
 import { i18n } from '../i18n';
@@ -90,9 +91,9 @@ class ProductReport extends React.Component {
         await fire_base.getAllProduct(this.getAllProductSuccess, this.unSuccess);
     }
 
-    getAllProductSuccess = async (querySnapshot) => {
+    getAllProductSuccess = (querySnapshot) => {
         let data = []
-        await querySnapshot.forEach(async (doc) => {
+        querySnapshot.forEach(async (doc) => {
             if (doc.id != 'state') {
 
                 let d = doc.data();
@@ -103,19 +104,25 @@ class ProductReport extends React.Component {
                 }else{
                     d.newOld = 'เก่า'
                 }
-                d.companyID.get()
+                await d.companyID.get()
                     .then(doc => {
                         d.companyName = doc.data().companyName
                     })
-                let a = await d.productType.get()
+                await d.productType.get()
                     .then(doc => {
                         d.productType = doc.data().name
-
-                        this.setState({ dataSource: this.state.dataSource.concat(d) });
+                        data.push(d);
+                        
                     })
+                
             }
-        });
-
+            
+        })
+        setTimeout(
+            ()=>this.setState({dataSource:data})
+            ,
+            500
+          );
     }
 
     unSuccess(error) {
