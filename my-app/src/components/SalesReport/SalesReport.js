@@ -96,7 +96,7 @@ class SalesReport extends React.Component {
                                 if (x.aproductID == a.idp) {
                                     a.avolume += x.volume
                                     a.totalPrice += (x.productPrice * x.volume) - x.disCount
-                                    // console.log('a>>', a)
+                                     
                                     this.setState({ dataSource: this.state.dataSource.concat(z) });
                                 }
 
@@ -106,7 +106,7 @@ class SalesReport extends React.Component {
 
             }
         });
-        
+        // console.log('a>>', this.state.dataSource)
 
 
     }

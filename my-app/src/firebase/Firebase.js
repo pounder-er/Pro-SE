@@ -230,7 +230,7 @@ class Firebase {
       })
   }
 
-  updateProduct=(idp,product,success,reject)=>{
+  updateProduct11=(idp,product,success,reject)=>{
     firebase.firestore().collection('Product').doc(idp)
       .update(product)
       .then(() => {
