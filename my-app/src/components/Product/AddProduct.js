@@ -149,7 +149,7 @@ class AddProduct extends Component {
     }
 
     uploadImageSuccess=async(url)=>{
-        await fire_base.updateProduct(this.id,{image:url},this.updateProductSuccess,this.unSuccess);
+        await fire_base.updateNewOldProduct(this.id,{image:url},this.updateProductSuccess,this.unSuccess);
     }
 
     updateProductSuccess=()=>{

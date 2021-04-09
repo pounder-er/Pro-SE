@@ -126,7 +126,7 @@ class ProductReport extends React.Component {
         return (
             <Container fluid={true} style={{ backgroundColor: 'wheat' }} >
                 <Modal isOpen={this.state.modal} toggle={this.toggleModalmodal} backdrop='static' size='lg' >
-                    <ModalHeader toggle={this.toggleModalmodal}>รายละเอียดการคำนวน</ModalHeader>
+                    <ModalHeader toggle={this.toggleModalmodal}>รายละเอียดสินค้า</ModalHeader>
                     <ModalBody>
                         <ProductDetail product={this.product}/>
                     </ModalBody>

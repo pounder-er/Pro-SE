@@ -230,9 +230,24 @@ class Firebase {
       })
   }
 
-  updateProduct=(idp,product,success,reject)=>{
-    firebase.firestore().collection('Product').doc(idp)
-      .update(product)
+  updateProduct=(id,product,success,reject)=>{
+    let product1 = Object.assign({}, product);
+    delete product1.productTotal
+    delete product1.productStatus
+    delete product1.productDetail
+    delete product1.productPrice
+    let product2 = {
+      productTotal:product.productTotal,
+      productStatus:product.productStatus,
+      productDetail:product.productDetail,
+      productPrice:product.productPrice
+    }
+    let batch = firebase.firestore().batch(), ref = firebase.firestore().collection('Product');
+    console.log([id[0], id.slice(2)].join(''));
+    batch.update(ref.doc([id[0], '1',id.slice(2)].join('')), product1);
+    batch.update(ref.doc([id[0], '0',id.slice(2)].join('')), product1);
+    batch.update(ref.doc(id) , product2);
+    batch.commit()
       .then(() => {
         success();
       })
@@ -240,6 +255,19 @@ class Firebase {
         reject(error);
       })
 
+  }
+
+  updateNewOldProduct = (id, product, success, reject) => {
+    let batch = firebase.firestore().batch(), ref = firebase.firestore().collection('Product');
+    batch.update(ref.doc([id[0], '1', id.slice(1)].join('')), product);
+    batch.update(ref.doc([id[0], '0', id.slice(1)].join('')), product);
+    batch.commit()
+      .then(() => {
+        success();
+      })
+      .catch((error) => {
+        reject(error);
+      })
   }
 
   uploadImageProfile = async (uid, image, success, reject) => {
@@ -376,19 +404,6 @@ class Firebase {
       reject(error);
     })
 
-  }
-
-  updateProduct = (id, product, success, reject) => {
-    let batch = firebase.firestore().batch(), ref = firebase.firestore().collection('Product');
-    batch.update(ref.doc([id[0], '1', id.slice(1)].join('')), product);
-    batch.update(ref.doc([id[0], '0', id.slice(1)].join('')), product);
-    batch.commit()
-      .then(() => {
-        success();
-      })
-      .catch((error) => {
-        reject(error);
-      })
   }
 
   addPO=(data, success, reject)=>{
