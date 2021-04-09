@@ -53,9 +53,24 @@ import Chart from "react-apexcharts";
 // import { Line, Pie } from '@reactchartjs/react-chart.js'
 import { Line, Pie } from 'react-chartjs-2';
 
+import ReactDataGrid from '@inovua/reactdatagrid-community'
+import '@inovua/reactdatagrid-community/base.css'
+import '@inovua/reactdatagrid-community/theme/default-light.css'
+
+import { i18n } from '../i18n';
+
 import firestore from '../../firebase/Firestore'
 import fire_base from '../../firebase/Firebase';
 import { array } from 'yup/lib/locale';
+
+
+const filterValue = [
+    { name: 'idp', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'productType', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'productName', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'avolume', operator: 'gte', type: 'number', value: '' },
+    { name: 'totalPrice', operator: 'gte', type: 'number', value: '' },
+];
 
 
 class DashBoard extends React.Component {
@@ -126,7 +141,19 @@ class DashBoard extends React.Component {
             productTypeID : [],
             dataSource : []
         }
+        this.columns = [
+            { name: 'id', header: 'Id', defaultVisible: false, type: 'number', maxWidth: 40 },
+            { name: 'idp', groupBy: false, defaultFlex: 1, header: 'รหัสสินค้า' },
+            { name: 'productType', groupBy: false, defaultFlex: 1, header: 'ชนิด' },
+            { name: 'productName', groupBy: false, defaultFlex: 1, header: 'รายการสินค้า' },
+            { name: 'avolume', groupBy: false, defaultFlex: 1, header: 'ปริมาณ' },
+            { name: 'totalPrice', groupBy: false, defaultFlex: 1, header: 'มูลค่าการขาย(บาท)' },
+        ]
     }
+
+    
+    setDataGridRef = (ref) => (this.dataGrid = ref)
+
     getAllSellSuccess = async (querySnapshot) => {
 
         await querySnapshot.forEach((doc) => {
@@ -152,7 +179,7 @@ class DashBoard extends React.Component {
                     })
                 // console.log(' datas', this.state.dataSource)
                 for (let a of this.state.dataSource) {
-                    a.avolume = Number(0)
+                    a.avolume = 0
                     a.totalPrice = 0
                     for (let x of d.log) {
                         // console.log('sell LOG', x)
@@ -164,7 +191,6 @@ class DashBoard extends React.Component {
                                     a.totalPrice += (x.productPrice * x.volume) - x.disCount
                                      
                                     this.setState({ dataSource: this.state.dataSource.concat(z) });
-                                    console.log('ZZZZZZZZZZZZZZZZZZZZZZ', z)
                                 }
 
                             });
@@ -173,14 +199,32 @@ class DashBoard extends React.Component {
 
             }
         });
-        console.log('---DATA SOURCE---', this.state.dataSource)
-        let temp_dataSource = this.state.dataSource
-        temp_dataSource.sort((a, b) => (a.volume > b.volume) ? 1 : -1)
-        console.log('---TEMP DATA SOURCE---', temp_dataSource)
+        // console.log('a>>', this.state.dataSource)
+
+        // console.log('---DATA SOURCE---', this.state.dataSource)
+        // let temp_dataSource = [...this.state.dataSource].reverse()
+        
+        // temp_dataSource.sort((a, b) => (a.avolume > b.avolume) ? 1 : -1)
+        // temp_dataSource.sort(function(a, b){
+        //     console.log('AAAAAAA',b.avolume)
+        //     if (a.avolume > b.avolume) return 1;
+        //     if (a.avolume < b.avolume) return -1;
+        //     return 0;
+        // })
+        
+        // console.log('---TEMP DATA SOURCE---', temp_dataSource[0])
+        // console.log('---TEMP DATA SOURCE---', temp_dataSource[0].productTotal)
+    
+        // console.log('---TEMP DATA SOURCE---', temp_dataSource[9].productPrice)
+
 
     }
 
-    getProductSuccess=(q)=>{
+
+
+    
+
+    getProductSuccess=async(q)=>{
         let tempValue = new Array(this.state.productTypeID.length)
         tempValue.fill(0)
         console.log('prod id list' ,this.state.productTypeID)
@@ -188,11 +232,29 @@ class DashBoard extends React.Component {
             // console.log(doc.id)
             // console.log(doc.data())
             // console.log(doc.data().productType.id)
-            let idx = this.state.productTypeID.indexOf(doc.data().productType.id)
-            tempValue[idx] += doc.data().productTotal
+          
+            if(doc.id != 'state'){
+                
+                let idx = this.state.productTypeID.indexOf(doc.data().productType.id)
+                tempValue[idx] += doc.data().productTotal
+
+                let d = doc.data();
+
+                d.idp = doc.id;
+
+                d.productType.get()
+                    .then(doc => {
+                        d.productType = doc.data().name
+                        // console.log('product', d);
+                        
+                        this.setState({ dataSource: this.state.dataSource.concat(d) });
+
+                    })
+            }
 
         });
-        console.log(tempValue)
+        await fire_base.getAllSellReport(this.getAllSellSuccess, this.reject);
+        // console.log(tempValue)
         let temp_pineChartData = this.state.pineChartData
         temp_pineChartData.datasets[0].data = tempValue
         this.setState({pineChartData : temp_pineChartData})
@@ -226,8 +288,8 @@ class DashBoard extends React.Component {
 
         this.setState({ lineChartData: temp })
 
-        console.log(temp)
-        console.log('from state : ', this.state.lineChartData)
+        // console.log(temp)
+        // console.log('from state : ', this.state.lineChartData)
 
 
     }
@@ -242,8 +304,8 @@ class DashBoard extends React.Component {
 
         this.setState({ lineChartData: temp })
 
-        console.log(temp)
-        console.log('from state : ', this.state.lineChartData)
+        // console.log(temp)
+        // console.log('from state : ', this.state.lineChartData)
 
 
     }
@@ -257,7 +319,9 @@ class DashBoard extends React.Component {
         await firestore.getCountBuyOrderComplete(this.getCountBuyOrderSuccess, this.reject)
         // fire_base.getAllProduct(this.getProductSuccess, this.reject);
         await fire_base.getAllProductType(this.getProductTypeSuccess, this.reject)
-        await fire_base.getAllSellReport(this.getAllSellSuccess, this.reject);
+        // await fire_base.getAllSellReport(this.getAllSellSuccess, this.reject);
+
+       
 
         let currentDate = new Date()
         let temp = this.state.lineChartData
@@ -337,27 +401,24 @@ class DashBoard extends React.Component {
                             <p />
                             <h3 style={{ marginLeft: '2.5%' }}>สินค้าขายดี</h3>
                             <p />
-                            <Table striped style={{ width: '95%', alignSelf: 'center' }}>
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>รหัสสินค้า</th>
-                                        <th>ชื่อสินค้า</th>
-                                        <th>ปริมาณ</th>
-                                        <th>มูลค่า(บาท)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>110101</td>
-                                        <td>ข้าวขาวดี</td>
-                                        <td>1000</td>
-                                        <td>1,000,000</td>
-                                    </tr>
-
-                                </tbody>
-                            </Table>
+                            <ReactDataGrid
+                                onReady={this.setDataGridRef}
+                                i18n={i18n}
+                                idProperty="id"
+                                columns={this.columns}
+                                pagination
+                                defaultLimit={10}
+                                defaultSkip={10}
+                                pageSizes={[10, 15, 30]}
+                                dataSource={this.state.dataSource}
+                                // defaultFilterValue={filterValue}
+                                showColumnMenuTool={true}
+                                emptyText="ไม่มีรายการ"
+                                defaultSortInfo={{name : 'avolume', dir : -1}}
+                                style={{ minHeight: 550 }}
+                            />
+        
+                            
                         </Card>
                     </div>
                 </div>
