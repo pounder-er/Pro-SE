@@ -11,6 +11,9 @@ import {
     Col,
     Label,
     Container,
+    Modal, 
+    ModalHeader, 
+    ModalBody, 
 } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -21,7 +24,7 @@ import '@inovua/reactdatagrid-community/theme/default-light.css'
 import PropTypes from 'prop-types';
 import {i18n} from '../i18n';
 
-
+import AssignEx from './AssignEx';
 
 const filterValue = [
     { name: 'productID', operator: 'startsWith', type: 'string', },
@@ -49,6 +52,7 @@ class SellDetail extends React.Component {
         this.state = {
             searchText: '',
             dataSource: [],
+            modalAss: false,
         }
         this.sum = 0
     }
@@ -74,10 +78,21 @@ class SellDetail extends React.Component {
         }
     }
     setDataGridRef = (ref) => (this.dataGrid = ref)
-
+    toggleModalAss= (e) => {
+        e.preventDefault();
+        this.setState({ modalAss: !this.state.modalAss });
+      }
     render() {
         return (
+            
             <Container fluid={false} style={{ backgroundColor: 'while'}} >
+                <button onClick={(e)=>{this.toggleModalAss(e);}} style={{display:'contents'}}>Ass</button>
+                <Modal isOpen={this.state.modalAss} toggle={this.toggleModalAss} backdrop='static' size='lg' >
+                    <ModalHeader toggle={this.toggleModalAss}>รายละเอียดการคำนวน</ModalHeader>
+                    <ModalBody>
+                        <AssignEx invoice={this.props.profile} closeTogle={this.toggleModalAss}/>
+                    </ModalBody>
+                </Modal>
                 <Row style={{ height: 25 }}>
                     <Col >
                     </Col>

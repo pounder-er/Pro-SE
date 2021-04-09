@@ -114,10 +114,10 @@ class EditCalculate extends React.Component {
                     <Col >จุดสั่งซื้อใหม่ R = d x L</Col>
                 </Row>
                 <Row>
-                    <Col >d อัตราความต้องการสินค้าคงคลัง ต่อ ปี</Col>
+                    <Col >d อัตราความต้องการสินค้าคงคลัง ต่อ (วัน)</Col>
                 </Row>
                 <Row>
-                    <Col >L เวลารอคอย ในการสั่งสินค้า 1 ครั้ง</Col>
+                    <Col >L เวลารอคอย ในการสั่งสินค้า 1 ครั้ง (วัน)</Col>
                 </Row>
                 <Formik
                     validationSchema={formEmployeeSchema}
@@ -140,7 +140,6 @@ class EditCalculate extends React.Component {
                         C: this.props.product.cal.C,
                         L: this.props.product.cal.L,
                         d: this.props.product.cal.d,
-                        R: ''
                     }}
                 >
                     {({
