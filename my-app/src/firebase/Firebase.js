@@ -230,6 +230,17 @@ class Firebase {
       })
   }
 
+  updateProduct11=(idp,product,success,reject)=>{
+    firebase.firestore().collection('Product').doc(idp)
+      .update(product)
+      .then(() => {
+        success();
+      })
+      .catch((error) => {
+        reject(error);
+      })
+
+  }
   updateProduct=(id,product,success,reject)=>{
     let product1 = Object.assign({}, product);
     delete product1.productTotal

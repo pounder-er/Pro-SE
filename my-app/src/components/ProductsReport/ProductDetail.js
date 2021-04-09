@@ -37,6 +37,7 @@ import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import BuyDetail from '../Buy/BuyDetail';
 
+
 const filterValue = [
     { name: 'ID', operator: 'startsWith', type: 'string', value: '' },
     { name: 'Inid', operator: 'startsWith', type: 'string', value: '' },
