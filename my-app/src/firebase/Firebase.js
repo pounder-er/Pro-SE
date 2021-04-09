@@ -261,7 +261,31 @@ class Firebase {
                 reject(error);
             })
     }
-
+    updateChangeStatus = (id, log, num, success, reject) => {
+        let update={},date = firebase.firestore.FieldValue.serverTimestamp();
+        
+        if (num == 1) {
+          update.dateInvoice = date;
+          update.status = 'รอชำระเงิน';
+          update.log = log;
+        }
+        else if(num == 2){
+          update.datePay = date;
+          update.status = 'รอรับสินค้า';
+          update.log = log;
+        }
+        else if(num == 3){
+          update.dateIn = date;
+          update.status = 'รอขนเข้าคลัง';
+        }
+        firebase.firestore().collection('Buy').doc(id).update(update)
+          .then(() => {
+            success();
+          }).catch((error) => {
+            reject(error);
+          })
+    
+      }
     updateProduct11 = (idp, product, success, reject) => {
         firebase.firestore().collection('Product').doc(idp)
             .update(product)
