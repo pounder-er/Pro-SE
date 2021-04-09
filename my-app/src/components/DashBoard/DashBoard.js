@@ -54,6 +54,8 @@ import Chart from "react-apexcharts";
 import { Line, Pie } from 'react-chartjs-2';
 
 import firestore from '../../firebase/Firestore'
+import fire_base from '../../firebase/Firebase';
+import { array } from 'yup/lib/locale';
 
 
 class DashBoard extends React.Component {
@@ -95,7 +97,7 @@ class DashBoard extends React.Component {
             },
 
             pineChartData: {
-                labels: ['ข้าว1', 'ข้าว2', 'ข้าว3', 'ข้าว4', 'ข้าว5', 'ว่าง'],
+                labels: [],
                 datasets: [
                     {
                         label: 'สัดส่วนโกดัง',
@@ -121,12 +123,44 @@ class DashBoard extends React.Component {
                 ],
             },
 
-            pineChartOption: {
-                series: [40, 20, 10, 30],
-                labels: ['ข้าว1', 'ข้าว2', 'ข้าว3', 'ว่าง'],
-
-            }
+            productTypeID : [],
+         
         }
+    }
+
+    getProductSuccess=(q)=>{
+        let tempValue = new Array(this.state.productTypeID.length)
+        tempValue.fill(0)
+        console.log('prod id list' ,this.state.productTypeID)
+        q.forEach(doc => {
+            // console.log(doc.id)
+            // console.log(doc.data())
+            // console.log(doc.data().productType.id)
+            let idx = this.state.productTypeID.indexOf(doc.data().productType.id)
+            tempValue[idx] += doc.data().productTotal
+
+        });
+        console.log(tempValue)
+        let temp_pineChartData = this.state.pineChartData
+        temp_pineChartData.datasets[0].data = tempValue
+        this.setState({pineChartData : temp_pineChartData})
+    }
+
+    getProductTypeSuccess=(q)=>{
+        let tempLabels = []
+        let tempProductTypeID =[]
+        q.forEach(doc => {
+            // console.log(doc.id)
+            // console.log(doc.data())
+            tempLabels.push(doc.data().name)
+            tempProductTypeID.push(doc.id)
+        });
+        let temp_pineChartData = this.state.pineChartData;
+        temp_pineChartData.labels = tempLabels;
+        this.setState({pineChartData : temp_pineChartData})
+        this.setState({productTypeID : tempProductTypeID})
+        fire_base.getAllProduct(this.getProductSuccess, this.reject);
+
     }
 
     getCountSellOrderSuccess = (size) => {
@@ -169,6 +203,8 @@ class DashBoard extends React.Component {
     componentDidMount() {
         firestore.getCountSellOrderComplete(this.getCountSellOrderSuccess, this.reject)
         firestore.getCountBuyOrderComplete(this.getCountBuyOrderSuccess, this.reject)
+        // fire_base.getAllProduct(this.getProductSuccess, this.reject);
+        fire_base.getAllProductType(this.getProductTypeSuccess, this.reject)
 
         let currentDate = new Date()
         let temp = this.state.lineChartData
@@ -234,7 +270,8 @@ class DashBoard extends React.Component {
                                                 marginTop:10}}
                                     /> */}
                             <Pie data={this.state.pineChartData}
-                                height='240' />
+                                height='240'
+                                redraw />
                             <div style={{ display: 'flex' }}></div>
                         </div>
                     </div>
