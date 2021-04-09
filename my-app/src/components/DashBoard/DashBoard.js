@@ -145,6 +145,22 @@ class DashBoard extends React.Component {
 
 
     }
+    getCountBuyOrderSuccess = (size) => {
+        console.log(size)
+        let temp = this.state.lineChartData
+        // temp.datasets[1].data.push(size)
+        temp.datasets[0].data = size
+        if(size.length == 7){
+            temp.datasets[0].data.reverse()
+        }
+
+        this.setState({ lineChartData: temp })
+
+        console.log(temp)
+        console.log('from state : ', this.state.lineChartData)
+
+
+    }
 
     reject(error) {
         console.log(error)
@@ -152,6 +168,7 @@ class DashBoard extends React.Component {
 
     componentDidMount() {
         firestore.getCountSellOrderComplete(this.getCountSellOrderSuccess, this.reject)
+        firestore.getCountBuyOrderComplete(this.getCountBuyOrderSuccess, this.reject)
 
         let currentDate = new Date()
         let temp = this.state.lineChartData
