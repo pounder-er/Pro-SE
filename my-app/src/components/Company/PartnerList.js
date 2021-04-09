@@ -16,6 +16,7 @@ import {
     Input
 } from 'reactstrap';
 
+
 import styled from 'styled-components';
 
 import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons/md";
@@ -41,6 +42,8 @@ import { AiFillFileText } from "react-icons/ai";
 // import EditEmployee from './EditEmployee';
 import EditPartnerCompany from './EditPartner'
 import AddPartner from './AddPartner'
+
+// import PDFInvoice from '../PDF/PDFInvoice'
 
 const filterValue = [
     { name: 'id', operator: 'startsWith', type: 'string', value: '' },
@@ -190,7 +193,7 @@ class PartnerList extends React.PureComponent {
                                     height:45, 
                                     marginBottom:10}}>เพิ่มบริษัทคู่ค้า</Button>
                     {/* <Button color="success" 
-                            onClick={()=>{firestore.getCountSaleOrderComplete()}}
+                            onClick={()=>{window.open()}}
                             style={{width:'10%', 
                                     height:45, 
                                     marginBottom:10}}>Test</Button>                 */}
