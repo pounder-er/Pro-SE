@@ -55,15 +55,15 @@ class Import extends React.Component {
             let array = doc.data()
             array.id = doc.id
             array.channel = "A1"
-            array.arriveDate = "ไม่ได้กรอก"
-            array.expireDate = "ไม่ได้กรอก"
+            // array.arriveDate = "ไม่ได้กรอก"
+            // array.expireDate = "ไม่ได้กรอก"
             // console.log(doc.data().log[0].productID.id)
 
             this.setState({ importList: this.state.importList.concat(array) })
 
         })
 
-        // console.log(this.state.importList)
+        // console.log(this.state.importList[0].companyID.id)
     }
 
     reject = (error) => {
@@ -85,7 +85,8 @@ class Import extends React.Component {
                         pathname: this.props.match.url + "/import_product_tb",
                         id: data.id,
                         channel: data.channel,
-                        data: data.log
+                        data: data.log,
+                        company: data.companyID.id
                     })}>
                         <FiFileText style={{ color: "#00A3FF" }} />
                     </td>

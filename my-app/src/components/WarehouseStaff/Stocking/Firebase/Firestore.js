@@ -120,7 +120,7 @@ class Firestore {
 
     }
 
-    onSavePO =(idPO, log)=> {
+    onSavePO =(idPO, log, taskDel)=> {
         firebase.firestore().collection('Buy').doc(idPO).update({
             status: "เสร็จสิ้น",
             log: log
@@ -132,6 +132,52 @@ class Firestore {
             // The document probably doesn't exist.
             console.error("Error updating document: ", error);
         });
+
+        let docID = firebase.firestore.FieldPath.documentId()
+
+        firebase.firestore().collection("ImportOrder").doc(idPO).delete()
+        .then(function (querySnapshot) {
+            taskDel(querySnapshot)
+
+        }).catch(function (error) {
+            console.error("Error removing document: ", error);
+        });
+    }
+
+    //-------------------------------- Sell Order  ---------------------------------//
+    getTaskSell =(order, reject, email)=>{
+        firebase.firestore().collection('ExportOrder').where("person", "==", email).get()
+            .then(function (querySnapshot) {
+                order(querySnapshot);
+            })
+            .catch(function (error) {
+                reject(error);
+            });
+    }
+    getSO =(success, reject, task)=> {
+        console.log("in getPO : " + task)
+        let docID = firebase.firestore.FieldPath.documentId()
+        firebase.firestore().collection('Sell').where(docID, "in", task).get()
+            .then(function (querySnapshot) {
+                success(querySnapshot);
+                // console.log("complete")
+            })
+            .catch(function (error) {
+                reject(error);
+            });
+    }
+    getProductNameByRef =(ref)=> {
+        console.log(ref)
+        console.log(ref.id)
+        console.log(ref.parent.id)
+
+        firebase.firestore().collection(ref.parent.id).doc(ref.id).get()
+            .then(function (querySnapshot) {
+                console.log(querySnapshot.productName)
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
     }
 }
 

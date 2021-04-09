@@ -18,6 +18,8 @@ import 'react-pro-sidebar/dist/css/styles.css';
 
 import './Style/ExportTable.css';
 
+import firestore from './Firebase/Firestore'
+
 class ExportTable extends React.Component {
     constructor(props) {
         super(props)
@@ -27,7 +29,8 @@ class ExportTable extends React.Component {
             exportDetail: this.props.location.data,
             checkCount:this.props.location.data.length
         }
-        // console.log(this.state.exportDetail)
+        // console.log(this.state.exportDetail[0].productID.path)
+        // firestore.getProductNameByRef(this.state.exportDetail[0].productID)
     }
 
     onCheckChange =(event)=>{
@@ -59,12 +62,12 @@ class ExportTable extends React.Component {
             return (
                 <tr>
                     <th scope="row">{i}</th>
-                    <td>{data.productID}</td>
-                    <td>{data.oldNew}</td>
-                    <td>{data.comName}</td>
+                    <td>{data.productID.id}</td>
+                    {/* <td>{data.oldNew}</td> */}
+                    {/* <td>{data.comName}</td> */}
                     <td>{data.productName}</td>
-                    <td>{data.productWeight}</td>
-                    <td>{data.total}</td>
+                    {/* <td>{data.productWeight}</td> */}
+                    <td>{data.volume}</td>
                     <td>
                         <InputGroup>
                             <Input addon type="checkbox" style={{ width: 20, height: 20 }} onChange = {this.onCheckChange}/>
@@ -91,10 +94,10 @@ class ExportTable extends React.Component {
                             <tr style={{ textAlign: 'center' }}>
                                 <th>ลำดับ</th>
                                 <th>รหัสสินค้า</th>
-                                <th>เก่า/ใหม่</th>
-                                <th>ชื่อบริษัท</th>
+                                {/* <th>เก่า/ใหม่</th> */}
+                                {/* <th>ชื่อบริษัท</th> */}
                                 <th>ชื่อสินค้า</th>
-                                <th>น้ำหนัก</th>
+                                {/* <th>น้ำหนัก</th> */}
                                 <th>จำนวน</th>
                             </tr>
                         </thead>

@@ -26,16 +26,14 @@ import checkList from './checkList.json'
 // ------------------------------------------------------------ // 
 
 import firestore from './Firebase/Firestore'
-
-import PaginationtTable from './PaginationtTable'
+import swal from 'sweetalert';
 
 class Stock extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            date: "1/1/2564",
-            time: "",
-            input: "",
+            date: new Date,
+            // input: "",
             checkList: [],
         }
 
@@ -70,7 +68,7 @@ class Stock extends React.Component {
         })
 
         firestore.getProduct(this.success, this.reject, array)
-        
+
     }
 
     reject = (error) => {
@@ -81,16 +79,17 @@ class Stock extends React.Component {
         // console.log(this.state.checkList)
         // let day = new Date
         // console.log(day.getDate()+"/"+(day.getMonth()+1)+"/"+day.getFullYear())
-        
-        if(this.state.checkList.length > 0)
-            firestore.sendTask(this.state.checkList,this.props.userProfile,this.taskEnd)
+
+        if (this.state.checkList.length > 0)
+            firestore.sendTask(this.state.checkList, this.props.userProfile, this.taskEnd)
         // this.setState({ input: "3" })
     }
 
-    taskEnd = (doc) =>{
+    taskEnd = (doc) => {
 
-        this.setState({checkList:[]})
+        this.setState({ checkList: [] })
         // console.log(this.state.checkList)
+        swal("บันทึกเสร็จสิ้น", "กด OK เพื่อออก", "success");
         console.log("Document successfully deleted!");
 
     }
@@ -188,7 +187,7 @@ class Stock extends React.Component {
                 <body className="ContentStocking" style={{ border: '2px solid gray' }}>
 
                     <h1 style={{ width: '95%', alignSelf: 'center', marginTop: 60, marginBottom: 20 }}>รายการที่ต้องเช็ค</h1>
-                    <h3 style={{ width: '95%', alignSelf: 'center', marginTop: 10, marginBottom: 20 }}>วันที่ : {this.state.date}  เวลา : {this.state.time} Test: {this.state.input}</h3>
+                    <h3 style={{ width: '95%', alignSelf: 'center', marginTop: 10, marginBottom: 20 }}>วันที่ : {this.state.date.toLocaleDateString()} </h3>
 
                     <div className="TableStocking">
                         <Table hover style={{ width: '95%', alignSelf: 'center', marginTop: 20, marginBottom: 20, background: "#f1f1f1" }}>

@@ -29,8 +29,9 @@ class ImportTable extends React.Component {
             channel: this.props.location.channel,
             importDetail: this.props.location.data,
             checkCount: this.props.location.data.length,
+            companyID: this.props.location.company
         }
-        // console.log(this.state.importDetail)
+        console.log(this.state.conpanyID)
     }
 
     onCheckChange =(event)=>{
@@ -48,7 +49,7 @@ class ImportTable extends React.Component {
 
     onSaveOrder =()=>{
         if(this.state.checkCount == 0){
-            firestore.onSavePO(this.state.lot, this.state.importDetail)
+            firestore.onSavePO(this.state.lot, this.state.importDetail, this.taskEnd)
             swal("บันทึกเสร็จสิ้น", "กด OK เพื่อออก", "success");
             this.props.history.goBack()
             console.log("Success")
@@ -59,6 +60,10 @@ class ImportTable extends React.Component {
             console.log("Unsuadadw ccess")
         }
     }
+
+    taskEnd =(doc)=> {
+        console.log("Document successfully deleted!");
+    }
     
     handleChangeText = (text, numOrder, type) => {
 
@@ -67,6 +72,9 @@ class ImportTable extends React.Component {
             for (let i = 0; i < this.state.importDetail.length; i++) {
                 if (this.state.importDetail[i].productID.id === numOrder) {
                     if(text.target.value == "f"){
+
+                        // ----- this line if in array isn't have arriveDate/expireDate
+                        // ----- it will create automatic 
                         this.state.importDetail[i].arriveDate = this.state.importDetail[i].expireDate
                         console.log(this.state.importDetail[i].arriveDate)
                         break
@@ -96,6 +104,7 @@ class ImportTable extends React.Component {
                 }
             }
         }
+        // console.log(this.state.importDetail)
     }
 
     render() {
@@ -142,7 +151,7 @@ class ImportTable extends React.Component {
                 <body className="ContentTable" style={{ border: '2px solid gray' }}>
 
                     <h1 style={{ width: '95%', alignSelf: 'center', marginTop: 60, marginBottom: 20 }}>รายการนำสินค้าเข้าคลัง</h1>
-                    <h3 style={{ width: '95%', alignSelf: 'center', marginTop: 10 }}>หมายเลขล็อต : {this.state.lot} | ช่องขนส่ง : {this.state.channel}</h3>
+                    <h3 style={{ width: '95%', alignSelf: 'center', marginTop: 10 }}>บริษัท : {this.state.companyID} หมายเลขล็อต : {this.state.lot} | ช่องขนส่ง : {this.state.channel}</h3>
                     {/* <h3 style={{width:'95%', alignSelf:'center', marginTop:10, marginBottom:20}}>ช่องขนส่ง : {this.state.channel}</h3> */}
 
                     <Table hover style={{ width: '95%', alignSelf: 'center', marginTop: 20, marginBottom: 20, background: "#f1f1f1" }}>
