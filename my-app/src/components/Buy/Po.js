@@ -177,7 +177,7 @@ class Po extends React.Component {
                         }
                         if(g)
                         {
-                               
+                            console.log(values.productID)   
                             let a ={},
                             b = this.product.find((doc,index)=>{
                                 if(doc.id == values.productID){
@@ -188,9 +188,8 @@ class Po extends React.Component {
                             a.productName = b.productName
                             a.volume = values.volume
                             a.productID = values.productID
-                            a.productPrice = null
-                            a.disCount = null
-                            console.log(a)
+                            a.productPrice = '-'
+                            a.disCount = '-'
                             this.setState({log : this.state.log.concat(a)})
                         }
 
@@ -199,6 +198,7 @@ class Po extends React.Component {
                     initialValues={{
                         productName: '',
                         productID: '300000',
+                        productPrice: '0',
                         companyID: '00',
                         volume: 1
                     }}
