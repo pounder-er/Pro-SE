@@ -26,6 +26,8 @@ import '@inovua/reactdatagrid-community/theme/default-light.css'
 import { i18n } from '../i18n';
 import 'react-pro-sidebar/dist/css/styles.css';
 
+import EditProduct from './EditProduct';
+
 import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
 import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons/md";
 import { IoMdTrash } from "react-icons/io";
@@ -175,7 +177,10 @@ class ProductDetail extends React.Component {
                         <BuyDetail profile={this.product} />
                     </ModalBody>
                 </Modal>
-                <Row >
+                
+                <EditProduct product={this.props.product} />
+                
+                {/* <Row >
                     <Col >
                         <h1 style={{
                             marginTop: 20,
@@ -209,7 +214,8 @@ class ProductDetail extends React.Component {
                             <Col >เก่า/ใหม่:{this.props.product.newOld}</Col>
                         </Row>
                     </Col>
-                </Row>
+                </Row> */}
+                
                 <Row style={{ marginTop: '20px' }}>
                     <ReactDataGrid alignSelf='center'
                         onReady={this.setDataGridRef}
