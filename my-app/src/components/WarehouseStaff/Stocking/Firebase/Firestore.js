@@ -26,7 +26,7 @@ class Firestore {
         firebase.firestore().collection('Product').where(docID, "in", task).get()
             .then(function (querySnapshot) {
                 success(querySnapshot);
-                // console.log("complete")
+                console.log("complete")
             })
             .catch(function (error) {
                 reject(error);
@@ -120,18 +120,64 @@ class Firestore {
 
     }
 
-    onSavePO =(idPO, log, taskDel)=> {
+    updateTotalPruduct =(proID, item)=>{
+        firebase.firestore().collection('Product').doc(proID).update({
+            productTotal : firebase.firestore.FieldValue.increment(item) 
+        })
+            .then(() => {
+                console.log("Document successfully updated in Total");
+            })
+            .catch((error) => {
+                // The document probably doesn't exist.
+                console.error("Error updating document: ", error);
+            });
+    }
+
+    onSavePO = (idPO, log, taskDel) => {
         firebase.firestore().collection('Buy').doc(idPO).update({
             status: "เสร็จสิ้น",
             log: log
         })
-        .then(() => {
-            console.log("Document successfully updated!");
+            .then(() => {
+                console.log("Document successfully updated!");
+            })
+            .catch((error) => {
+                // The document probably doesn't exist.
+                console.error("Error updating document: ", error);
+            });
+        
+        // console.log(log)
+        log.forEach((data)=>{
+            // console.log(data.productID.id)
+            this.updateTotalPruduct(data.productID.id,data.volume)
         })
-        .catch((error) => {
-            // The document probably doesn't exist.
-            console.error("Error updating document: ", error);
-        });
+
+        let docID = firebase.firestore.FieldPath.documentId()
+        // firebase.firestore().collection('Product').where(docID, "==", )
+
+        // log.forEach((data) => {
+        //     // console.log(data.productID.id)
+        //     firebase.firestore().collection(data.productID.parent.id).doc(data.productID.id).get()
+        //         .then(function (querySnapshot) {
+        //             // console.log(querySnapshot.data())
+        //             firebase.firestore().collection('Pro').doc(idPO).update({
+        //                 status: "เสร็จสิ้น",
+        //                 log: log
+        //             })
+        //                 .then(() => {
+        //                     console.log("Document successfully updated!");
+        //                 })
+        //                 .catch((error) => {
+        //                     // The document probably doesn't exist.
+        //                     console.error("Error updating document: ", error);
+        //                 });
+
+        //         })
+        //         .catch(function (error) {
+        //             console.error(error);
+        //         });
+
+        // })
 
         // let docID = firebase.firestore.FieldPath.documentId()
 
@@ -145,7 +191,7 @@ class Firestore {
     }
 
     //-------------------------------- Sell Order  ---------------------------------//
-    getTaskSell =(order, reject, email)=>{
+    getTaskSell = (order, reject, email) => {
         firebase.firestore().collection('ExportOrder').where("person", "==", email).get()
             .then(function (querySnapshot) {
                 order(querySnapshot);
@@ -154,7 +200,7 @@ class Firestore {
                 reject(error);
             });
     }
-    getSO =(success, reject, task)=> {
+    getSO = (success, reject, task) => {
         console.log("in getPO : " + task)
         let docID = firebase.firestore.FieldPath.documentId()
         firebase.firestore().collection('Sell').where(docID, "in", task).get()
@@ -167,33 +213,33 @@ class Firestore {
             });
     }
 
-    onSaveSO =(idSO, taskDel)=> {
+    onSaveSO = (idSO, taskDel) => {
         firebase.firestore().collection('Sell').doc(idSO).update({
             status: "กำลังจัดส่ง"
             // ----- คำสั่งตัวอย่าง -----
             // status: "รอชำระเงิน"
         })
-        .then(() => {
-            console.log("Document successfully updated!");
-        })
-        .catch((error) => {
-            // The document probably doesn't exist.
-            console.error("Error updating document: ", error);
-        });
+            .then(() => {
+                console.log("Document successfully updated!");
+            })
+            .catch((error) => {
+                // The document probably doesn't exist.
+                console.error("Error updating document: ", error);
+            });
 
         // let docID = firebase.firestore.FieldPath.documentId()
 
         firebase.firestore().collection("ExportOrder").doc(idSO).delete()
-        .then(function (querySnapshot) {
-            taskDel(querySnapshot)
+            .then(function (querySnapshot) {
+                taskDel(querySnapshot)
 
-        }).catch(function (error) {
-            console.error("Error removing document: ", error);
-        });
+            }).catch(function (error) {
+                console.error("Error removing document: ", error);
+            });
     }
     //-------------------------- get Ref -------------------------- //
 
-    getBranchNameByRef =(ref, changeName)=> {
+    getBranchNameByRef = (ref, changeName) => {
         console.log(ref)
         console.log(ref.id)
         console.log(ref.parent.id)
@@ -210,7 +256,7 @@ class Firestore {
             });
     }
 
-    getCompanyNameByRef =(ref, changeName)=> {
+    getCompanyNameByRef = (ref, changeName) => {
         console.log(ref)
         console.log(ref.id)
         console.log(ref.parent.id)
@@ -227,7 +273,7 @@ class Firestore {
             });
     }
 
-    getProductNameByRef =(ref)=> {
+    getProductNameByRef = (ref) => {
         console.log(ref)
         console.log(ref.id)
         console.log(ref.parent.id)
