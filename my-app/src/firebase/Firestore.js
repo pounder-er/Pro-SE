@@ -289,6 +289,7 @@ class Firestore {
   }
 
 
+
 }
 const firestore = new Firestore();
 export default firestore

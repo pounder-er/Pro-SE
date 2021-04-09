@@ -19,14 +19,55 @@ import 'react-pro-sidebar/dist/css/styles.css';
 
 import { FiFileText } from 'react-icons/fi'
 
+import firestore from './Firebase/Firestore'
+
+import { connect } from 'react-redux';
+import { addSession, addUserProfile } from '../../../redux/actions';
+
 import importList from './importList.json'
 
 class Import extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            importList:importList
+            importList: []
         }
+
+        firestore.getTaskBuy(this.task, this.reject, this.props.userProfile.email)
+    }
+
+    task = (doc) => {
+        let array = []
+
+        doc.forEach(doc => {
+            let id = doc.id
+            array.push(id)
+        })
+
+        // console.log(array)
+
+        firestore.getPO(this.success, this.reject, array)
+    }
+
+    success = (doc) => {
+        console.log("in PO Collection")
+        doc.forEach(doc => {
+            let array = doc.data()
+            array.id = doc.id
+            array.channel = "A1"
+            // array.arriveDate = "ไม่ได้กรอก"
+            // array.expireDate = "ไม่ได้กรอก"
+            // console.log(doc.data().log[0].productID.id)
+
+            this.setState({ importList: this.state.importList.concat(array) })
+
+        })
+
+        // console.log(this.state.importList[0].companyID.id)
+    }
+
+    reject = (error) => {
+        console.log("error is : " + error)
     }
 
     render() {
@@ -34,17 +75,19 @@ class Import extends React.Component {
         let i = 0
         const listItems = this.state.importList.map((data) => {
             i++
+            // console.log(data.companyID.id)
             return (
 
                 <tr style={{ textAlign: 'center' }}>
                     <th scope="row">{i}</th>
-                    <td>{data.lot}</td>
+                    <td>{data.id}</td>
                     <td>{data.channel}</td>
                     <td onClick={() => this.props.history.push({
-                        pathname : this.props.match.url + "/import_product_tb",
-                        lot : data.lot,
-                        channel : data.channel,
-                        data: data.detail
+                        pathname: this.props.match.url + "/import_product_tb",
+                        id: data.id,
+                        channel: data.channel,
+                        data: data.log,
+                        company: data.companyID
                     })}>
                         <FiFileText style={{ color: "#00A3FF" }} />
                     </td>
@@ -89,5 +132,12 @@ class Import extends React.Component {
         )
     }
 }
+const mapStateToProps = (state) => {
+    return {
+        session: state.session,
+        userProfile: state.userProfile
+    }
+}
 
-export default Import
+
+export default connect(mapStateToProps)(Import);
