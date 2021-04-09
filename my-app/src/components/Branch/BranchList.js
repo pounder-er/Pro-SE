@@ -39,12 +39,13 @@ import {
 import { AiFillFileText } from "react-icons/ai";
 
 // import EditEmployee from './EditEmployee';
-import EditPartnerCompany from './EditPartner'
-import AddPartner from './AddPartner'
+import EditBranch from './EditBranch'
+import AddBranch from './AddBranch'
 
 const filterValue = [
     { name: 'id', operator: 'startsWith', type: 'string', value: '' },
-    { name: 'companyName', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'branchName', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'ownerName', operator: 'startsWith', type: 'string', value: '' },
     { name: 'agentName', operator: 'startsWith', type: 'string', value: '' },
     { name: 'email', operator: 'startsWith', type: 'string', value: '' },
     { name: 'phoneNumber', operator: 'startsWith', type: 'string', value: '' }
@@ -71,20 +72,21 @@ const i18n = Object.assign({}, ReactDataGrid.defaultProps.i18n, {
     showingText:'กำลังแสดงรายการ '
 })
 
-class PartnerList extends React.PureComponent {
+class BranchList extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
             searchText: '',
             dataSource: [],
             modalEditPartner: false,
-            modalAddPartner : false
+            modalAddBranch : false
         }
         this.data = {};
         this.columns = [
             { name: 'no', header: 'No', type: 'number' , groupBy: false, maxWidth: 50 },
-            { name: 'id', groupBy: false,defaultFlex: 0.5, header: 'รหัสบริษัท'},
-            { name: 'companyName', groupBy: false,defaultFlex: 1, header: 'ชื่อบริษัท' },
+            { name: 'id', groupBy: false,defaultFlex: 0.5, header: 'รหัสสาขา'},
+            { name: 'branchName', groupBy: false,defaultFlex: 1, header: 'ชื่อบริษัท' },
+            { name: 'ownerName', groupBy: false,defaultFlex: 1, header: 'ชื่อเจ้าของ' },
             { name: 'agentName', groupBy: false,defaultFlex: 1, header: 'ชื่อตัวแทน' },
             { name: 'email', groupBy: false, defaultFlex: 1, header: 'อีเมล' },
             { name: 'phoneNumber', groupBy: false, defaultFlex: 1, header: 'เบอร์ติดต่อ' },
@@ -99,20 +101,21 @@ class PartnerList extends React.PureComponent {
         this.setState({ modalEditPartner: !this.state.modalEditPartner });
     }
 
-    toggleModalAddPartner = (e) => {
+    toggleModalAddBranch = (e) => {
         e.preventDefault();
-        this.setState({ modalAddPartner: !this.state.modalAddPartner });
+        this.setState({ modalAddBranch: !this.state.modalAddBranch });
     }
 
     async componentDidMount(){
+        
         //await fire_base.getAllUserProfile(this.getAllUserProfileSuccess,this.unSuccess);
         // await firestore.listeningProfile(this.listeningProfileSuccess,this.unSuccess);
         //await firestore.getAllPartnerCompany(this.getAllPartnerCompanySuccess,this.unSuccess);
-        await firestore.listeningPartnerCompany(this.listeningPartnerCompanySuccess, this.unSuccess);
+        await firestore.listeningBranch(this.listeningBranchSuccess, this.unSuccess);
 
     }
 
-    listeningPartnerCompanySuccess=(snapshot)=>{
+    listeningBranchSuccess=(snapshot)=>{
         let data = this.state.dataSource;
         snapshot.docChanges().forEach(function (change) {
             if(change.doc.id != 'state'){
@@ -133,7 +136,7 @@ class PartnerList extends React.PureComponent {
                 }
             }
         })
-
+        console.log(data)
         this.setState({
             dataSource: [...data]
         });
@@ -161,18 +164,18 @@ class PartnerList extends React.PureComponent {
 
             <div>
                 <Modal isOpen={this.state.modalEditPartner} toggle={this.toggleModalEditPartner} backdrop='static' size='lg' >
-                    <ModalHeader toggle={this.toggleModalEditPartner}>รายละเอียดบริษัทคู่ค้า</ModalHeader>
+                    <ModalHeader toggle={this.toggleModalEditPartner}>รายละเอียดสาขา</ModalHeader>
                     <ModalBody>
                         {/* <EditEmployee profile={this.profile} /> */}
-                        <EditPartnerCompany data={this.data}/>
+                        <EditBranch data={this.data}/>
                     </ModalBody>
                 </Modal>
 
-                <Modal isOpen={this.state.modalAddPartner} toggle={this.toggleModalAddPartner} backdrop='static' size='lg' >
-                    <ModalHeader toggle={this.toggleModalAddPartner}>เพิ่มบริษัทคู่ค้า</ModalHeader>
+                <Modal isOpen={this.state.modalAddBranch} toggle={this.toggleModalAddBranch} backdrop='static' size='lg' >
+                    <ModalHeader toggle={this.toggleModalAddBranch}>เพิ่มสาขา</ModalHeader>
                     <ModalBody>
                         {/* <EditEmployee profile={this.profile} /> */}
-                        <AddPartner/>
+                        <AddBranch/>
                     </ModalBody>
                 </Modal>
                 {/* <Row style={{ marginBottom: '1rem' }}>
@@ -185,15 +188,10 @@ class PartnerList extends React.PureComponent {
                 </Row> */}
                 <div style={{display:'flex', width:'100%', justifyContent:'flex-end'}}>
                     <Button color="success" 
-                            onClick={()=>{this.setState({modalAddPartner : !this.state.modalAddPartner})}}
+                            onClick={()=>{this.setState({modalAddBranch : !this.state.modalAddBranch})}}
                             style={{width:150, 
                                     height:45, 
-                                    marginBottom:10}}>เพิ่มบริษัทคู่ค้า</Button>
-                    {/* <Button color="success" 
-                            onClick={()=>{firestore.getCountSaleOrderComplete()}}
-                            style={{width:'10%', 
-                                    height:45, 
-                                    marginBottom:10}}>Test</Button>                 */}
+                                    marginBottom:10}}>เพิ่มสาขา</Button>
                 </div>
                 
                 <ReactDataGrid
@@ -223,4 +221,4 @@ class PartnerList extends React.PureComponent {
 
 
 
-export default PartnerList;
+export default BranchList;

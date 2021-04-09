@@ -9,9 +9,9 @@ import {
     UncontrolledCollapse,
     CardBody,
     Card,
-    Modal, 
-    ModalHeader, 
-    ModalBody, 
+    Modal,
+    ModalHeader,
+    ModalBody,
     ModalFooter,
     Input
 } from 'reactstrap';
@@ -20,7 +20,7 @@ import styled from 'styled-components';
 
 import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons/md";
 
-import {i18n} from '../i18n';
+import { i18n } from '../i18n';
 
 import ReactDataGrid from '@inovua/reactdatagrid-community';
 import '@inovua/reactdatagrid-community/base.css';
@@ -43,13 +43,13 @@ import { AiFillFileText } from "react-icons/ai";
 import EditEmployee from './EditEmployee';
 
 const filterValue = [
-    { name: 'firstName', operator: 'startsWith', type: 'string',  },
+    { name: 'firstName', operator: 'startsWith', type: 'string', },
     { name: 'lastName', operator: 'startsWith', type: 'string', },
-    { name: 'email', operator: 'startsWith', type: 'string',  },
-    { name: 'phoneNumber', operator: 'startsWith', type: 'string',  },
-    { name: 'jobTitle', operator: 'startsWith', type: 'select',operator: 'inlist',  },
-    { name: 'status', operator: 'startsWith', type: 'select',operator: 'inlist',  },
-    
+    { name: 'email', operator: 'startsWith', type: 'string', },
+    { name: 'phoneNumber', operator: 'startsWith', type: 'string', },
+    { name: 'jobTitle', operator: 'startsWith', type: 'select', operator: 'inlist', },
+    { name: 'status', operator: 'startsWith', type: 'select', operator: 'inlist', },
+
 ];
 
 class ListEmployee extends React.PureComponent {
@@ -62,63 +62,70 @@ class ListEmployee extends React.PureComponent {
         }
         this.profile = {};
         this.columns = [
-            { name: 'id', header: 'Id', defaultVisible: false, defaultWidth: 50},
+            { name: 'id', header: 'Id', defaultVisible: false, defaultWidth: 50 },
             // { name: 'no', header: '', type: 'number' ,groupBy: false, defaultWidth: 50 },
-            { name: 'firstName', groupBy: false,defaultFlex: 1, header: 'ชื่อ' },
-            { name: 'lastName', groupBy: false,defaultFlex: 1, header: 'นามสกุล' },
+            { name: 'firstName', groupBy: false, defaultFlex: 1, header: 'ชื่อ' },
+            { name: 'lastName', groupBy: false, defaultFlex: 1, header: 'นามสกุล' },
             { name: 'email', groupBy: false, defaultFlex: 1, header: 'อีเมล' },
             { name: 'phoneNumber', groupBy: false, defaultFlex: 1, header: 'เบอร์ติดต่อ' },
-            { name: 'jobTitle', defaultFlex: 1,  
-            filterEditor: SelectFilter,
-            filterEditorProps: {
-                placeholder: 'ทั้งหมด',
-                dataSource: [{id:'ผู้จัดการ',label:'ผู้จัดการ'},
-                {id:'ผู้ดูแลระบบ',label:'ผู้ดูแลระบบ'},
-                {id:'เจ้าหน้าที่',label:'เจ้าหน้าที่'},
-                {id:'พนังงานคลัง',label:'พนังงานคลัง'}]
-            },header: 'ตำแหน่ง' },
-            { name: 'status', groupBy: false, defaultFlex: 1,  
-            filterEditor: SelectFilter,
-            filterEditorProps: {
-                placeholder: 'ทั้งหมด',
-                dataSource: [{id:'ปกติ',label:'ปกติ'},{id:'ลาพัก',label:'ลาพัก'},{id:'ออก',label:'ออก'}]
-            }, header: 'สถานะ',render: ({value})=>{
-                if(value == 'ปกติ'){
-                    return(
-                        <div style={{display:'flex',alignItems:'center'}}>
-                        <div style={{width:8,height:8,margin:5,borderRadius:100,backgroundColor:'#00B046'
-                         }} /> 
-                        {value}
-                    </div>);
+            {
+                name: 'jobTitle', defaultFlex: 1,
+                filterEditor: SelectFilter,
+                filterEditorProps: {
+                    placeholder: 'ทั้งหมด',
+                    dataSource: [{ id: 'ผู้จัดการ', label: 'ผู้จัดการ' },
+                    { id: 'ผู้ดูแลระบบ', label: 'ผู้ดูแลระบบ' },
+                    { id: 'เจ้าหน้าที่', label: 'เจ้าหน้าที่' },
+                    { id: 'พนังงานคลัง', label: 'พนังงานคลัง' }]
+                }, header: 'ตำแหน่ง'
+            },
+            {
+                name: 'status', groupBy: false, defaultFlex: 1,
+                filterEditor: SelectFilter,
+                filterEditorProps: {
+                    placeholder: 'ทั้งหมด',
+                    dataSource: [{ id: 'ปกติ', label: 'ปกติ' }, { id: 'ลาพัก', label: 'ลาพัก' }, { id: 'ออก', label: 'ออก' }]
+                }, header: 'สถานะ', render: ({ value }) => {
+                    if (value == 'ปกติ') {
+                        return (
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <div style={{
+                                    width: 8, height: 8, margin: 5, borderRadius: 100, backgroundColor: '#00B046'
+                                }} />
+                                {value}
+                            </div>);
+                    }
+                    else if (value == 'ลาพัก') {
+                        return (
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <div style={{
+                                    width: 8, height: 8, margin: 5, borderRadius: 100, backgroundColor: 'gray'
+                                }} />
+                                {value}
+                            </div>);
+                    } else {
+                        return (
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <div style={{
+                                    width: 8, height: 8, margin: 5, borderRadius: 100, backgroundColor: '#FF0B0B'
+                                }} />
+                                {value}
+                            </div>);
+                    }
+
                 }
-                else if(value == 'ลาพัก'){
-                    return(
-                        <div style={{display:'flex',alignItems:'center'}}>
-                        <div style={{width:8,height:8,margin:5,borderRadius:100,backgroundColor:'gray'
-                         }} /> 
-                        {value}
-                    </div>);
-                }else{
-                    return(
-                        <div style={{display:'flex',alignItems:'center'}}>
-                        <div style={{width:8,height:8,margin:5,borderRadius:100,backgroundColor:'#FF0B0B'
-                         }} /> 
-                        {value}
-                    </div>);
-                }
-                
-            }
             }
             ,
-            { name: 'detail', header: 
-            <div style={{ display: 'inline-block' }}>
-                {'รายละเอียด'}
-          </div>,defaultWidth: 109, 
-            render: ({data})=>
-            <button onClick={(e)=>{this.toggleModalEditEmployee(e);this.profile=data;}} style={{display:'contents'}}>
-                <AiFillFileText color='#00A3FF' size={30} />
-            </button> ,
-            textAlign: 'center'
+            {
+                name: 'detail', header:
+                    <div style={{ display: 'inline-block' }}>
+                        {'รายละเอียด'}
+                    </div>, defaultWidth: 109,
+                render: ({ data }) =>
+                    <button onClick={(e) => { this.toggleModalEditEmployee(e); this.profile = data; }} style={{ display: 'contents' }}>
+                        <AiFillFileText color='#00A3FF' size={30} />
+                    </button>,
+                textAlign: 'center'
             }
         ]
     }
@@ -128,14 +135,14 @@ class ListEmployee extends React.PureComponent {
     toggleModalEditEmployee = (e) => {
         e.preventDefault();
         this.setState({ modalEditEmployee: !this.state.modalEditEmployee });
-      }
-
-    async componentDidMount(){
-        //await fire_base.getAllUserProfile(this.getAllUserProfileSuccess,this.unSuccess);
-        await fire_base.listeningProfile(this.listeningProfileSuccess,this.unSuccess);
     }
 
-    listeningProfileSuccess=(snapshot)=>{
+    async componentDidMount() {
+        //await fire_base.getAllUserProfile(this.getAllUserProfileSuccess,this.unSuccess);
+        await fire_base.listeningProfile(this.listeningProfileSuccess, this.unSuccess);
+    }
+
+    listeningProfileSuccess = (snapshot) => {
         let data = this.state.dataSource;
         snapshot.docChanges().forEach(function (change) {
             let d = change.doc.data();
@@ -145,38 +152,38 @@ class ListEmployee extends React.PureComponent {
                 data.push(d);
             }
             if (change.type === "modified") {
-                d.no = data[data.findIndex((obj=>obj.id == d.id))].no
-                data[data.findIndex((obj=>obj.id == d.id))] = d;
+                d.no = data[data.findIndex((obj => obj.id == d.id))].no
+                data[data.findIndex((obj => obj.id == d.id))] = d;
                 console.log("Modified : ", d);
             }
             if (change.type === "removed") {
-                data.splice(data.findIndex((obj=>obj.id == d.id)),1);
+                data.splice(data.findIndex((obj => obj.id == d.id)), 1);
                 console.log("Removed : ", change.doc.data());
             }
         })
         //console.log(data);
-        data.sort(function(a,b){
-            return a.CreateDate.toDate() - b.CreateDate.toDate();
-          });
+        data.sort(function (a, b) {
+            return a.createDate.toDate() - b.createDate.toDate();
+        });
         this.setState({
             dataSource: [...data]
-          });
+        });
     }
 
-    getAllUserProfileSuccess=(querySnapshot)=>{
+    getAllUserProfileSuccess = (querySnapshot) => {
         let data = []
         querySnapshot.forEach(doc => {
             let d = doc.data();
             d.id = doc.id
-      
-                data.push(d);
-                console.log(doc.id, " => ", doc.data());
+
+            data.push(d);
+            console.log(doc.id, " => ", doc.data());
 
         });
-        this.setState({dataSource:data});
+        this.setState({ dataSource: data });
     }
 
-    unSuccess(error){
+    unSuccess(error) {
         console.log(error);
     }
 
@@ -185,10 +192,10 @@ class ListEmployee extends React.PureComponent {
 
             <div>
                 <Modal isOpen={this.state.modalEditEmployee} toggle={this.toggleModalEditEmployee} backdrop='static' size='lg' >
-                <ModalHeader toggle={this.toggleModalEditEmployee}>รายละเอียดพนักงาน</ModalHeader>
-                <ModalBody>
-                <EditEmployee profile={this.profile} />
-                </ModalBody>
+                    <ModalHeader toggle={this.toggleModalEditEmployee}>รายละเอียดพนักงาน</ModalHeader>
+                    <ModalBody>
+                        <EditEmployee profile={this.profile} />
+                    </ModalBody>
                 </Modal>
                 {/* <Row style={{ marginBottom: '1rem' }}>
                     <Col md="6">.col-3</Col>
@@ -211,7 +218,7 @@ class ListEmployee extends React.PureComponent {
                     defaultFilterValue={filterValue}
                     showColumnMenuTool={false}
                     emptyText="ไม่มีรายการ"
-                    style={{minHeight: 550}}
+                    style={{ minHeight: 550 }}
                 />
                 {/* <UncontrolledCollapse toggler="#toggler">
                 <FormEmployee />

@@ -1,146 +1,146 @@
 import React from 'react';
 
+import fire_base from '../../firebase/Firebase';
+import {
+    Link,
+} from 'react-router-dom';
 
-import './Company.css';
-
+import { AiFillFileText } from "react-icons/ai";
 import {
     Button,
-    InputGroup,
-    InputGroupAddon,
-    InputGroupText,
-    Input,
-    Table,
-    Pagination,
-    PaginationItem,
-    PaginationLink
+    Row,
+    Col,
+    Container,
+    Modal, 
+    ModalHeader, 
+    ModalBody, 
 } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { 
-    Switch, 
-    Route, 
-    Link, 
-    NavLink, 
-    withRouter } from 'react-router-dom';
-import {
-    ProSidebar,
-    Menu,
-    MenuItem,
-    SubMenu
-} from 'react-pro-sidebar';
+
+import ReactDataGrid from '@inovua/reactdatagrid-community'
 import 'react-pro-sidebar/dist/css/styles.css';
+import '@inovua/reactdatagrid-community/base.css'
+import '@inovua/reactdatagrid-community/theme/default-light.css'
 
-import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
-import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons/md";
-import { IoMdTrash } from "react-icons/io";
+import {i18n} from '../i18n';
+import BuyDetail from './BuyDetail';
 
+
+const filterValue = [
+    { name: 'InID', operator: 'startsWith', type: 'string', },
+    { name: 'companyID', operator: 'startsWith', type: 'string', },
+    { name: 'dateCreate', operator: 'startsWith', type: 'string', },
+    { name: 'dateIn', operator: 'startsWith', type: 'string', },
+    { name: 'res', operator: 'startsWith', type: 'string', },
+    { name: 'status', operator: 'startsWith', type: 'string', },
+
+];
 
 
 class Buy extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            searchText: '',
+            dataSource: [],
+            modalฺBuyDetail: false,
         }
+        this.profile = {};
+        this.columns = [
+            { name: 'id', header: 'id', defaultVisible: false, },
+            { name: 'InID', header: 'หมายเลขใบสั่งซื้อ', defaultVisible: true, groupBy: false },
+            { name: 'companyID', groupBy: false, defaultFlex: 1, header: 'บริษัท' },
+            { name: 'dateCreate', groupBy: false, defaultFlex: 1, header: 'วันที่สร้าง' },
+            { name: 'dateIn', groupBy: false, defaultFlex: 1, header: 'วันที่สำเร็จการซื้อ' },
+            { name: 'res', groupBy: false, defaultFlex: 1, header: 'ผู้รับผิดชอบ' },
+            { name: 'status', groupBy: false, defaultFlex: 1, header: 'สถานะ' },
+            { name: 'detail', groupBy: false, defaultFlex: 1, header: 'รายละเอียด' ,
+            render: ({data})=>
+            <button onClick={(e)=>{this.toggleModalBuyDetail(e);this.profile=data;}} style={{display:'contents'}}>
+                <AiFillFileText color='#00A3FF' size={30} />
+            </button> ,
+            textAlign: 'center'},
+        ]
+    }
+
+    toggleModalBuyDetail = (e) => {
+        e.preventDefault();
+        this.setState({ modalBuyDetail: !this.state.modalBuyDetail });
+      }
+
+    setDataGridRef = (ref) => (this.dataGrid = ref)
+
+    async componentDidMount() {
+        await fire_base.getAllBuy(this.getAllBuySuccess, this.unSuccess);
+    }
+
+    getAllBuySuccess = async(querySnapshot) => {
+        
+        let data = []
+        await querySnapshot.forEach((doc) => { 
+            if(doc.id != 'state')
+            {
+            let d = doc.data();
+            let log = doc.data().log;
+            d.InID = doc.id;
+            d.dateCreate = d.dateCreate.toDate().getDate()+"/"+(d.dateCreate.toDate().getMonth()+1)+"/"+d.dateCreate.toDate().getFullYear()
+            if(d.dateIn)
+                d.dateIn = d.dateIn.toDate().getDate()+"/"+(d.dateIn.toDate().getMonth()+1)+"/"+d.dateIn.toDate().getFullYear()
+            else
+                d.dateIn = "-"
+            if(d.datePay)
+                d.datePay = d.datePay.toDate().getDate()+"/"+(d.datePay.toDate().getMonth()+1)+"/"+d.datePay.toDate().getFullYear()
+            else
+                d.datePay = "-"
+            let a = d.companyID.get()
+            .then(doc=>{
+                // this.setState({dataSource:this.state.dataSource.concat(doc)});
+                d.companyID = doc.data().companyName
+                this.setState({dataSource:this.state.dataSource.concat(d)});
+                return d;
+            })
+            // this.setState({dataSource:this.state.dataSource.concat(d)});
+            
+            }
+        });
+        //  await this.setState({dataSource: data });
+        
+        
+    }
+
+    unSuccess(error) {
+        // console.log(error);
     }
     render() {
         return (
-            <div className="Container">
+            <Container fluid={true} style={{ backgroundColor: 'while' }} >
+                <Modal  isOpen={this.state.modalBuyDetail} toggle={this.toggleModalBuyDetail} backdrop='static' size='lg' >
+                <ModalHeader toggle={this.toggleModalBuyDetail}>รายละเอียดการสั่งซื้อ</ModalHeader>
+                <ModalBody>
+                <BuyDetail profile={this.profile} />
+                </ModalBody>
+                </Modal>
+                <Link to={this.props.match.url + "/po"}>
+                    <Button color="info" style={{ width: 150 }}>เพิ่มรายการสั่งซื้อ</Button>
+                </Link>
+                <Row style={{ marginTop: '20px' }}>
+                    <ReactDataGrid
+                        onReady={this.setDataGridRef}
+                        i18n={i18n}
+                        idProperty="id"
+                        columns={this.columns}
+                        pagination
+                        defaultLimit={15}
+                        defaultSkip={15}
+                        pageSizes={[10, 15, 30]}
+                        dataSource={this.state.dataSource}
+                        defaultFilterValue={filterValue}
+                        showColumnMenuTool={true}
+                        emptyText="ไม่มีรายการ"
+                    />
+                </Row>
 
-                <div className="Content">
-                    <body className="Body">
-                        <h1 style={{
-                            marginTop: 20,
-                            marginBottom: 20,
-                            width: '95%',
-                            alignSelf: 'center'
-                        }}>รายการสั่งซื้อสินค้า</h1>
-                        <div className="Search_Button">
-                            <InputGroup style={{ width: 400 }}>
-                                <Input placeholder="หมายเลขใบสั่งซื้อ" />
-                                <InputGroupAddon addonType="append">
-                                    <InputGroupText><MdSearch color="#1F1F1F" size={22} /></InputGroupText>
-                                </InputGroupAddon>
-                            </InputGroup>
-                            <Button color="info" style={{ width: 100 }}>fillter</Button>
-                            <Link to={this.props.match.url+"/po"}>
-                            <Button color="info" style={{ width: 150 }}>เพิ่มรายการสั่งซื้อ</Button>
-                            </Link>
-                        </div>
-
-                        <Table striped style={{ width: '95%', alignSelf: 'center', marginTop: 20 }}>
-                            <thead>
-                                <tr>
-                                    <th>ลำดับที่</th>
-                                    <th>บริษัท</th>
-                                    <th>หมายเลขใบสั่งซื้อ</th>
-                                    <th>วันที่สั่งซื้อ</th>
-                                    <th>ผู้รับผิดชอบ</th>
-                                    <th>สถานะ</th>
-                                    <th>รายละเอียด</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>สส.จำกัด</td>
-                                    <td>100012</td>
-                                    <td>01/01/2564</td>
-                                    <td>ประยา จันชุด</td>
-                                    <td>รอใบเสนอขาย</td>
-                                    <td className="CenterTd"><MdDescription color="#00A3FF" size={25} /></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>สส.จำกัดค้าแป้ง</td>
-                                    <td>100013</td>
-                                    <td>01/01/2564</td>
-                                    <td>ประยา จันชุด</td>
-                                    <td>รอการยืนยัน</td>
-                                    <td className="CenterTd"><MdDescription color="#00A3FF" size={25} /></td>
-                                </tr>
-                                {/* <tr>
-                                    <th scope="row">3</th>
-                                    <td>100012</td>
-                                    <td>01/01/2564</td>
-                                    <td>ประยา จันชุด</td>
-                                    <td>เข้า</td>
-                                    <td className="CenterTd"><MdDescription color="#00A3FF" size={25} /></td>
-                                </tr> */}
-
-
-
-                            </tbody>
-                        </Table>
-                        <Pagination aria-label="Page navigation example"
-                            style={{
-                                justifyContent: 'center',
-                                marginTop: 10
-                            }}>
-                            <PaginationItem>
-                                <PaginationLink first href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink previous href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">1</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">2</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">3</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink next href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink last href="#" />
-                            </PaginationItem>
-                        </Pagination>
-                    </body>
-                </div>
-            </div>
+            </Container>
         );
     }
 }

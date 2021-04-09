@@ -43,14 +43,15 @@ import {
 } from "react-icons/bs";
 
 import firestore from '../../firebase/Firestore'
-// import SideBar from './SideBar'
-import './AddPartner.css'
+
+import '../Company/AddPartner.css'
 
 var checkZip = false;
 var subDistrictFilter = [];
 var districtFilter = [];
 const formPartnerSchema = Yup.object().shape({
-  companyName: Yup.string().required('กรุณาระบุข้อมูล'),
+  branchName: Yup.string().required('กรุณาระบุข้อมูล'),
+  ownerName: Yup.string().required('กรุณาระบุข้อมูล'),
   agentName: Yup.string().required('กรุณาระบุข้อมูล'),
   phoneNumber: Yup.string()
     .length(10, 'หมายเลขโทรศัพท์ไม่ครบ 10 หลัก')
@@ -81,7 +82,7 @@ const formPartnerSchema = Yup.object().shape({
 })
 
 
-class AddPartner extends React.Component {
+class AddBranch extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -96,6 +97,7 @@ class AddPartner extends React.Component {
     this.loading = false;
     this.account = null;
     this.hiddenFileInputRef = React.createRef();
+
   }
 
   toggleModalProfileImage = (e) => {
@@ -116,7 +118,7 @@ class AddPartner extends React.Component {
 
   setEditorRef = (editor) => (this.editor = editor)
 
-  addPartnerSuccess = () => {
+  addBranchSuccess = () => {
     this.setState({ loading: false });
     console.log("add partner success");
     this.sweetAlret("เสร็จสิ้น","เพิ่มบริษัทคู่ค้าแล้วแล้ว","success","ตกลง");
@@ -140,8 +142,8 @@ class AddPartner extends React.Component {
   render() {
     // console.log(new Date().toLocaleDateString());
     return (
-      <Card style={{width:'97%', alignSelf:'center'}}>
-                
+    <Card style={{width:'100%'}}>
+                        
         <CardBody>
           <Formik
             validationSchema={formPartnerSchema}
@@ -151,14 +153,15 @@ class AddPartner extends React.Component {
               this.setState({ loading: true });
               this.account = values;
               console.log(values)
-              //firestore.addPartnerCompany(values, this.addPartnerSuccess, this.unSuccess);
-              firestore.addVender(values, this.addPartnerSuccess, this.unSuccess);
+              // firestore.addBranch(values, this.addBranchSuccess, this.unSuccess);
+              firestore.addBranchV2(values, this.addBranchSuccess, this.unSuccess);
               resetForm(true);
               
             }}
             //กำหนดค่า default from
             initialValues={{
-              companyName: '',
+              branchName: '',
+              ownerName: '',
               agentName: '',
               phoneNumber: '',
               address: '',
@@ -189,13 +192,9 @@ class AddPartner extends React.Component {
               >
                 {/* from กรอกข้อมูล */}
                 <Form onSubmit={handleSubmit} onReset={(e) => { e.preventDefault(); this.setDefaultImageCrop(); handleReset(e); }}>
-
-                  
                   <Row form>
                     <Col>
-
                       <FormGroup style={{ display: 'flex', justifyContent: 'center' }} >
-
                       </FormGroup>
                     </Col>
                   </Row>
@@ -203,18 +202,18 @@ class AddPartner extends React.Component {
                     
                     <Col md={6}>
                       <FormGroup>
-                        <Label for="companyName">ชื่อบริษัท</Label>
+                        <Label for="branchName">ชื่อสาขา</Label>
                         <Input
                           type="text"
-                          name="companyName"
-                          id="companyName"
+                          name="branchName"
+                          id="branchName"
                           placeholder="ตย. สมชาย"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.companyName}
-                          invalid={errors.companyName && touched.companyName}
+                          value={values.branchName}
+                          invalid={errors.branchName && touched.branchName}
                         />
-                        <FormFeedback>*{errors.companyName}</FormFeedback>
+                        <FormFeedback>*{errors.branchName}</FormFeedback>
                       </FormGroup>
                     </Col>
                     <Col md={6}>
@@ -231,6 +230,22 @@ class AddPartner extends React.Component {
                           invalid={errors.agentName && touched.agentName}
                         />
                         <FormFeedback >*{errors.agentName}</FormFeedback>
+                      </FormGroup>
+                    </Col>
+                    <Col md={6}>
+                      <FormGroup>
+                        <Label for="ownerName">ชื่อเจ้าของสาขา</Label>
+                        <Input
+                          type="text"
+                          name="ownerName"
+                          id="ownerName"
+                          placeholder="ตย. ใจหาญ"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.ownerName}
+                          invalid={errors.ownertName && touched.ownerName}
+                        />
+                        <FormFeedback >*{errors.ownerName}</FormFeedback>
                       </FormGroup>
                     </Col>
                     <Col md={6}>
@@ -296,6 +311,7 @@ class AddPartner extends React.Component {
                           placeholder="ตย. 20230"
                           onKeyUp={() => {
                             //console.log(values.zipCode.length);
+                            console.log(values.subdistrict)
                             if (values.zipCode.length == 5) {
                               let filter = data.address.filter((data) => {
                                 return data.zipcode == Number(values.zipCode)
@@ -312,10 +328,10 @@ class AddPartner extends React.Component {
                                 setFieldValue('province', filter[0].province);
                                 checkZip = true
                               } else {
-                                setFieldValue('subdistrict', '');
-                                setFieldValue('district', '');
-                                setFieldValue('province', '');
-                                checkZip = false
+                                    setFieldValue('subdistrict', '');
+                                    setFieldValue('district', '');
+                                    setFieldValue('province', '');
+                                    checkZip = false
                               }
                             }
                           }}
@@ -335,7 +351,6 @@ class AddPartner extends React.Component {
                           name="subdistrict"
                           id="subdistrict"
                           placeholder="ทุ่งสุขลา"
-
                           onChange={handleChange}
                           onBlur={handleBlur}
                           value={values.subdistrict}
@@ -353,6 +368,7 @@ class AddPartner extends React.Component {
                           type="text"
                           name="district"
                           id="district"
+                          onChange={handleChange}
                           value={values.district}
                         // invalid={errors.city && touched.city}
                         />
@@ -367,6 +383,7 @@ class AddPartner extends React.Component {
                           type="text"
                           name="province"
                           id="province"
+                          onChange={handleChange}
                           value={values.province}
                         />
                         {/* <FormFeedback >*{errors.state}</FormFeedback> */}
@@ -374,12 +391,7 @@ class AddPartner extends React.Component {
                     </Col>
                   </Row>
                   <Row form>
-                    <Col md={8} />
-                    <Col md={2} style={{ display: 'flex' }}>
-                      <FormGroup style={{ display: 'flex', flex: 1 }}>
-                        <Button type="reset" color="secondary" style={{ flex: 1 }}>เคลียร์</Button>
-                      </FormGroup>
-                    </Col>
+                    <Col md={10} />
                     <Col md={2} style={{ display: 'flex' }}>
                       <FormGroup style={{ display: 'flex', flex: 1 }}>
                         <Button type="submit" color="success" style={{ flex: 1 }}>บันทึก</Button>
@@ -391,13 +403,15 @@ class AddPartner extends React.Component {
             )}
 
           </Formik>
-          </CardBody>
-      </Card>     
-                                     
+        </CardBody>
+    </Card>        
 
     );
   }
 }
 
+AddBranch.propTypes = {
+    data: PropTypes.object
+}
 
-export default AddPartner;
+export default AddBranch;

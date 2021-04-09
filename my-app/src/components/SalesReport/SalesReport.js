@@ -21,7 +21,7 @@ import '@inovua/reactdatagrid-community/base.css'
 import '@inovua/reactdatagrid-community/theme/default-light.css'
 import 'react-pro-sidebar/dist/css/styles.css';
 
-import {i18n} from '../i18n';
+import { i18n } from '../i18n';
 
 import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
 import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons/md";
@@ -30,44 +30,108 @@ import { IoMdTrash } from "react-icons/io";
 import * as Yup from 'yup';
 
 const filterValue = [
-    { name: 'date', operator: 'startsWith', type: 'string', value: '' },
-    { name: 'productID', operator: 'startsWith', type: 'string', value: '' },
-    { name: 'total', operator: 'startsWith', type: 'string', value: '' },
-    { name: 'volume', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'idp', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'productType', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'productName', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'avolume', operator: 'gte', type: 'number', value: '' },
+    { name: 'totalPrice', operator: 'gte', type: 'number', value: '' },
 ];
-const columns = [
-    { name: 'id', header: 'Id', defaultVisible: false, type: 'number', maxWidth: 40 },
-    { name: 'productID', groupBy: false, defaultFlex: 1, header: 'รหัสสินค้า' },
-    { name: 'productID', groupBy: false, defaultFlex: 1, header: 'ชนิด' },
-    { name: 'total', groupBy: false, defaultFlex: 1, header: 'รายการสินค้า' },
-    { name: 'total', groupBy: false, defaultFlex: 1, header: 'ปริมาณ' },
-    { name: 'volume', groupBy: false, defaultFlex: 1, header: 'มูลค่าการขาย(บาท)' },
 
-]
-const dataSource = [{ id: '1150', firstName: 'chainan', lastName: 'punsri', email: 'chain@hhh.com' }, { id: '1151', firstName: 'ahainun', lastName: 'vansri', email: 'cain@hhh.com' }]
 
 class SalesReport extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             searchText: '',
-            dataSource: dataSource
+            dataSource: [],
+            key:'',
         }
+        this.columns = [
+            { name: 'id', header: 'Id', defaultVisible: false, type: 'number', maxWidth: 40 },
+            { name: 'idp', groupBy: false, defaultFlex: 1, header: 'รหัสสินค้า' },
+            { name: 'productType', groupBy: false, defaultFlex: 1, header: 'ชนิด' },
+            { name: 'productName', groupBy: false, defaultFlex: 1, header: 'รายการสินค้า' },
+            { name: 'avolume', groupBy: false, defaultFlex: 1, header: 'ปริมาณ' },
+            { name: 'totalPrice', groupBy: false, defaultFlex: 1, header: 'มูลค่าการขาย(บาท)' },
+        ]
     }
 
     setDataGridRef = (ref) => (this.dataGrid = ref)
 
     async componentDidMount() {
-        await fire_base.getAllUserProfile(this.getAllUserProfileSuccess, this.unSuccess);
+        await fire_base.getAllProduct(this.getAllProductSuccess, this.unSuccess);
     }
+    getAllSellSuccess = async (querySnapshot) => {
 
-    getAllUserProfileSuccess = (querySnapshot) => {
-        let data = []
-        querySnapshot.forEach(doc => {
-            data.push(doc.data());
-            console.log(doc.id, " => ", doc.data());
+        await querySnapshot.forEach((doc) => {
+            let z =[]
+            if (doc.id != 'state') {
+                let d = doc.data();
+                d.InID = doc.id
+                // console.log('Sell', d)
+                d.avolume = 0;
+                d.dateCreate = d.dateCreate.toDate().getDate() + "/" + (d.dateCreate.toDate().getMonth() + 1) + "/" + d.dateCreate.toDate().getFullYear()
+                if (d.dateIn != undefined)
+                    d.dateIn = d.dateIn.toDate().getDate() + "/" + (d.dateIn.toDate().getMonth() + 1) + "/" + d.dateIn.toDate().getFullYear()
+                else
+                    d.dateIn = "-"
+                if (d.datePay != undefined)
+                    d.datePay = d.datePay.toDate().getDate() + "/" + (d.datePay.toDate().getMonth() + 1) + "/" + d.datePay.toDate().getFullYear()
+                else
+                    d.datePay = "-"
+                d.branchID.get()
+                    .then(doc => {
+                        d.branchName = doc.data().branchName
+                        return d;
+                    })
+                // console.log(' datas', this.state.dataSource)
+                for (let a of this.state.dataSource) {
+                    a.avolume = Number(0)
+                    a.totalPrice = 0
+                    for (let x of d.log) {
+                        // console.log('sell LOG', x)
+                        x.productID.get()
+                            .then(doc => {
+                                x.aproductID = doc.id
+                                if (x.aproductID == a.idp) {
+                                    a.avolume += x.volume
+                                    a.totalPrice += (x.productPrice * x.volume) - x.disCount
+                                     
+                                    this.setState({ dataSource: this.state.dataSource.concat(z) });
+                                }
+
+                            });
+                    }
+                }
+
+            }
         });
-        this.setState({ dataSource: data });
+        // console.log('a>>', this.state.dataSource)
+
+
+    }
+    getAllProductSuccess = async (querySnapshot) => {
+        let data = []
+        
+        await querySnapshot.forEach(async (doc) => {
+            if (doc.id != 'state') {
+
+                let d = doc.data();
+
+                d.idp = doc.id;
+
+                await d.productType.get()
+                    .then(doc => {
+                        d.productType = doc.data().name
+                        // console.log('product', d);
+                        
+                        this.setState({ dataSource: this.state.dataSource.concat(d) });
+
+                    })
+            }
+        });
+        fire_base.getAllSellReport(this.getAllSellSuccess, this.unSuccess);
+
     }
 
     unSuccess(error) {
@@ -76,16 +140,9 @@ class SalesReport extends React.Component {
 
     render() {
         return (
-            <Container fluid={true} style={{ backgroundColor: 'wheat' }} >
-                <Row >
-                    <h1 style={{
-                        marginTop: 20,
-                        marginBottom: 20,
-                        width: '100%',
-                        alignSelf: 'center'
-                    }}>ยอดขายสินค้า</h1>
-                </Row>
-                <Row >
+            <Container fluid={true} style={{ backgroundColor: 'black' }} >
+
+                {/* <Row >
                     <Col sm="1">
                         Date
                                 </Col>
@@ -110,25 +167,13 @@ class SalesReport extends React.Component {
                             placeholder="date placeholder"
                         />
                     </Col>
-                    <Col>
-                        <InputGroup >
-                            <Input placeholder="รหัสสินค้า" />
-                            <InputGroupAddon addonType="append">
-                                <InputGroupText><MdSearch color="#1F1F1F" size={22} /></InputGroupText>
-                            </InputGroupAddon>
-                        </InputGroup>
-
-                    </Col>
-                    <Col md="auto">
-                        <Button color="info" style={{ width: 200 }}>fillter</Button>
-                    </Col>
-                </Row >
-                <Row style={{ marginTop:'20px'}}>
+                </Row > */}
+                <Row style={{ marginTop: '20px' }}>
                     <ReactDataGrid
                         onReady={this.setDataGridRef}
                         i18n={i18n}
                         idProperty="id"
-                        columns={columns}
+                        columns={this.columns}
                         pagination
                         defaultLimit={15}
                         defaultSkip={15}
@@ -137,8 +182,9 @@ class SalesReport extends React.Component {
                         defaultFilterValue={filterValue}
                         showColumnMenuTool={true}
                         emptyText="ไม่มีรายการ"
+                        style={{ minHeight: 550 }}
                     />
-                </Row>
+                </Row >
 
             </Container>
         );
