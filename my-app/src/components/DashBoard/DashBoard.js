@@ -417,7 +417,8 @@ class DashBoard extends React.Component {
                                 defaultSortInfo={{name : 'avolume', dir : -1}}
                                 style={{ minHeight: 550 }}
                             />
-        
+         
+         
                             
                         </Card>
                     </div>
