@@ -2,7 +2,7 @@ import React from 'react';
 
 import { PDFViewer } from '@react-pdf/renderer';
 
-import {InvoiceCreater, ReceiptCreater, POCreater} from './PDFCreater';
+import {InvoiceCreater,  POCreater, ReceiptCreaterV2} from './PDFCreater';
 
 class PDFReceipt extends React.Component {
     constructor(props){
@@ -62,7 +62,7 @@ class PDFReceipt extends React.Component {
             <div style={{display:'flex', justifyContent:'center', width:'100%'}}>
                 <PDFViewer style={{width:'100%', height:'100vh', border:'none'}}>
 
-                    <ReceiptCreater data={data} 
+                    <ReceiptCreaterV2 data={data} 
                                     branchData={branchData} 
                                     companyData={companyData}/>
 

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { PDFViewer } from '@react-pdf/renderer';
 
-import {POCreater} from './PDFCreater';
+import {POCreater, POCreaterV2} from './PDFCreater';
 
 class PDFPO extends React.Component {
     constructor(props){
@@ -61,7 +61,7 @@ class PDFPO extends React.Component {
         return(
             <div style={{display:'flex', justifyContent:'center', width:'100%'}}>
                 <PDFViewer style={{width:'100%', height:'100vh', border:'none'}}>
-                    <POCreater data={poData} 
+                    <POCreaterV2 data={poData} 
                                branchData={branchData} 
                                companyData={companyData}/>
                 </PDFViewer>

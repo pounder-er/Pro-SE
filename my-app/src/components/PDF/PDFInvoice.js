@@ -22,7 +22,9 @@ class PDFInvoice extends React.Component {
                     {id:'', pname:'', pricePerUnit: '', quantity: '', discount: '', sum: ''},
                     {id:'', pname:'', pricePerUnit: '', quantity: '', discount: '', sum: ''},
                     {id:'', pname:'', pricePerUnit: '', quantity: '', discount: '', sum: ''},
-                    {id:'', pname:'', pricePerUnit: '', quantity: '', discount: '', sum: ''}
+                    {id:'', pname:'', pricePerUnit: '', quantity: '', discount: '', sum: ''},
+                    {id:'', pname:'', pricePerUnit: '', quantity: '', discount: '', sum: ''},
+                    {id:'', pname:'', pricePerUnit: '', quantity: '', discount: '', sum: ''},
                    ]
         let branchData = {branchID : '1234',
                           cusName : 'จอห์นวิค สมุทรปราการ',
