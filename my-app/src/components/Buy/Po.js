@@ -82,9 +82,12 @@ class Po extends React.Component {
             log : [],
             companyCheck : false,
             
+            loading:false
         }
         this.product = []
         
+        
+
         this.companyID = ""
     }
 
@@ -102,7 +105,8 @@ class Po extends React.Component {
             element.push(e);
         })
         this.setState({ elementPartnerCompany: element });
-        // console.log(element);
+
+        console.log(this.state.elementPartnerCompany[0].props.value);
     }
 
     getAllProductSuccess = (querySnapshot) => {
@@ -125,11 +129,24 @@ class Po extends React.Component {
     }
 
     unSuccess = (error) => {
-        // console.log(error)
+        this.setState({loading:false});
+        console.log(error)
+        this.sweetAlret('ล้มเหลว', 'การเชื่อมต่อผิดพลาด', 'error', 'ตกลง');
     }
 
     addPOSuccess=()=>{
+        this.setState({loading:false});
+        this.sweetAlret('สำเร็จ', 'เพิ่มรายการซื้อเรียบร้อย', 'success', 'ตกลง');
 
+    }
+
+    sweetAlret(title, text, icon, button) {
+        swal({
+            title: title,
+            text: text,
+            icon: icon,
+            button: button,
+        })
     }
 
     uploadTodb =()=>{
@@ -140,7 +157,7 @@ class Po extends React.Component {
             res : this.props.userProfile.firstName + " " +  this.props.userProfile.lastName
         }
         // let llog = []
-        console.log(this.state.log)
+        
         // for(let x of this.state.log){           
         //     let b = this.product.find((doc,index)=>{
         //         if(doc.id == x.productID){
@@ -150,13 +167,24 @@ class Po extends React.Component {
             
         //     llog.push(b)
         // }
-        
+        console.log(data)
+        this.setState({loading:true});
         fire_base.addPO(data,this.addPOSuccess, this.unSuccess)
     }
-
+    
+    checkCom=(setFieldValue,values)=>{
+        if(values.companyID == '' && this.state.elementPartnerCompany.length>0){
+            setFieldValue('companyID',this.state.elementPartnerCompany[0].props.value);
+        }
+    }
     render() {
         
         return (
+            <LoadingOverlay
+                active={this.state.loading}
+                spinner
+                text='กำลังเพิ่มรายการซื้อ...'
+            >
             <div>
                 <Formik
                     validationSchema={formPo}
@@ -177,7 +205,7 @@ class Po extends React.Component {
                         }
                         if(g)
                         {
-                            console.log(values.productID)   
+                               
                             let a ={},
                             b = this.product.find((doc,index)=>{
                                 if(doc.id == values.productID){
@@ -188,8 +216,9 @@ class Po extends React.Component {
                             a.productName = b.productName
                             a.volume = values.volume
                             a.productID = values.productID
-                            a.productPrice = '-'
-                            a.disCount = '-'
+                            a.productPrice = null
+                            a.disCount = null
+                            console.log(a)
                             this.setState({log : this.state.log.concat(a)})
                         }
 
@@ -198,8 +227,7 @@ class Po extends React.Component {
                     initialValues={{
                         productName: '',
                         productID: '300000',
-                        productPrice: '0',
-                        companyID: '00',
+                        companyID: '',
                         volume: 1
                     }}
                 >
@@ -216,7 +244,7 @@ class Po extends React.Component {
                         errors,
                     }) => (
                         <Form onSubmit={handleSubmit} onReset={(e) => { e.preventDefault(); handleReset(e); }} >
-
+                            {this.checkCom(setFieldValue,values)}
                             <Row form>
                                 
                                 <Col md={6} >
@@ -241,6 +269,7 @@ class Po extends React.Component {
                                                 d.forEach(doc=>{
                                                     element.push(<option key={doc.id} value={doc.id}>{doc.id + ' : ' + doc.productName}</option>);
                                                 })
+                                                setFieldValue('productName',d[0].id);
                                                 this.setState({elementProduct:element});
                                                 // console.log(values.companyID)
                                             
@@ -358,6 +387,7 @@ class Po extends React.Component {
                 </Row> */}
                 
             </div>
+            </LoadingOverlay>
         );
     }
 }
