@@ -33,6 +33,8 @@ import { FaFilePdf } from "react-icons/fa";
 import { AiFillFileText } from "react-icons/ai";
 import { BiImageAdd } from "react-icons/bi";
 
+import PDFInvoice from '../PDF/PDFInvoice'
+import PDFReceipt from '../PDF/PDFReceipt'
 
 const filterValue = [
     { name: 'productID', operator: 'startsWith', type: 'string', },
@@ -71,6 +73,9 @@ class SellDetail extends React.Component {
             modalAssing:false,
             searchText: '',
             dataSource: [],
+
+            modalInv: false,
+            modalRe : false
         }
         this.sum = 0
         this.hiddenFileInputRef = React.createRef();
@@ -95,6 +100,7 @@ class SellDetail extends React.Component {
                 console.log(this.state.dataSource)
             })
         }
+        this.props.profile.sum = this.sum
     }
     setDataGridRef = (ref) => (this.dataGrid = ref)
 
@@ -145,6 +151,16 @@ class SellDetail extends React.Component {
         
         this.setState({ modalAssing: !this.state.modalAssing });
     }
+
+    toggleModalInv = () => {
+        
+        this.setState({ modalInv: !this.state.modalInv });
+    }
+
+    toggleModalRe = () => {
+        
+        this.setState({ modalRe: !this.state.modalRe });
+    }
     render() {
         return (
             <Container fluid={false} style={{ backgroundColor: 'while'}} >
@@ -153,6 +169,19 @@ class SellDetail extends React.Component {
                     <ModalHeader toggle={this.toggleModalAss}>มอบหมายงาน</ModalHeader>
                     <ModalBody>
                         <AssignEx invoice={this.props.profile} closeTogle={this.toggleModalAss}/>
+                    </ModalBody>
+                </Modal>
+
+                <Modal isOpen={this.state.modalInv} toggle={this.toggleModalInv} backdrop='static' size='lg' >
+                    <ModalHeader toggle={this.toggleModalInv}>Inv</ModalHeader>
+                    <ModalBody>
+                        <PDFInvoice data={this.props.profile}/>
+                    </ModalBody>
+                </Modal>
+                <Modal isOpen={this.state.modalRe} toggle={this.toggleModalRe} backdrop='static' size='lg' >
+                    <ModalHeader toggle={this.toggleModalRe}>Receipt</ModalHeader>
+                    <ModalBody>
+                        <PDFReceipt data={this.props.profile}/>
                     </ModalBody>
                 </Modal>
                  <Modal isOpen={this.state.ModalImage} toggle={this.toggleModalImage} backdrop='static' >
@@ -300,7 +329,7 @@ class SellDetail extends React.Component {
                 <Row style={{ height: 50 }}>
                 <Col md={2} >
                         <Label>ใบแจ้งหนี้: </Label>
-                        <button  style={{ display: 'contents' }}>
+                        <button  onClick={this.toggleModalInv} style={{ display: 'contents' }}>
                             <FaFilePdf color='red' size={25} />
                         </button>
                     </Col>
@@ -309,7 +338,7 @@ class SellDetail extends React.Component {
                         <button style={{ display: 'contents' }} onClick={(e) => { this.toggleModalImage(e); e.preventDefault(); }} >
                             <AiFillFileText color='#00A3FF' size={30} />
                         </button>
-                        <button style={{ display: 'contents' }}>
+                        <button onClick={this.toggleModalRe} style={{ display: 'contents' }}>
                             <FaFilePdf size={25} color='red' />
                         </button>
                     </Col>

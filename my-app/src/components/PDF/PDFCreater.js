@@ -128,17 +128,17 @@ class InvoiceCreater extends React.Component {
                                 borderWidth: 2,
                                 width: '97%'
                             }}>
-                                <Text style={{ fontSize: 13, marginLeft: 14 }}>รหัสสาขา {this.props.branchData.branchID}</Text>
-                                <Text style={{ fontSize: 13, marginLeft: 14 }}>ชื่อลูกค้า {this.props.branchData.cusName}</Text>
+                                <Text style={{ fontSize: 13, marginLeft: 14 }}>สาขา {this.props.branchData.branchID}</Text>
+                                <Text style={{ fontSize: 13, marginLeft: 14 }}> {this.props.branchData.cusName}</Text>
                                 <View style={{ flexDirection: 'row' }}>
-                                    <Text style={{ fontSize: 13, marginLeft: 14 }}>ที่อยู่ {this.props.branchData.address}</Text>
-                                    <Text style={{ fontSize: 13, marginLeft: 10 }}>หมู่ {this.props.branchData.moo}</Text>
-                                    <Text style={{ fontSize: 13, marginLeft: 10 }}>ต. {this.props.branchData.sub_district}</Text>
-                                    <Text style={{ fontSize: 13, marginLeft: 10 }}>อ. {this.props.branchData.district}</Text>
-                                    <Text style={{ fontSize: 13, marginLeft: 10 }}>จ. {this.props.branchData.provide}</Text>
+                                    <Text style={{ fontSize: 13, marginLeft: 14 }}> {this.props.branchData.address}</Text>
+                                    <Text style={{ fontSize: 13, marginLeft: 10 }}> {this.props.branchData.moo}</Text>
+                                    <Text style={{ fontSize: 13, marginLeft: 10 }}> {this.props.branchData.sub_district}</Text>
+                                    <Text style={{ fontSize: 13, marginLeft: 10 }}> {this.props.branchData.district}</Text>
+                                    <Text style={{ fontSize: 13, marginLeft: 10 }}> {this.props.branchData.provide}</Text>
                                     <Text style={{ fontSize: 13, marginLeft: 10 }}>{this.props.branchData.zipCode}</Text>
                                 </View>
-                                <Text style={{ fontSize: 13, marginLeft: 14 }}>โทร {this.props.branchData.tel}</Text>
+                                <Text style={{ fontSize: 13, marginLeft: 14 }}> {this.props.branchData.tel}</Text>
                             </View>
 
                         </View>
@@ -148,10 +148,10 @@ class InvoiceCreater extends React.Component {
                             marginRight: 30,
                             flex: 0.3
                         }}>
-                            <Text style={{ fontSize: 13, marginLeft: 5 }}>หมายเลขใบแจ้งหนี้ : 12123</Text>
-                            <Text style={{ fontSize: 13, marginLeft: 5 }}>วันที่ : 01/01/2564</Text>
-                            <Text style={{ fontSize: 13, marginLeft: 5 }}>ผู้รับผิดชอบ : </Text>
-                            <Text style={{ fontSize: 13, marginLeft: 5 }}>วันครบกำหนด : 01/01/2564</Text>
+                            <Text style={{ fontSize: 13, marginLeft: 5 }}>หมายเลขใบแจ้งหนี้ : {this.props.invInfo.id}</Text>
+                            <Text style={{ fontSize: 13, marginLeft: 5 }}>วันที่ : {this.props.invInfo.date}</Text>
+                            <Text style={{ fontSize: 13, marginLeft: 5 }}>ผู้รับผิดชอบ : {this.props.invInfo.resp}</Text>
+                            {/* <Text style={{ fontSize: 13, marginLeft: 5 }}>วันครบกำหนด : 01/01/2564</Text> */}
                         </View>
                     </View>
                     <View style={{ marginTop: 10, marginLeft: 30, marginRight: 30 }}>
@@ -297,22 +297,22 @@ class InvoiceCreater extends React.Component {
                         <Text>{num}</Text>
                     </View>
                     <View style={{ flex: 0.16, borderLeftColor: 'black', borderLeftWidth: this.state.tableBorderWidth }}>
-                        <Text>{list[x].id}</Text>
+                        <Text>{list[x].productID.id}</Text>
                     </View>
                     <View style={{ flex: 0.18, borderLeftColor: 'black', borderLeftWidth: this.state.tableBorderWidth }}>
-                        <Text>{list[x].pname}</Text>
+                        <Text>{list[x].productName}</Text>
                     </View>
                     <View style={{ flex: 0.15, borderLeftColor: 'black', borderLeftWidth: this.state.tableBorderWidth }}>
-                        <Text>{list[x].pricePerUnit}</Text>
+                        <Text>{list[x].productPrice}</Text>
                     </View>
                     <View style={{ flex: 0.14, borderLeftColor: 'black', borderLeftWidth: this.state.tableBorderWidth }}>
-                        <Text>{list[x].quantity}</Text>
+                        <Text>{list[x].volume}</Text>
                     </View>
                     <View style={{ flex: 0.14, borderLeftColor: 'black', borderLeftWidth: this.state.tableBorderWidth }}>
-                        <Text>{list[x].discount}</Text>
+                        <Text>{list[x].disCount}</Text>
                     </View>
                     <View style={{ flex: 0.14, borderLeftColor: 'black', borderLeftWidth: this.state.tableBorderWidth }}>
-                        <Text>{list[x].sum}</Text>
+                        <Text>{(list[x].productPrice * list[x].volume)-list[x].disCount}</Text>
                     </View>
                 </View>
             );
@@ -350,7 +350,7 @@ class InvoiceCreater extends React.Component {
                         <Text>{this.state.data[x].pricePerUnit}</Text>
                     </View>
                     <View style={{ flex: 0.14, borderLeftColor: 'black', borderLeftWidth: this.state.tableBorderWidth }}>
-                        <Text>{this.state.data[x].quantity}</Text>
+                        <Text>{this.state.data[x].volume}</Text>
                     </View>
                     <View style={{ flex: 0.14, borderLeftColor: 'black', borderLeftWidth: this.state.tableBorderWidth }}>
                         <Text>{this.state.data[x].discount}</Text>
@@ -393,11 +393,11 @@ class ReceiptCreaterV2 extends React.Component {
         }
 
         this.list = []
-        this.sum = 0
+        this.sum = this.props.sum
         this.discount = 0
         this.tax = 0
         this.total = 0
-
+        console.log(this.props.invInfo)
     }
 
     componentDidMount() {
@@ -417,6 +417,8 @@ class ReceiptCreaterV2 extends React.Component {
         this.total = tempTotal;
 
         this.renderAllPage();
+
+    
     }
 
     sliceData = () => {
@@ -497,17 +499,17 @@ class ReceiptCreaterV2 extends React.Component {
                                 borderWidth: 2,
                                 width: '97%'
                             }}>
-                                <Text style={{ fontSize: 13, marginLeft: 14 }}>รหัสสาขา {this.props.branchData.branchID}</Text>
-                                <Text style={{ fontSize: 13, marginLeft: 14 }}>ชื่อลูกค้า {this.props.branchData.cusName}</Text>
+                                <Text style={{ fontSize: 13, marginLeft: 14 }}>สาขา {this.props.branchData.branchID}</Text>
+                                <Text style={{ fontSize: 13, marginLeft: 14 }}> {this.props.branchData.cusName}</Text>
                                 <View style={{ flexDirection: 'row' }}>
-                                    <Text style={{ fontSize: 13, marginLeft: 14 }}>ที่อยู่ {this.props.branchData.address}</Text>
-                                    <Text style={{ fontSize: 13, marginLeft: 10 }}>หมู่ {this.props.branchData.moo}</Text>
-                                    <Text style={{ fontSize: 13, marginLeft: 10 }}>ต. {this.props.branchData.sub_district}</Text>
-                                    <Text style={{ fontSize: 13, marginLeft: 10 }}>อ. {this.props.branchData.district}</Text>
-                                    <Text style={{ fontSize: 13, marginLeft: 10 }}>จ. {this.props.branchData.provide}</Text>
+                                    <Text style={{ fontSize: 13, marginLeft: 14 }}> {this.props.branchData.address}</Text>
+                                    <Text style={{ fontSize: 13, marginLeft: 10 }}> {this.props.branchData.moo}</Text>
+                                    <Text style={{ fontSize: 13, marginLeft: 10 }}> {this.props.branchData.sub_district}</Text>
+                                    <Text style={{ fontSize: 13, marginLeft: 10 }}> {this.props.branchData.district}</Text>
+                                    <Text style={{ fontSize: 13, marginLeft: 10 }}> {this.props.branchData.provide}</Text>
                                     <Text style={{ fontSize: 13, marginLeft: 10 }}>{this.props.branchData.zipCode}</Text>
                                 </View>
-                                <Text style={{ fontSize: 13, marginLeft: 14 }}>โทร {this.props.branchData.tel}</Text>
+                                <Text style={{ fontSize: 13, marginLeft: 14 }}> {this.props.branchData.tel}</Text>
                             </View>
 
                         </View>
@@ -517,10 +519,10 @@ class ReceiptCreaterV2 extends React.Component {
                             marginRight: 30,
                             flex: 0.3
                         }}>
-                            <Text style={{ fontSize: 13, marginLeft: 5 }}>หมายเลขใบแจ้งหนี้ : 12123</Text>
-                            <Text style={{ fontSize: 13, marginLeft: 5 }}>วันที่ : 01/01/2564</Text>
-                            <Text style={{ fontSize: 13, marginLeft: 5 }}>ผู้รับผิดชอบ : </Text>
-                            <Text style={{ fontSize: 13, marginLeft: 5 }}>วันครบกำหนด : 01/01/2564</Text>
+                            <Text style={{ fontSize: 13, marginLeft: 5 }}>หมายเลขใบแจ้งหนี้ : {this.props.invInfo.id}</Text>
+                            <Text style={{ fontSize: 13, marginLeft: 5 }}>วันที่ : {this.props.invInfo.date}</Text>
+                            <Text style={{ fontSize: 13, marginLeft: 5 }}>ผู้รับผิดชอบ : {this.props.invInfo.resp}</Text>
+                            {/* <Text style={{ fontSize: 13, marginLeft: 5 }}>วันครบกำหนด : 01/01/2564</Text> */}
                         </View>
                     </View>
                     <View style={{ marginTop: 10, marginLeft: 30, marginRight: 30 }}>
@@ -650,20 +652,20 @@ class ReceiptCreaterV2 extends React.Component {
                         <Text>{num}</Text>
                     </View>
                     <View style={{ flex: 0.16, borderLeftColor: 'black', borderLeftWidth: this.state.tableBorderWidth }}>
-                        <Text>{list[x].id}</Text>
+                        <Text>{list[x].productID.id}</Text>
                     </View>
                     <View style={{ flex: 0.32, borderLeftColor: 'black', borderLeftWidth: this.state.tableBorderWidth }}>
-                        <Text>{list[x].pname}</Text>
+                        <Text>{list[x].productName}</Text>
                     </View>
                     <View style={{ flex: 0.15, borderLeftColor: 'black', borderLeftWidth: this.state.tableBorderWidth }}>
-                        <Text>{list[x].pricePerUnit}</Text>
+                        <Text>{list[x].productPrice}</Text>
                     </View>
                     <View style={{ flex: 0.14, borderLeftColor: 'black', borderLeftWidth: this.state.tableBorderWidth }}>
-                        <Text>{this.state.data[x].quantity}</Text>
+                        <Text>{list[x].volume}</Text>
                     </View>
                     
                     <View style={{ flex: 0.14, borderLeftColor: 'black', borderLeftWidth: this.state.tableBorderWidth }}>
-                        <Text>{list[x].sum}</Text>
+                        <Text>{list[x].volume * list[x].productPrice}</Text>
                     </View>
                 </View>
             );
@@ -701,7 +703,7 @@ class ReceiptCreaterV2 extends React.Component {
                         <Text>{this.state.data[x].pricePerUnit}</Text>
                     </View>
                     <View style={{ flex: 0.14, borderLeftColor: 'black', borderLeftWidth: this.state.tableBorderWidth }}>
-                        <Text>{this.state.data[x].quantity}</Text>
+                        <Text>{this.state.data[x].volume}</Text>
                     </View>
                     <View style={{ flex: 0.14, borderLeftColor: 'black', borderLeftWidth: this.state.tableBorderWidth }}>
                         <Text>{this.state.data[x].discount}</Text>
@@ -756,7 +758,7 @@ class POCreaterV2 extends React.Component {
         let tempTotal = 0
         for (let x of this.state.data) {
             console.log(x);
-            tempTotal += x.quantity
+            tempTotal += x.volume
         }
         this.total = tempTotal
         this.renderAllPage();
@@ -824,8 +826,8 @@ class POCreaterV2 extends React.Component {
                                 alignItems: 'center',
                                 borderRadius: 10
                             }}>
-                                <Text style={{ fontSize: 20, marginTop: 5 }}>ใบแจ้งหนี้</Text>
-                                <Text style={{ fontSize: 20, marginBottom: 5 }}>Invoice</Text>
+                                <Text style={{ fontSize: 20, marginTop: 5 }}>ใบสั่งซื้อ</Text>
+                                <Text style={{ fontSize: 20, marginBottom: 5 }}>Purchase Orders</Text>
                             </View>
                         </View>
                     </View>
@@ -840,17 +842,17 @@ class POCreaterV2 extends React.Component {
                                 borderWidth: 2,
                                 width: '97%'
                             }}>
-                                <Text style={{ fontSize: 13, marginLeft: 14 }}>รหัสสาขา {this.props.branchData.branchID}</Text>
-                                <Text style={{ fontSize: 13, marginLeft: 14 }}>ชื่อลูกค้า {this.props.branchData.cusName}</Text>
+                                <Text style={{ fontSize: 13, marginLeft: 14 }}>ผู้ขาย {this.props.branchData.branchID}</Text>
+                                <Text style={{ fontSize: 13, marginLeft: 14 }}> {this.props.branchData.cusName}</Text>
                                 <View style={{ flexDirection: 'row' }}>
-                                    <Text style={{ fontSize: 13, marginLeft: 14 }}>ที่อยู่ {this.props.branchData.address}</Text>
-                                    <Text style={{ fontSize: 13, marginLeft: 10 }}>หมู่ {this.props.branchData.moo}</Text>
-                                    <Text style={{ fontSize: 13, marginLeft: 10 }}>ต. {this.props.branchData.sub_district}</Text>
-                                    <Text style={{ fontSize: 13, marginLeft: 10 }}>อ. {this.props.branchData.district}</Text>
-                                    <Text style={{ fontSize: 13, marginLeft: 10 }}>จ. {this.props.branchData.provide}</Text>
-                                    <Text style={{ fontSize: 13, marginLeft: 10 }}>{this.props.branchData.zipCode}</Text>
+                                    <Text style={{ fontSize: 13, marginLeft: 14 }}> {this.props.branchData.address}</Text>
+                                    <Text style={{ fontSize: 13, marginLeft: 10 }}> {this.props.branchData.moo}</Text>
+                                    <Text style={{ fontSize: 13, marginLeft: 10 }}> {this.props.branchData.sub_district}</Text>
+                                    <Text style={{ fontSize: 13, marginLeft: 10 }}> {this.props.branchData.district}</Text>
+                                    <Text style={{ fontSize: 13, marginLeft: 10 }}> {this.props.branchData.provide}</Text>
+                                    <Text style={{ fontSize: 13, marginLeft: 10 }}> {this.props.branchData.zipCode}</Text>
                                 </View>
-                                <Text style={{ fontSize: 13, marginLeft: 14 }}>โทร {this.props.branchData.tel}</Text>
+                                <Text style={{ fontSize: 13, marginLeft: 14 }}> {this.props.branchData.tel}</Text>
                             </View>
 
                         </View>
@@ -860,10 +862,10 @@ class POCreaterV2 extends React.Component {
                             marginRight: 30,
                             flex: 0.3
                         }}>
-                            <Text style={{ fontSize: 13, marginLeft: 5 }}>หมายเลขใบแจ้งหนี้ : 12123</Text>
-                            <Text style={{ fontSize: 13, marginLeft: 5 }}>วันที่ : 01/01/2564</Text>
-                            <Text style={{ fontSize: 13, marginLeft: 5 }}>ผู้รับผิดชอบ : </Text>
-                            <Text style={{ fontSize: 13, marginLeft: 5 }}>วันครบกำหนด : 01/01/2564</Text>
+                            <Text style={{ fontSize: 13, marginLeft: 5 }}>หมายเลขใบสั่งซื้อ : {this.props.poInfo.id}</Text>
+                            <Text style={{ fontSize: 13, marginLeft: 5 }}>วันที่ : {this.props.poInfo.date}</Text>
+                            <Text style={{ fontSize: 13, marginLeft: 5 }}>ผู้รับผิดชอบ : {this.props.poInfo.respName}</Text>
+                            {/* <Text style={{ fontSize: 13, marginLeft: 5 }}>วันครบกำหนด : 01/01/2564</Text> */}
                         </View>
                     </View>
                     <View style={{ marginTop: 10, marginLeft: 30, marginRight: 30 }}>
@@ -957,10 +959,10 @@ class POCreaterV2 extends React.Component {
                         <Text>{num}</Text>
                     </View>
                     <View style={{ flex: 0.77, borderLeftColor: 'black', borderLeftWidth: this.state.tableBorderWidth }}>
-                        <Text>{list[x].pname}</Text>
+                        <Text>{list[x].productName}</Text>
                     </View>
                     <View style={{ flex: 0.14, borderLeftColor: 'black', borderLeftWidth: this.state.tableBorderWidth }}>
-                        <Text>{list[x].quantity}</Text>
+                        <Text>{list[x].volume}</Text>
                     </View>
                 </View>
             );
@@ -998,7 +1000,7 @@ class POCreaterV2 extends React.Component {
                         <Text>{this.state.data[x].pricePerUnit}</Text>
                     </View>
                     <View style={{ flex: 0.14, borderLeftColor: 'black', borderLeftWidth: this.state.tableBorderWidth }}>
-                        <Text>{this.state.data[x].quantity}</Text>
+                        <Text>{this.state.data[x].volume}</Text>
                     </View>
                     <View style={{ flex: 0.14, borderLeftColor: 'black', borderLeftWidth: this.state.tableBorderWidth }}>
                         <Text>{this.state.data[x].discount}</Text>
@@ -1086,7 +1088,7 @@ class POCreaterV2 extends React.Component {
 //                         <Text>{this.state.data[x].pricePerUnit}</Text>
 //                     </View>
 //                     <View style={{ flex: 0.14, borderLeftColor: 'black', borderLeftWidth: this.state.tableBorderWidth }}>
-//                         <Text>{this.state.data[x].quantity}</Text>
+//                         <Text>{this.state.data[x].volume}</Text>
 //                     </View>
 //                     <View style={{ flex: 0.14, borderLeftColor: 'black', borderLeftWidth: this.state.tableBorderWidth }}>
 //                         <Text>{this.state.data[x].discount}</Text>
@@ -1288,7 +1290,7 @@ class POCreater extends React.Component {
         let tempTotal = 0;
         for (let x of this.state.data) {
             console.log(x);
-            tempTotal += x.quantity
+            tempTotal += x.volume
         }
 
         this.setState({ total: tempTotal });
@@ -1317,7 +1319,7 @@ class POCreater extends React.Component {
                         <Text>{this.state.data[x].pname}</Text>
                     </View>
                     <View style={{ flex: 0.14, borderLeftColor: 'black', borderLeftWidth: this.state.tableBorderWidth }}>
-                        <Text>{this.state.data[x].quantity}</Text>
+                        <Text>{this.state.data[x].volume}</Text>
                     </View>
                 </View>
             );

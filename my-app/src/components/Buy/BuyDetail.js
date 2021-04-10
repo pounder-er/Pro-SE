@@ -34,6 +34,8 @@ import Resizer from 'react-image-file-resizer';
 
 import { BiImageAdd } from "react-icons/bi";
 
+import PDFPO from '../PDF/PDFPO'
+
 const filterValue = [
     { name: 'productID', operator: 'startsWith', type: 'string', },
     { name: 'productName', operator: 'startsWith', type: 'string', },
@@ -111,6 +113,8 @@ class BuyDetail extends React.Component {
             sum: 0,
             modalAssing:false,
 
+            modalPdf: false
+
         }
         this.hiddenFileInputRef = React.createRef();
         this.selectModal = ''
@@ -151,6 +155,11 @@ class BuyDetail extends React.Component {
         e.preventDefault();
         this.selectModal = select;
         this.setState({ ModalImage: !this.state.ModalImage });
+    }
+
+    toggleModalPdf = (e) => {
+        e.preventDefault();
+        this.setState({ modalPdf: !this.state.modalPdf });
     }
 
     setDefaultImageCrop = () => {
@@ -238,6 +247,12 @@ class BuyDetail extends React.Component {
                     <ModalHeader toggle={this.toggleModalAss}>มอบหมายงาน</ModalHeader>
                     <ModalBody>
                         <AssignIn invoice={this.props.profile} closeTogle={this.toggleModalAss}/>
+                    </ModalBody>
+                </Modal>
+                <Modal isOpen={this.state.modalPdf} toggle={this.toggleModalPdf} backdrop='static' size='lg' >
+                    <ModalHeader toggle={this.toggleModalPdf}>ppp</ModalHeader>
+                    <ModalBody>
+                        <PDFPO data={this.props.profile}/>
                     </ModalBody>
                 </Modal>
                 <Modal isOpen={this.state.ModalImage} toggle={this.toggleModalImage} backdrop='static' >
@@ -374,7 +389,7 @@ class BuyDetail extends React.Component {
                 <Row style={{ height: 50 }}>
                     <Col md={2} >
                         <Label>ใบสั่งซื้อ: </Label>
-                        <button style={{ display: 'contents' }}>
+                        <button onClick={this.toggleModalPdf} style={{ display: 'contents' }}>
                             <FaFilePdf color='red' size={25} />
                         </button>
                     </Col>
