@@ -98,7 +98,7 @@ class Stock extends React.Component {
 
     handleChangeText = (text, numOrder, type) => {
 
-        // console.log(numOrder)
+        
 
         if (type == "balance") {
             for (let i = 0; i < this.state.checkList.length; i++) {
