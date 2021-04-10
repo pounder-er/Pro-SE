@@ -135,7 +135,7 @@ class Firestore {
 
     onSavePO = (idPO, log, taskDel) => {
         firebase.firestore().collection('Buy').doc(idPO).update({
-            status: "สำเร็จ",
+            status: "เสร็จสิ้น",
             log: log
         })
             .then(() => {
