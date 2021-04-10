@@ -602,8 +602,31 @@ class Firebase {
       });
   }
 
+  addImportOrder = (id,email, success, reject) => {
+    let batch = firebase.firestore().batch(), ref = firebase.firestore().collection('ImportOrder');
+   
+      batch.set(ref.doc(id), { person: email });
+    
+    batch.commit()
+      .then(() => {
+        success();
+      })
+      .catch(error => {
+        reject(error);
+      })
+    
 
 
+  }
+  getAllProductLis  = (success, reject) => {
+    firebase.firestore().collection('Product')
+      .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
+      .onSnapshot(function (querySnapshot) {
+        success(querySnapshot);
+      }, function (error) {
+        reject(error);
+      });
+  }
 }
 const fire_base = new Firebase();
 export default fire_base;
