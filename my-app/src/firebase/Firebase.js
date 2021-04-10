@@ -109,6 +109,15 @@ class Firebase {
         reject(error);
       })
   }
+  getAllProduct2 = (success, reject) => {
+    firebase.firestore().collection('Product')
+    .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
+      .onSnapshot(function (querySnapshot) {
+        success(querySnapshot);
+      }, function (error) {
+        reject(error);
+      });
+  }
 
 
   getAllProductType = (success, reject) => {
@@ -331,7 +340,7 @@ class Firebase {
       update.dateIn = date;
       update.status = 'สำเร็จ';
     }
-    firebase.firestore().collection('Sell').doc(id).update(update)
+    firebase.firestore().collection('Buy').doc(id).update(update)
       .then(() => {
         success();
       }).catch((error) => {

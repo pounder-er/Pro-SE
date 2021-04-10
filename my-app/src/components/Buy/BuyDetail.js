@@ -107,8 +107,7 @@ class BuyDetail extends React.Component {
             editTable: false,
             searchText: '',
             dataSource: [],
-            sum: 0,
-            modalAssing:false,
+            sum: 0
 
         }
         this.hiddenFileInputRef = React.createRef();
@@ -144,6 +143,67 @@ class BuyDetail extends React.Component {
                     // console.log(this.state.dataSource)
                 })
         }
+    }
+
+    toggleModalImage = (e, select) => {
+        e.preventDefault();
+        this.selectModal = select;
+        this.setState({ ModalImage: !this.state.ModalImage });
+    }
+
+    setDefaultImageCrop = () => {
+        this.state.sourceImageFile[this.selectModal] = null;
+        this.setState({ sourceImageFile: this.state.sourceImageFile })
+        // this.setState({
+        //     sourceImageFile: null,
+
+        //     disabledButtonSaveOrEdit: true,
+        //     disabledButtonDefault: true,
+        //     resizeImageUrl: ''
+        // });
+    }
+
+    setEditorRef = (editor) => (this.editor = editor)
+
+    uploadImageSuccess = (url) => {
+        // this.state.imageUrl[this.selectModal] = url;
+        // this.setState({imageUrl:this.state.imageUrl});
+        // let i = {this.selectModal:this.sourceImageFile[this.selectModal]}
+        console.log('upload image success');
+        let i = {}
+        i[this.selectModal] = url;
+        // console.log(this.selectModal);
+        fire_base.updateImageSellBuy(this.props.profile.InID, i, this.updateImageSellBuySuccess, this.unSuccess)
+    }
+
+    updateImageSellBuySuccess = () => {
+        console.log('update url success');
+    }
+
+    unSuccess = (error) => {
+        console.log(error);
+    }
+
+
+    onEditComplete = ({ value, columnId, rowIndex }) => {
+        const data = [...this.state.dataSource];
+        data[rowIndex] = Object.assign({}, data[rowIndex], { [columnId]: Number(value) });
+        if (data[rowIndex]['productPrice'] != null && data[rowIndex]['disCount'] != null) {
+            data[rowIndex]['summary'] = data[rowIndex]['productPrice'] * data[rowIndex]['volume'] - data[rowIndex]['disCount'];
+        }
+
+        this.state.sum = 0;
+        let check = false;
+        data.forEach(doc=>{
+            this.state.sum += doc.summary;
+            if (doc.summary == null) {
+                check = true;
+            }
+        })
+
+        this.setState({ dataSource: data,sum:this.state.sum,disButtonSave: check });
+
+
     }
 
     toggleModalImage = (e, select) => {
@@ -348,7 +408,11 @@ class BuyDetail extends React.Component {
                 </Row>
                 <Row style={{ height: 50 }}>
                     <Col>
-                        <Label>วันที่สร้างใบแจ้งหนี้: {this.props.profile.dateCreate}</Label>
+                        <Label>วันที่สร้างใบสั่งซื้อ: {this.props.profile.dateCreate}</Label>
+                    </Col>
+                    <Col  >
+                        {this.props.profile.dateInvoice && <Label>วันที่ได้รับใบแจ้งหนี้: {this.props.profile.dateInvoice}</Label>}
+                        {!this.props.profile.dateInvoice && <Label>วันที่ได้รับใบแจ้งหนี้: -</Label>}
                     </Col>
                     <Col >
                         {this.props.profile.datePay && <Label>วันที่ชำระเงิน: {this.props.profile.datePay}</Label>}
@@ -364,8 +428,12 @@ class BuyDetail extends React.Component {
                         {!this.props.profile.dateOut && <Label>วันที่สินค้าออกคลัง: -</Label>}
                     </Col>
                     <Col >
-                        {this.props.profile.dateIn && <Label>วันที่สินค้าถึงสาขา: {this.props.profile.dateIn}</Label>}
-                        {!this.props.profile.dateIn && <Label>วันที่สินค้าถึงสาขา: -</Label>}
+                        {this.props.profile.datePay && <Label>วันที่ชำระเงิน: {this.props.profile.datePay}</Label>}
+                        {!this.props.profile.datePay && <Label>วันที่ชำระเงิน: -</Label>}
+                    </Col >
+                    <Col >
+                        {this.props.profile.dateIn && <Label>วันที่สินค้าถึงคลัง: {this.props.profile.dateIn}</Label>}
+                        {!this.props.profile.dateIn && <Label>วันที่สินค้าถึงคลัง: -</Label>}
                     </Col >
                     <Col >
                     </Col>

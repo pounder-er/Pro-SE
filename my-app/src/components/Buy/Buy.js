@@ -92,6 +92,10 @@ class Buy extends React.Component {
                 d.datePay = d.datePay.toDate().getDate()+"/"+(d.datePay.toDate().getMonth()+1)+"/"+d.datePay.toDate().getFullYear()
             else
                 d.datePay = "-"
+            if(d.dateInvoice)
+                d.dateInvoice = d.dateInvoice.toDate().getDate()+"/"+(d.dateInvoice.toDate().getMonth()+1)+"/"+d.dateInvoice.toDate().getFullYear()
+            else
+                d.dateInvoice = "-"
             let a = d.companyID.get()
             .then(doc=>{
                 // this.setState({dataSource:this.state.dataSource.concat(doc)});
