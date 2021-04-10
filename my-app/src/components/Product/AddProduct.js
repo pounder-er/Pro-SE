@@ -165,7 +165,7 @@ class AddProduct extends Component {
     }
 
     updateProductSuccess=()=>{
-        this.sweetAlret('สำเร็จ','เพิ่มสินค้าเรียบร้อยแล้ว ไอเหี้ยยย','success','ตกลง');
+        this.sweetAlret('สำเร็จ','เพิ่มสินค้าเรียบร้อยแล้ว','success','ตกลง');
         this.setState({loading:false});
         console.log('add product success');
     }
