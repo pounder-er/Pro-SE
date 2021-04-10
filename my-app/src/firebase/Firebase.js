@@ -108,7 +108,15 @@ class Firebase {
         reject(error);
       })
   }
-
+  getAllProduct2 = (success, reject) => {
+    firebase.firestore().collection('Product')
+    .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
+      .onSnapshot(function (querySnapshot) {
+        success(querySnapshot);
+      }, function (error) {
+        reject(error);
+      });
+  }
  
   getAllProductType = (success, reject) => {
     firebase.firestore().collection('ProductType')
