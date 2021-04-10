@@ -436,6 +436,8 @@ class Firebase {
       O: '',
       U: '',
       d: '',
+      EOQ :0,
+      R :0
     }
     prod.productTotal = 0
     prod.productType = db.collection('ProductType').doc(prod.productType);
