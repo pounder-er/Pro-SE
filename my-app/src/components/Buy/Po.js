@@ -177,7 +177,6 @@ class Po extends React.Component {
             setFieldValue('companyID',this.state.elementPartnerCompany[0].props.value);
         }
     }
-
     render() {
         
         return (
