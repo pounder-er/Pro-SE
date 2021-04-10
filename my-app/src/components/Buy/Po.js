@@ -91,9 +91,9 @@ class Po extends React.Component {
         this.companyID = ""
     }
 
-    async componentDidMount() {
-        await fire_base.getAllCompany(this.getCompanySuccess, this.unSuccess)
-        await fire_base.getAllProduct(this.getAllProductSuccess, this.unSuccess);
+    componentDidMount() {
+        fire_base.getAllCompany(this.getCompanySuccess, this.unSuccess)
+        
     
 
     }
@@ -106,26 +106,59 @@ class Po extends React.Component {
         })
         this.setState({ elementPartnerCompany: element });
 
-        console.log(this.state.elementPartnerCompany[0].props.value);
+        fire_base.getAllProduct(this.getAllProductSuccess, this.unSuccess);
+
+        // console.log(this.state.elementPartnerCompany[0].props.value);
     }
 
-    getAllProductSuccess = (querySnapshot) => {
+    filterElement=()=>{
+        let element=[],e = this.product.filter((doc)=>{
+                if(doc.companyID == this.state.elementPartnerCompany[0].props.value){
+                    return true;
+                }
+        });
+
+        e.forEach(doc=>{
+            element.push(<option key={doc.id} value={doc.id}>{doc.id + ' : ' + doc.productName}</option>);
+        })
+        this.setState({elementProduct:element});
+        
+    }
+
+    getAllProductSuccess = async(querySnapshot) => {
         let element = [],data=[]
-        querySnapshot.forEach((doc) => {
-            let p;
+       querySnapshot.forEach(async(doc) => {
+            let p=[];
             p = doc.data()
             p.id = doc.id
-            p.companyID.get().then(doc=>{
-                p.companyID = doc.id
-                data.push(p)
+            p.companyID.get().then(a=>{
+                p.companyID = a.id
+                
             })
-            let e = <option key={doc.id} value={doc.id}>{doc.id + ' : ' + doc.data().productName}</option>
-            element.push(e);
+            data.push(p);
+            // element.push(<option key={doc.id} value={doc.id}>{doc.id + ' : ' + doc.data().productName}</option>);
         })
-        // console.log(data);
         this.product = data;
-        this.setState({ elementProduct: element });
-        // console.log(element);
+        setTimeout(
+            ()=>this.filterElement()
+            ,
+            200
+        )
+       
+
+        // let e = this.product.filter((doc)=>{
+        //     console.log('111');
+        //     if(doc.companyID == this.state.elementPartnerCompany[0].props.value){
+                
+        //         return true;
+        //     }
+        // });
+        // console.log(e);
+        // e.forEach(doc=>{
+        //     element.push(<option key={doc.id} value={doc.id}>{doc.id + ' : ' + doc.data().productName}</option>)
+        // })
+        // this.setState({ elementProduct: element });
+        
     }
 
     unSuccess = (error) => {
@@ -175,6 +208,9 @@ class Po extends React.Component {
     checkCom=(setFieldValue,values)=>{
         if(values.companyID == '' && this.state.elementPartnerCompany.length>0){
             setFieldValue('companyID',this.state.elementPartnerCompany[0].props.value);
+        }
+        if(values.productID == '' && this.state.elementProduct.length>0){
+            setFieldValue('productID',this.state.elementProduct[0].props.value);
         }
     }
     render() {
@@ -226,7 +262,7 @@ class Po extends React.Component {
                     }}
                     initialValues={{
                         productName: '',
-                        productID: '300000',
+                        productID: '',
                         companyID: '',
                         volume: 1
                     }}

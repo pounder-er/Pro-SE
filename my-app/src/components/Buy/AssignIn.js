@@ -57,7 +57,7 @@ const filterValueEm = [
 ];
 
 
-class AssignEx extends Component {
+class AssignIn extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -134,16 +134,12 @@ class AssignEx extends Component {
         console.log(this.props.invoice.InID,' +++ ',this.dataE);
         e.preventDefault();
         if(this.dataE != null)
-            fire_base.addExportOrder(this.props.invoice.InID,this.dataE.email, this.addCheckStockSuccess, this.unSuccess);
+            fire_base.addImportOrder(this.props.invoice.InID,this.dataE.email, this.addCheckStockSuccess, this.unSuccess);
     }
 
     render() {
         return (
             <div>
-                
-                <Alert color="secondary">
-                    *หมายเหตุ: การเช็คสต๊อกควรเช็คก็ต่อเมื่อสินค้าไม่มีการเคลื่อนไหวหรือโยกย้ายระหว่างคลังสินค้าแล้วเท่านั้น
-                </Alert>
                 <br />
                         <h4>รายชื่อพนักงานที่สามารถมอบหมายได้</h4>
                         <LoadingOverlay
@@ -175,11 +171,9 @@ class AssignEx extends Component {
     }
 }
 
-AssignEx.propTypes = {
 
-};
-AssignEx.propTypes = {
+AssignIn.propTypes = {
     invoice: PropTypes.object,
     
 };
-export default AssignEx;
+export default AssignIn;

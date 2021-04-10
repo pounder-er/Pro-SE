@@ -5,6 +5,7 @@ import {
     Link,
 } from 'react-router-dom';
 import { AiFillFileText } from "react-icons/ai";
+import { FaRegFilePdf } from "react-icons/fa";
 import {
     Button,
     Row,
@@ -26,7 +27,7 @@ import '@inovua/reactdatagrid-community/base.css'
 import '@inovua/reactdatagrid-community/theme/default-light.css'
 import PropTypes from 'prop-types';
 import { i18n } from '../i18n';
-import AssignEx from '../Sell/AssignEx';
+import AssignIn from './AssignIn';
 import AvatarEditor from 'react-avatar-editor';
 
 import Resizer from 'react-image-file-resizer';
@@ -97,7 +98,7 @@ class BuyDetail extends React.Component {
             },
             disButtonSave: true,
 
-            zoom: 1,
+            // zoom: 1,
             ModalImage: false,
             disabledButtonSaveOrEdit: true,
             disabledButtonDefault: true,
@@ -174,7 +175,7 @@ class BuyDetail extends React.Component {
         let i = {}
         i[this.selectModal] = url;
         // console.log(this.selectModal);
-        fire_base.updateImageSellBuy(this.props.profile.InID, i, this.updateImageSellBuySuccess, this.unSuccess)
+        fire_base.updateImageSellBuy(this.props.profile.InID,'Buy', i, this.updateImageSellBuySuccess, this.unSuccess)
     }
 
     updateImageSellBuySuccess = () => {
@@ -234,9 +235,9 @@ class BuyDetail extends React.Component {
             <Container fluid={false} style={{ backgroundColor: 'while' }} >
                 <Button color="danger" onClick={this.toggleModalAss} style={{ width: 100 }}>zz</Button>
                 <Modal isOpen={this.state.modalAssing} toggle={this.toggleModalAss} backdrop='static' size='lg' >
-                    <ModalHeader toggle={this.toggleModalAss}>หมอยหมายงาน</ModalHeader>
+                    <ModalHeader toggle={this.toggleModalAss}>มอบหมายงาน</ModalHeader>
                     <ModalBody>
-                        <AssignEx invoice={this.props.profile} closeTogle={this.toggleModalAss}/>
+                        <AssignIn invoice={this.props.profile} closeTogle={this.toggleModalAss}/>
                     </ModalBody>
                 </Modal>
                 <Modal isOpen={this.state.ModalImage} toggle={this.toggleModalImage} backdrop='static' >

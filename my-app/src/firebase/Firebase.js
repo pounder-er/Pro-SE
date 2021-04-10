@@ -281,8 +281,8 @@ class Firebase {
 
   }
 
-  updateImageSellBuy = (id, image, success, reject) => {
-    firebase.firestore().collection('Buy').doc(id)
+  updateImageSellBuy = (id,BS, image, success, reject) => {
+    firebase.firestore().collection(BS).doc(id)
       .update(image)
       .then(() => {
         success();
@@ -615,10 +615,23 @@ class Firebase {
       .catch(error => {
         reject(error);
       })
-    
-
 
   }
+
+  addExportOrder = (id,email, success, reject) => {
+    let batch = firebase.firestore().batch(), ref = firebase.firestore().collection('ExportOrder');
+   
+      batch.set(ref.doc(id), { person: email });
+    
+    batch.commit()
+      .then(() => {
+        success();
+      })
+      .catch(error => {
+        reject(error);
+      })
+    }
+    
   getAllProductLis  = (success, reject) => {
     firebase.firestore().collection('Product')
       .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
