@@ -206,11 +206,11 @@ class PartnerList extends React.PureComponent {
                             style={{width:150, 
                                     height:45, 
                                     marginBottom:10}}>เพิ่มบริษัทคู่ค้า</Button>
-                    {/* <Button color="success" 
+                    <Button color="success" 
                             onClick={this.toggleModalTest}
                             style={{width:'10%', 
                                     height:45, 
-                                    marginBottom:10}}>Test</Button>             */}
+                                    marginBottom:10}}>Test</Button>            
                 </div>
                 
                 <ReactDataGrid
