@@ -42,6 +42,10 @@ import { AiFillFileText } from "react-icons/ai";
 import EditPartnerCompany from './EditPartner'
 import AddPartner from './AddPartner'
 
+import PDFInvoice from '../PDF/PDFInvoice'
+import PDFReceipt from '../PDF/PDFReceipt'
+import PDFPO from '../PDF/PDFPO'
+
 const filterValue = [
     { name: 'id', operator: 'startsWith', type: 'string', value: '' },
     { name: 'companyName', operator: 'startsWith', type: 'string', value: '' },
@@ -175,6 +179,15 @@ class PartnerList extends React.PureComponent {
                         <AddPartner/>
                     </ModalBody>
                 </Modal>
+
+                <Modal isOpen={this.state.modalTest} toggle={this.toggleModalTest} backdrop='static' size='xl' >
+                    <ModalHeader toggle={this.toggleModalTest}>เพิ่มบริษัทคู่ค้า</ModalHeader>
+                    <ModalBody>
+                       {/* <PDFInvoice/> */}
+                       <PDFReceipt/>
+                       {/* <PDFPO/> */}
+                    </ModalBody>
+                </Modal>
                 {/* <Row style={{ marginBottom: '1rem' }}>
                     <Col md="6">.col-3</Col>
                     <Col md="6" style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -190,10 +203,10 @@ class PartnerList extends React.PureComponent {
                                     height:45, 
                                     marginBottom:10}}>เพิ่มบริษัทคู่ค้า</Button>
                     {/* <Button color="success" 
-                            onClick={()=>{firestore.getCountSaleOrderComplete()}}
+                            onClick={this.toggleModalTest}
                             style={{width:'10%', 
                                     height:45, 
-                                    marginBottom:10}}>Test</Button>                 */}
+                                    marginBottom:10}}>Test</Button>             */}
                 </div>
                 
                 <ReactDataGrid

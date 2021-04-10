@@ -92,7 +92,7 @@ import ImportProduct from '../WarehouseStaff/Stocking/Import'
 import ExportProduct from '../WarehouseStaff/Stocking/Export'
 import ImportProductTB from '../WarehouseStaff/Stocking/ImportTable'
 import ExportProductTB from '../WarehouseStaff/Stocking/ExportTable'
-
+import DailyStock from '../DailyStock/DailyStock'
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -190,7 +190,7 @@ class Home extends React.Component {
               ประวัติสินค้าเข้า/ออกคลัง
             <Link to={this.props.match.url + "/historyInOut"} onClick={() => this.setState({ headerTitle: 'ระวัติสินค้าเข้า/ออกคลัง' })} />
             </MenuItem>
-            <MenuItem >ผลการเช็คสต๊อกสินค้า<Link onClick={() => this.setState({ headerTitle: 'ผลการเช็คสต๊อกสินค้า' })} /></MenuItem>
+            <MenuItem >ผลการเช็คสต๊อกสินค้า<Link to={this.props.match.url + "/DailyStock"} onClick={() => this.setState({ headerTitle: 'ผลการเช็คสต๊อกสินค้า' })} /></MenuItem>
           </SubMenu>,
 
           <SubMenu key='7' title="ผู้ติดต่อ" icon={<BsBriefcaseFill />}>
@@ -289,6 +289,7 @@ class Home extends React.Component {
                 <Route exact path={this.props.match.path + "/export_product"} component={ExportProduct} />
                 <Route exact path={this.props.match.path + "/import_product/import_product_tb"} component={ImportProductTB} />
                 <Route exact path={this.props.match.path + "/export_product/export_product_tb"} component={ExportProductTB} />
+                <Route exact path={this.props.match.path + "/DailyStock"} component={DailyStock} />
 
               </Switch>
             </Container>
