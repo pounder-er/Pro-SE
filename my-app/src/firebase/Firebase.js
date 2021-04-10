@@ -279,7 +279,7 @@ class Firebase {
         reject(error);
       })
 
-      
+
   }
 
   updateImageSellBuy = (id,BS, image, success, reject) => {
@@ -326,9 +326,6 @@ class Firebase {
       update.status = 'รอจัดส่ง';
     }
     else if(num == 2){
-      update.status = 'รอขนสินค้าออกคลัง';
-    }
-    else if(num == 3){
       update.dateIn = date;
       update.status = 'สำเร็จ';
     }

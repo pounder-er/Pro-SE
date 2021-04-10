@@ -5,7 +5,7 @@ import {
     Link,
 } from 'react-router-dom';
 import { AiFillFileText } from "react-icons/ai";
-import { FaRegFilePdf } from "react-icons/fa";
+import { FaFilePdf } from "react-icons/fa";
 import {
     Button,
     Row,
@@ -233,7 +233,7 @@ class BuyDetail extends React.Component {
     render() {
         return (
             <Container fluid={false} style={{ backgroundColor: 'while' }} >
-                <Button color="danger" onClick={this.toggleModalAss} style={{ width: 100 }}>zz</Button>
+                {/* <Button color="danger" onClick={this.toggleModalAss} style={{ width: 100 }}>zz</Button> */}
                 <Modal isOpen={this.state.modalAssing} toggle={this.toggleModalAss} backdrop='static' size='lg' >
                     <ModalHeader toggle={this.toggleModalAss}>มอบหมายงาน</ModalHeader>
                     <ModalBody>
@@ -375,7 +375,7 @@ class BuyDetail extends React.Component {
                     <Col md={2} >
                         <Label>ใบสั่งซื้อ: </Label>
                         <button style={{ display: 'contents' }}>
-                            <AiFillFileText color='#00A3FF' size={30} />
+                            <FaFilePdf color='red' size={25} />
                         </button>
                     </Col>
                     <Col md={2} >
@@ -432,12 +432,12 @@ class BuyDetail extends React.Component {
                             {this.props.profile.status=='รอรับสินค้า' && <Button  color="info" onClick={(e)=>{e.preventDefault(); this.onChangeStatus(3);}} style={{ width: 100, marginRight: 15 }}>
                             รับสินค้า
                             </Button>}
-                            {this.props.profile.status=='รอขนเข้าคลัง' && <Button  color="info" style={{ width: 100, marginRight: 15 }}>
+                            {this.props.profile.status=='รอขนเข้าคลัง' && <Button  color="info" onClick={this.toggleModalAss()} style={{ width: 100, marginRight: 15 }}>
                             มอบหมายงาน
                             </Button>}
                         
                         {' '}
-                        <Button color="danger" style={{ width: 100 }}>ยกเลิก</Button>
+                        {/* <Button color="danger" style={{ width: 100 }}>ยกเลิก</Button> */}
                     </Col>
                 </Row>
             </Container>

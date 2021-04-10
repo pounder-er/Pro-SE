@@ -170,6 +170,8 @@ class Po extends React.Component {
     addPOSuccess=()=>{
         this.setState({loading:false});
         this.sweetAlret('สำเร็จ', 'เพิ่มรายการซื้อเรียบร้อย', 'success', 'ตกลง');
+        this.setState({companyCheck:false});
+        this.setState({log:[]});
 
     }
 
@@ -186,7 +188,7 @@ class Po extends React.Component {
         let data = {
             log : this.state.log,
             status : 'รอใบเสนอราคา',
-            companyID : this.companyID,
+            companyID : this.state.elementPartnerCompany[0].props.value,
             res : this.props.userProfile.firstName + " " +  this.props.userProfile.lastName
         }
         // let llog = []
@@ -209,6 +211,7 @@ class Po extends React.Component {
         if(values.companyID == '' && this.state.elementPartnerCompany.length>0){
             setFieldValue('companyID',this.state.elementPartnerCompany[0].props.value);
         }
+        console.log(values.companyID);
         if(values.productID == '' && this.state.elementProduct.length>0){
             setFieldValue('productID',this.state.elementProduct[0].props.value);
         }
@@ -263,7 +266,7 @@ class Po extends React.Component {
                     initialValues={{
                         productName: '',
                         productID: '',
-                        companyID: '',
+                        companyID: '00',
                         volume: 1
                     }}
                 >
@@ -297,7 +300,7 @@ class Po extends React.Component {
                                                 let element = []
                                                 let d = this.product.filter(doc=>{
                                                     if(doc.companyID == e.target.value){
-                                                        this.companyID = e.target.value;
+                                                        // this.companyID = e.target.value;
                                                         return true;
                                                     }
                                                 })

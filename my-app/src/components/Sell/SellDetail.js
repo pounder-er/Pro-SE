@@ -100,7 +100,7 @@ class SellDetail extends React.Component {
     
 
     onChangeStatus = (num) =>{
-        fire_base.updateChangeStatusSo(this.props.profile.InID, 1,this.ChangeStatusSuccess,this.unSuccess);
+        fire_base.updateChangeStatusSo(this.props.profile.InID, num,this.ChangeStatusSuccess,this.unSuccess);
     }
 
     ChangeStatusSuccess = () =>{
@@ -147,7 +147,7 @@ class SellDetail extends React.Component {
     render() {
         return (
             <Container fluid={false} style={{ backgroundColor: 'while'}} >
-                <Button color="danger" onClick={this.toggleModalAss} style={{ width: 100 }}>zz</Button>
+                {/* <Button color="danger" onClick={this.toggleModalAss} style={{ width: 100 }}>zz</Button> */}
                 <Modal isOpen={this.state.modalAssing} toggle={this.toggleModalAss} backdrop='static' size='lg' >
                     <ModalHeader toggle={this.toggleModalAss}>มอบหมายงาน</ModalHeader>
                     <ModalBody>
@@ -245,7 +245,7 @@ class SellDetail extends React.Component {
                             แก้ไข/บันทึก
                                     </Button>
                         {' '}
-                        <Button color="secondary" onClick={this.toggleModalImage}>ยกเลิก</Button>
+                         <Button color="secondary" onClick={this.toggleModalImage}>ยกเลิก</Button>
                     </ModalFooter>
                 </Modal>
                 <Row style={{ height: 25 }}>
@@ -255,9 +255,12 @@ class SellDetail extends React.Component {
                     </Col >
                     <Col style={{display:'flex',flexDirection:'row',justifyContent: 'flex-end'}} >
                         {this.props.profile.status == 'รอชำระเงิน'&&<Button color="info" onClick={(e)=>{e.preventDefault(); this.onChangeStatus(1);}} style={{ width: 100 ,marginRight: 15}}>ชำระเงินแล้ว</Button>}
-                        {this.props.profile.status == 'รอจัดส่ง' && <Button color="info" onClick={(e)=>{e.preventDefault();}} style={{ width: 100 ,marginRight: 15}}>มอบหมายงาน</Button>}
+                        {this.props.profile.status == 'รอจัดส่ง' && <Button color="info" onClick={(e)=>{e.preventDefault(); this.toggleModalAss();}} style={{ width: 100 ,marginRight: 15}}>มอบหมายงาน</Button>}
+                        {this.props.profile.status == 'กำลังจัดส่ง' && <Button color="info" onClick={(e)=>{e.preventDefault(); this.onChangeStatus(2);}} style={{ width: 100 ,marginRight: 15}}>สำเร็จการขาย</Button>}
+
                         {' '}
-                        <Button color="danger" style={{ width: 100 }}>ยกเลิก</Button>
+
+                        {/* {(this.props.profile.status != 'กำลังจัดส่ง' || this.props.profile.status != 'สำเร็จ') && <Button color="danger" style={{ width: 100 }}>ยกเลิก</Button>} */}
                     </Col>
                 </Row>
                 <Row style={{ height: 50 }}>
