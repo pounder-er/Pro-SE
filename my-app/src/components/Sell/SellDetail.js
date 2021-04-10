@@ -75,6 +75,18 @@ class SellDetail extends React.Component {
     }
     setDataGridRef = (ref) => (this.dataGrid = ref)
 
+    onChangeStatus = (num) =>{
+        fire_base.updateChangeStatusSo(this.props.profile.InID, 1,this.ChangeStatusSuccess,this.unSuccess);
+    }
+
+    ChangeStatusSuccess = () =>{
+        console.log('update success');
+    }
+
+    unSuccess=(error)=>{
+        console.log(error);
+    }
+
     render() {
         return (
             <Container fluid={false} style={{ backgroundColor: 'while'}} >
@@ -84,7 +96,8 @@ class SellDetail extends React.Component {
                     <Col >
                     </Col >
                     <Col style={{display:'flex',flexDirection:'row',justifyContent: 'flex-end'}} >
-                        <Button color="info" style={{ width: 100 ,marginRight: 15}}>บันทึก</Button>
+                        {this.props.profile.status == 'รอชำระเงิน'&&<Button color="info" onClick={(e)=>{e.preventDefault(); this.onChangeStatus(1);}} style={{ width: 100 ,marginRight: 15}}>ชำระเงินแล้ว</Button>}
+                        {this.props.profile.status == 'รอจัดส่ง' && <Button color="info" onClick={(e)=>{e.preventDefault();}} style={{ width: 100 ,marginRight: 15}}>มอบหมายงาน</Button>}
                         {' '}
                         <Button color="danger" style={{ width: 100 }}>ยกเลิก</Button>
                     </Col>

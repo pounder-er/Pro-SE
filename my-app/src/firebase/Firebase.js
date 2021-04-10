@@ -109,8 +109,16 @@ class Firebase {
         reject(error);
       })
   }
-
-
+  getAllProduct2 = (success, reject) => {
+    firebase.firestore().collection('Product')
+    .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
+      .onSnapshot(function (querySnapshot) {
+        success(querySnapshot);
+      }, function (error) {
+        reject(error);
+      });
+  }
+ 
   getAllProductType = (success, reject) => {
     firebase.firestore().collection('ProductType')
       .where(firebase.firestore.FieldPath.documentId(), '!=', 'state')
@@ -293,7 +301,7 @@ class Firebase {
       });
   }
 
-  updateChangeStatus = (id, log, num, success, reject) => {
+  updateChangeStatusPo = (id, log, num, success, reject) => {
     let update={},date = firebase.firestore.FieldValue.serverTimestamp();
     
     if (num == 1) {
@@ -317,6 +325,27 @@ class Firebase {
         reject(error);
       })
 
+  }
+
+  updateChangeStatusSo = (id,num, success, reject) =>{
+    let update={},date = firebase.firestore.FieldValue.serverTimestamp();
+    if (num == 1) {
+      update.datePay = date;
+      update.status = 'รอจัดส่ง';
+    }
+    else if(num == 2){
+      update.status = 'รอขนสินค้าออกคลัง';
+    }
+    else if(num == 3){
+      update.dateIn = date;
+      update.status = 'สำเร็จ';
+    }
+    firebase.firestore().collection('Buy').doc(id).update(update)
+      .then(() => {
+        success();
+      }).catch((error) => {
+        reject(error);
+      })
   }
 
   updateNewOldProduct = (id, product, success, reject) => {
@@ -416,6 +445,8 @@ class Firebase {
       O: '',
       U: '',
       d: '',
+      EOQ :0,
+      R :0
     }
     prod.productTotal = 0
     prod.productType = db.collection('ProductType').doc(prod.productType);
@@ -518,8 +549,26 @@ class Firebase {
   addSO = (data, success, reject) => {
     data.dateCreate = firebase.firestore.FieldValue.serverTimestamp();
     var stateRef = firebase.firestore().collection('Sell').doc('state')
+
+
+
+
+
     return firebase.firestore().runTransaction((transaction) => {
       return transaction.get(stateRef).then((stateDoc) => {
+
+        data.log.forEach(D=>{
+          transaction.get(firebase.firestore().collection('Product').doc(D.productID))
+          .then(doc=>{
+            if(D.volume > doc.data().productTotal){
+              return Promise.reject("Sorry! volume of product is too big.");
+            }
+          }).catch(error=>{
+            reject(error)
+           
+          })
+        })
+
         data.branchID = firebase.firestore().collection('Branch').doc(data.branchID)
         for (let x of data.log) {
           x.productID = firebase.firestore().collection('Product').doc(x.productID)
@@ -548,15 +597,15 @@ class Firebase {
 
         firebase.firestore().collection('Sell').doc("IN" + state)
           .set(data)
-          .then(() => {
-            success();
-          })
+          .then()
           .catch((error) => {
-            reject(error);
+            
           });
       })
     })
-      .then()
+      .then(() => {
+        success();
+      })
       .catch((error) => {
         console.log(error)
       });
