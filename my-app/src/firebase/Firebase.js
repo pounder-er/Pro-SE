@@ -331,7 +331,7 @@ class Firebase {
       update.dateIn = date;
       update.status = 'สำเร็จ';
     }
-    firebase.firestore().collection('Buy').doc(id).update(update)
+    firebase.firestore().collection('Sell').doc(id).update(update)
       .then(() => {
         success();
       }).catch((error) => {
@@ -491,6 +491,7 @@ class Firebase {
   }
 
   addPO = (data, success, reject) => {
+    
     data.dateCreate = firebase.firestore.FieldValue.serverTimestamp();
     var stateRef = firebase.firestore().collection('Buy').doc('state')
     return firebase.firestore().runTransaction((transaction) => {

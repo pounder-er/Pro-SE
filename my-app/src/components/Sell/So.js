@@ -86,9 +86,10 @@ class So extends React.Component {
         this.state = {
             elementBranch: [],
             elementProduct: [],
-            dataSource: [],
             log: [],
             branchCheck: false,
+
+            loading:false
 
         }
         this.product = []
@@ -136,12 +137,14 @@ class So extends React.Component {
     }
 
     unSuccess = (error) => {
+        this.setState({loading:false});
         console.log(error);
         this.sweetAlret('ล้มเหลว', 'สินค้าไม่เพียงพอ', 'error', 'ตกลง');
     }
 
-    addPOSuccess = () => {
-
+    addSOSuccess = () => {
+        this.setState({loading:false});
+        this.sweetAlret('เสร็จสิ้น', 'เพิ่มรายการขายเรียบร้อย', 'success', 'ตกลง');
     }
 
     uploadTodb = () => {
@@ -153,6 +156,7 @@ class So extends React.Component {
         }
         // let llog = []
         console.log(data)
+        this.setState({log:[]});
         // for(let x of this.state.log){           
         //     let b = this.product.find((doc,index)=>{
         //         if(doc.id == x.productID){
@@ -162,13 +166,18 @@ class So extends React.Component {
 
         //     llog.push(b)
         // }
-
-        fire_base.addSO(data, this.addPOSuccess, this.unSuccess)
+        this.setState({loading:true});
+        fire_base.addSO(data, this.addSOSuccess, this.unSuccess);
     }
 
     render() {
 
         return (
+            <LoadingOverlay
+                active={this.state.loading}
+                spinner
+                text='กำลังเพิ่มรายการขาย...'
+            >
             <div>
                 <Formik
                     validationSchema={formPo}
@@ -272,6 +281,7 @@ class So extends React.Component {
                         errors,
                     }) => (
                         <Form onSubmit={handleSubmit} onReset={(e) => { e.preventDefault(); handleReset(e); }} >
+                            
                             <Row form>
                                 <Col md={6}>
                                     <FormGroup>
@@ -412,7 +422,7 @@ class So extends React.Component {
                     <Col md={8} />
                     <Col md={2} style={{ display: 'flex' }}>
                         <FormGroup style={{ display: 'flex', flex: 1 }}>
-                            <Button type="reset" color="secondary" style={{ flex: 1 }}>เคลียร์</Button>
+                            <Button type="reset" color="secondary" onClick={(e)=>{e.preventDefault();this.setState({log:[]})}} style={{ flex: 1 }}>เคลียร์</Button>
                         </FormGroup>
                     </Col>
                     <Col md={2} style={{ display: 'flex' }}>
@@ -447,6 +457,7 @@ class So extends React.Component {
                 </Row> */}
 
             </div>
+            </LoadingOverlay>
         );
     }
 }
