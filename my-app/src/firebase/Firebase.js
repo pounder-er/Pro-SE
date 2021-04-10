@@ -280,6 +280,7 @@ class Firebase {
       })
 
   }
+  
 
   updateImageSellBuy = (id, image, success, reject) => {
     firebase.firestore().collection('Buy').doc(id)
