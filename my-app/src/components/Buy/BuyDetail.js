@@ -328,7 +328,7 @@ class BuyDetail extends React.Component {
                 </Row>
                 <Row style={{ height: 50 }}>
                     <Col md={4}>
-                        <Label>หมายเลขใบแจ้งหนี้: {this.props.profile.InID}</Label>
+                        <Label>หมายเลขใบสั่งซื้อ: {this.props.profile.InID}</Label>
                     </Col>
                     <Col md={4}>
                         <Label>สถานะ: {this.props.profile.status}</Label>
@@ -337,24 +337,25 @@ class BuyDetail extends React.Component {
                 </Row>
                 <Row style={{ height: 50 }}>
                     <Col>
-                        <Label>วันที่สร้างใบแจ้งหนี้: {this.props.profile.dateCreate}</Label>
+                        <Label>วันที่สร้างใบสั่งซื้อ: {this.props.profile.dateCreate}</Label>
                     </Col>
+                    <Col  >
+                        {this.props.profile.dateInvoice && <Label>วันที่ได้รับใบแจ้งหนี้: {this.props.profile.dateInvoice}</Label>}
+                        {!this.props.profile.dateInvoice && <Label>วันที่ได้รับใบแจ้งหนี้: -</Label>}
+                    </Col>
+                    
+                    <Col>
+
+                    </Col>
+                </Row>
+                <Row style={{ height: 50 }}>
                     <Col >
                         {this.props.profile.datePay && <Label>วันที่ชำระเงิน: {this.props.profile.datePay}</Label>}
                         {!this.props.profile.datePay && <Label>วันที่ชำระเงิน: -</Label>}
                     </Col >
                     <Col >
-
-                    </Col>
-                </Row>
-                <Row style={{ height: 50 }}>
-                    <Col  >
-                        {this.props.profile.dateOut && <Label>วันที่สินค้าออกคลัง: {this.props.profile.dateOut}</Label>}
-                        {!this.props.profile.dateOut && <Label>วันที่สินค้าออกคลัง: -</Label>}
-                    </Col>
-                    <Col >
-                        {this.props.profile.dateIn && <Label>วันที่สินค้าถึงสาขา: {this.props.profile.dateIn}</Label>}
-                        {!this.props.profile.dateIn && <Label>วันที่สินค้าถึงสาขา: -</Label>}
+                        {this.props.profile.dateIn && <Label>วันที่สินค้าถึงคลัง: {this.props.profile.dateIn}</Label>}
+                        {!this.props.profile.dateIn && <Label>วันที่สินค้าถึงคลัง: -</Label>}
                     </Col >
                     <Col >
                     </Col>
@@ -414,13 +415,13 @@ class BuyDetail extends React.Component {
                         {this.props.profile.status=='รอใบเสนอราคา' && <Button disabled={this.state.disButtonSave} color="info" onClick={(e)=>{e.preventDefault(); this.onChangeStatus(1);}} style={{ width: 100, marginRight: 15 }}>
                             บันทึก
                             </Button>}
-                            {this.props.profile.status=='รอชำระเงิน' && <Button  color="info" onClick={(e)=>{e.preventDefault(); this.onChangeStatus(2);}} style={{ width: 100, marginRight: 15 }}>
+                            {this.props.profile.status=='รอชำระเงิน' && <Button  color="info" onClick={(e)=>{e.preventDefault(); this.onChangeStatus(2);}} style={{ width: 150, marginRight: 15 }}>
                             ชำระเงินแล้ว
                             </Button>}
-                            {this.props.profile.status=='รอรับสินค้า' && <Button  color="info" onClick={(e)=>{e.preventDefault(); this.onChangeStatus(3);}} style={{ width: 100, marginRight: 15 }}>
+                            {this.props.profile.status=='รอรับสินค้า' && <Button  color="info" onClick={(e)=>{e.preventDefault(); this.onChangeStatus(3);}} style={{ width: 150, marginRight: 15 }}>
                             รับสินค้า
                             </Button>}
-                            {this.props.profile.status=='รอขนเข้าคลัง' && <Button  color="info" style={{ width: 100, marginRight: 15 }}>
+                            {this.props.profile.status=='รอขนเข้าคลัง' && <Button  color="info" style={{ width: 150, marginRight: 15 }}>
                             มอบหมายงาน
                             </Button>}
                         
