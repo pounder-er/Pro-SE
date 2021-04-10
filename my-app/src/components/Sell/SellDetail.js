@@ -163,7 +163,8 @@ class SellDetail extends React.Component {
                                 {this.state.sourceImageFile && (
                                     <img src={URL.createObjectURL(this.state.sourceImageFile)} />
                                 )}
-
+ 
+ 
                                 {!this.state.sourceImageFile && (
                                     <Button
                                         onClick={() => this.hiddenFileInputRef.current.click()}
