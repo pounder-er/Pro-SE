@@ -602,7 +602,20 @@ class Firebase {
       });
   }
 
+  addImportOrder = (id,email, success, reject) => {
+    let batch = firebase.firestore().batch(),
+        ref = firebase.firestore().collection('ExportOrder');
 
+        batch.set(ref.doc(id), { person: email });
+
+    batch.commit()
+        .then(() => {
+            success();
+        })
+        .catch(error => {
+            reject(error);
+        })
+}
 
 }
 const fire_base = new Firebase();
