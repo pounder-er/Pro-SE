@@ -279,6 +279,7 @@ class Firebase {
         reject(error);
       })
 
+      
   }
 
   updateImageSellBuy = (id,BS, image, success, reject) => {
