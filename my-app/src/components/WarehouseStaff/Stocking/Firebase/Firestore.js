@@ -22,15 +22,26 @@ class Firestore {
     }
 
     getProduct = (success, reject, task) => {
+        let round = parseInt(task.length / 10) + 1
+        let roundStart = 0, roundEnd = 10
         let docID = firebase.firestore.FieldPath.documentId()
-        firebase.firestore().collection('Product').where(docID, "in", task).get()
-            .then(function (querySnapshot) {
-                success(querySnapshot);
-                console.log("complete")
-            })
-            .catch(function (error) {
-                reject(error);
-            });
+
+        for (let i = 0; i < round; i++) {
+
+            // let docID = firebase.firestore.FieldPath.documentId()
+            console.log(task.slice(roundStart, roundEnd))
+            firebase.firestore().collection('Product').where(docID, "in", task.slice(roundStart, roundEnd)).get()
+                .then(function (querySnapshot) {
+                    success(querySnapshot);
+                    console.log("complete")
+                })
+                .catch(function (error) {
+                    reject(error);
+                });
+
+            roundStart += 10
+            roundEnd += 10
+        }
     }
 
     getTaskStock = (order, reject, email) => {
@@ -65,6 +76,7 @@ class Firestore {
         let docID = firebase.firestore.FieldPath.documentId()
         let day = new Date()
         let date = firebase.firestore.FieldValue.serverTimestamp()
+        console.log(docID)
 
         firebase.firestore().collection("HistoryStock").add({
             task: task,
@@ -81,16 +93,28 @@ class Firestore {
                 console.error("Error writing document: ", error);
             });
 
-        firebase.firestore().collection("TaskStock").where(docID, "in", array).get()
-            .then(function (querySnapshot) {
-                successDelete(querySnapshot)
-                querySnapshot.forEach(function (doc) {
-                    doc.ref.delete();
+        let round = parseInt(task.length / 10) + 1
+        let roundStart = 0, roundEnd = 10
+        // let docID = firebase.firestore.FieldPath.documentId()
+
+        for (let i = 0; i < round; i++) {
+
+            // let docID = firebase.firestore.FieldPath.documentId()
+            console.log(task.slice(roundStart, roundEnd))
+            firebase.firestore().collection("TaskStock").where(docID, "in", array.slice(roundStart, roundEnd)).get()
+                .then(function (querySnapshot) {
+                    successDelete(querySnapshot)
+                    querySnapshot.forEach(function (doc) {
+                        doc.ref.delete();
+                    });
+
+                }).catch(function (error) {
+                    console.error("Error removing document: ", error);
                 });
 
-            }).catch(function (error) {
-                console.error("Error removing document: ", error);
-            });
+            roundStart += 10
+            roundEnd += 10
+        }
     }
 
     //-------------------------------- Pre Order Buying ---------------------------------//
@@ -107,22 +131,31 @@ class Firestore {
     }
 
     getPO = (success, reject, task) => {
-        // console.log("in getPO : " + task)
+        let round = parseInt(task.length / 10) + 1
+        let roundStart = 0, roundEnd = 10
         let docID = firebase.firestore.FieldPath.documentId()
-        firebase.firestore().collection('Buy').where(docID, "in", task).get()
-            .then(function (querySnapshot) {
-                success(querySnapshot);
-                // console.log("complete")
-            })
-            .catch(function (error) {
-                reject(error);
-            });
 
+        for (let i = 0; i < round; i++) {
+
+            // let docID = firebase.firestore.FieldPath.documentId()
+            // console.log(task.slice(roundStart,roundEnd))
+            firebase.firestore().collection('Buy').where(docID, "in", task.slice(roundStart, roundEnd)).get()
+                .then(function (querySnapshot) {
+                    success(querySnapshot);
+                    // console.log("complete")
+                })
+                .catch(function (error) {
+                    reject(error);
+                });
+
+            roundStart += 10
+            roundEnd += 10
+        }
     }
 
-    updateTotalPruduct =(proID, item)=>{
+    updateTotalPruduct = (proID, item) => {
         firebase.firestore().collection('Product').doc(proID).update({
-            productTotal : firebase.firestore.FieldValue.increment(item) 
+            productTotal: firebase.firestore.FieldValue.increment(item)
         })
             .then(() => {
                 console.log("Document successfully updated in Total");
@@ -136,7 +169,8 @@ class Firestore {
     onSavePO = (idPO, log, taskDel) => {
         firebase.firestore().collection('Buy').doc(idPO).update({
             status: "สำเร็จ",
-            log: log
+            log: log,
+            dateIn: firebase.firestore.FieldValue.serverTimestamp()
         })
             .then(() => {
                 console.log("Document successfully updated!");
@@ -145,20 +179,20 @@ class Firestore {
                 // The document probably doesn't exist.
                 console.error("Error updating document: ", error);
             });
-        
+
         // console.log(log)
-        log.forEach((data)=>{
+        log.forEach((data) => {
             // console.log(data.productID.id)
-            this.updateTotalPruduct(data.productID.id,data.volume)
+            this.updateTotalPruduct(data.productID.id, data.volume)
         })
 
         firebase.firestore().collection("ImportOrder").doc(idPO).delete()
-        .then(function (querySnapshot) {
-            taskDel(querySnapshot)
+            .then(function (querySnapshot) {
+                taskDel(querySnapshot)
 
-        }).catch(function (error) {
-            console.error("Error removing document: ", error);
-        });
+            }).catch(function (error) {
+                console.error("Error removing document: ", error);
+            });
     }
 
     //-------------------------------- Sell Order  ---------------------------------//
@@ -172,16 +206,27 @@ class Firestore {
             });
     }
     getSO = (success, reject, task) => {
-        console.log("in getPO : " + task)
+        // console.log("in getPO : " + task)
+        let round = parseInt(task.length / 10) + 1
+        let roundStart = 0, roundEnd = 10
         let docID = firebase.firestore.FieldPath.documentId()
-        firebase.firestore().collection('Sell').where(docID, "in", task).get()
-            .then(function (querySnapshot) {
-                success(querySnapshot);
-                // console.log("complete")
-            })
-            .catch(function (error) {
-                reject(error);
-            });
+
+        for (let i = 0; i < round; i++) {
+
+            // let docID = firebase.firestore.FieldPath.documentId()
+            // console.log(task.slice(roundStart,roundEnd))
+            firebase.firestore().collection('Sell').where(docID, "in", task.slice(roundStart, roundEnd)).get()
+                .then(function (querySnapshot) {
+                    success(querySnapshot);
+                    // console.log("complete")
+                })
+                .catch(function (error) {
+                    reject(error);
+                });
+
+            roundStart += 10
+            roundEnd += 10
+        }
     }
 
     onSaveSO = (idSO, taskDel) => {
