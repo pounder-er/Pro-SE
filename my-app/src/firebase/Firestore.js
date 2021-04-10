@@ -288,6 +288,17 @@ class Firestore {
 
   }
 
+  getAllHistoryStock=(success, reject)=>{
+    firebase.firestore().collection('HistoryStock')
+    .get()
+    .then(function(querySnapshot){
+      success(querySnapshot)
+    })
+    .catch(function(error){
+      reject(error)
+    });
+  }
+
 
 
 }
