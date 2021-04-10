@@ -217,7 +217,7 @@ class BuyDetail extends React.Component {
             }
         }
         
-        fire_base.updateChangeStatus(this.props.profile.InID,this.props.profile.log,num,this.updateChangeSuccess,this.unSuccess)
+        fire_base.updateChangeStatusPo(this.props.profile.InID,this.props.profile.log,num,this.updateChangeSuccess,this.unSuccess)
     }
 
     updateChangeSuccess=()=>{

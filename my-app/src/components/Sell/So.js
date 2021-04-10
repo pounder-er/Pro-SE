@@ -136,7 +136,8 @@ class So extends React.Component {
     }
 
     unSuccess = (error) => {
-        // console.log(error)
+        console.log(error);
+        this.sweetAlret('ล้มเหลว', 'สินค้าไม่เพียงพอ', 'error', 'ตกลง');
     }
 
     addPOSuccess = () => {
@@ -179,10 +180,11 @@ class So extends React.Component {
                             }
                         });
                         let c = this.state.log.find((doc, index) => {
-                            if (doc.id == values.productID) {
+                            if (doc.productID == values.productID) {
                                 return true;
                             }
                         });
+                        // console.log(this.product);
                         if (c != undefined) {
                             // console.log('555');
                             c.volume += values.volume;
@@ -415,9 +417,9 @@ class So extends React.Component {
                     </Col>
                     <Col md={2} style={{ display: 'flex' }}>
                         <FormGroup style={{ display: 'flex', flex: 1 }}>
-                            <Link to={"../sell"}>
+                            
                                 <Button onClick={this.uploadTodb} type="submit" color="success" style={{ flex: 1 }}>บันทึก</Button>
-                            </Link>
+                            
                         </FormGroup>
                     </Col>
                 </Row>
