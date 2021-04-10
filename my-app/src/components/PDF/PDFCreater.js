@@ -5,6 +5,7 @@ import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/rendere
 import { Table, TableBody, TableHeader, TableCell, DataTableCell} from '@david.kucsai/react-pdf-table'
 
 import font from './font/Prompt-Regular.ttf'
+import { isThisTypeNode } from 'typescript';
 
 Font.register({ family: 'Prompt', src: font });
 
@@ -21,20 +22,20 @@ class InvoiceCreater extends React.Component {
             total:0,
             list : []
         }
-        this.sliceData()
+        
     }
 
     componentDidMount(){
         let tempSum = 0;
         let tempDiscount = 0;
         for(let x of this.state.data){
-            console.log(x);
+            // console.log(x);
             tempSum += x.sum;
             tempDiscount += x.discount;
         }
         this.setState({sum: tempSum});
         this.setState({discount: tempDiscount});
-        console.log(this.state.sum)
+        // console.log(this.state.sum)
         let tempTax = ((tempSum-tempDiscount)*7) / 100
         let tempTotal = (tempSum-tempDiscount) + tempTax
         this.setState({tax : tempTax});
@@ -44,17 +45,19 @@ class InvoiceCreater extends React.Component {
     }
 
     sliceData=()=>{
+        console.log(this.props.data)
         if(this.props.data.length > 10){
             for(let i=0; i<this.props.data.length; i+=10){
                 let slice_data = this.props.data.slice(i, i+10)
                 this.setState({list : this.state.list.concat([this.renderInvoiceListV2(slice_data)])});
             }
         }else{
-            this.setState({list : this.state.list.concat([this.props.data])});
+            this.setState({list : this.state.list.concat([this.renderInvoiceListV2(this.state.data)])});
         }
     }
 
     renderAllPage=()=>{
+        this.sliceData()
         let pageList = []
         for(let idx in this.state.list){
             if(idx == 0){
@@ -150,6 +153,9 @@ class InvoiceCreater extends React.Component {
                                 {/*  ##  renderList   ## */}
                                 {/* <this.renderInvoiceList/> */}
                                 {this.state.list[idx]}
+                                {/* {this.renderInvoiceListV2} */}
+                                {/* <this.renderInvoiceListV2/> */}
+
                             </View>
                             <View style={{flexDirection:'row'}}>
                                 <View style={{flex:1}}>
@@ -162,60 +168,7 @@ class InvoiceCreater extends React.Component {
                                         </View>
                                     </View>
                                 </View>
-                                {/* <View style={{flex:1}}>                        
-                                    <View style={{borderColor:'black', 
-                                                borderWidth:this.state.tableBorderWidth, 
-                                                marginTop:10, 
-                                                width:'70%', 
-                                                alignSelf:'flex-end',
-                                                fontSize:13,
-                                                textAlign:'center'}}>
-                                        <View style={{flexDirection:'row'}}>
-                                            <View style={{flex:1}}>
-                                                <Text>ราคารวมทั้งสิ้น</Text>
-                                            </View>
-                                            <View style={{flex:1, borderLeftColor:'black', borderLeftWidth:this.state.tableBorderWidth}}>
-                                                <Text>{this.state.sum}</Text>
-                                            </View>
-                                        </View>  
-
-                                        <View style={{flexDirection:'row', borderTopColor:'black', borderTopWidth:this.state.tableBorderWidth}}>
-                                            <View style={{flex:1}}>
-                                                <Text>ส่วนลด</Text>
-                                            </View>
-                                            <View style={{flex:1, borderLeftColor:'black', borderLeftWidth:this.state.tableBorderWidth}}>
-                                                <Text>{this.state.discount}</Text>
-                                            </View>
-                                        </View>
-
-                                        <View style={{flexDirection:'row', borderTopColor:'black', borderTopWidth:this.state.tableBorderWidth}}>
-                                            <View style={{flex:1}}>
-                                                <Text>ราคารวมส่วนลด</Text>
-                                            </View>
-                                            <View style={{flex:1, borderLeftColor:'black', borderLeftWidth:this.state.tableBorderWidth}}>
-                                                <Text>{this.state.sum - this.state.discount}</Text>
-                                            </View>
-                                        </View> 
-
-                                        <View style={{flexDirection:'row', borderTopColor:'black', borderTopWidth:this.state.tableBorderWidth}}>
-                                            <View style={{flex:1}}>
-                                                <Text>ภาษีมูลค่าเพิ่ม 7%</Text>
-                                            </View>
-                                            <View style={{flex:1, borderLeftColor:'black', borderLeftWidth:this.state.tableBorderWidth}}>
-                                                <Text>{this.state.tax}</Text>
-                                            </View>
-                                        </View> 
-
-                                        <View style={{flexDirection:'row', borderTopColor:'black', borderTopWidth:this.state.tableBorderWidth}}>
-                                            <View style={{flex:1}}>
-                                                <Text>จำนวนเงินรวมทั้งสิ้น</Text>
-                                            </View>
-                                            <View style={{flex:1, borderLeftColor:'black', borderLeftWidth:this.state.tableBorderWidth}}>
-                                                <Text>{this.state.total}</Text>
-                                            </View>
-                                        </View>                         
-                                    </View>
-                                </View>     */}
+                                
                             </View>
                         </View>
                     </Page>
@@ -227,11 +180,14 @@ class InvoiceCreater extends React.Component {
     }
 
     renderInvoiceListV2=(list)=>{
+        // this.sliceData()
+        // let list = this.state.list
+        // console.log("listtt",list)
         let componentList = []
         // console.log(this.state.data);
         
         for(let x in list) {
-            console.log(x);
+            console.log('dataaa',x);
             let num = parseInt(x)+1;
             
             componentList.push(
@@ -244,22 +200,22 @@ class InvoiceCreater extends React.Component {
                         <Text>{num}</Text>    
                     </View>
                     <View style={{flex:0.16, borderLeftColor:'black', borderLeftWidth:this.state.tableBorderWidth}}> 
-                        <Text>{this.state.data[x].id}</Text>
+                        <Text>{list[x].id}</Text>
                     </View>
                     <View style={{flex:0.18, borderLeftColor:'black', borderLeftWidth:this.state.tableBorderWidth}}> 
-                        <Text>{this.state.data[x].pname}</Text>
+                        <Text>{list[x].pname}</Text>
                     </View>
                     <View style={{flex:0.15, borderLeftColor:'black', borderLeftWidth:this.state.tableBorderWidth}}> 
-                        <Text>{this.state.data[x].pricePerUnit}</Text>
+                        <Text>{list[x].pricePerUnit}</Text>
                     </View>
                     <View style={{flex:0.14, borderLeftColor:'black', borderLeftWidth:this.state.tableBorderWidth}}> 
-                        <Text>{this.state.data[x].quantity}</Text>
+                        <Text>{list[x].quantity}</Text>
                     </View>
                     <View style={{flex:0.14, borderLeftColor:'black', borderLeftWidth:this.state.tableBorderWidth}}> 
-                        <Text>{this.state.data[x].discount}</Text>
+                        <Text>{list[x].discount}</Text>
                     </View>
                     <View style={{flex:0.14, borderLeftColor:'black', borderLeftWidth:this.state.tableBorderWidth}}> 
-                        <Text>{this.state.data[x].sum}</Text>
+                        <Text>{list[x].sum}</Text>
                     </View>    
                 </View>
             );
