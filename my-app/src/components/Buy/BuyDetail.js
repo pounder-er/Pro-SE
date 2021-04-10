@@ -333,7 +333,6 @@ class BuyDetail extends React.Component {
                     <Col md={4}>
                         <Label>สถานะ: {this.props.profile.status}</Label>
                     </Col >
-
                 </Row>
                 <Row style={{ height: 50 }}>
                     <Col>
