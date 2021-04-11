@@ -28,7 +28,7 @@ import '@inovua/reactdatagrid-community/theme/default-light.css'
 import PropTypes from 'prop-types';
 import { i18n } from '../i18n';
 import AssignIn from './AssignIn';
-import AvatarEditor from 'react-avatar-editor';
+
 
 import Resizer from 'react-image-file-resizer';
 
