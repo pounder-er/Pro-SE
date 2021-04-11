@@ -46,6 +46,9 @@ import firestore from '../../firebase/Firestore'
 // import SideBar from './SideBar'
 import './AddPartner.css'
 
+
+import PDFInvoice from '../PDF/PDFInvoice'
+
 var checkZip = false;
 var subDistrictFilter = [];
 var districtFilter = [];
@@ -91,7 +94,8 @@ class AddPartner extends React.Component {
       disabledButtonSaveOrEdit: true,
       disabledButtonDefault: true,
       loading: false,
-      resizeImageUrl: ''
+      resizeImageUrl: '',
+  
     }
     this.loading = false;
     this.account = null;
@@ -137,9 +141,12 @@ class AddPartner extends React.Component {
     })
   }
 
+ 
+
   render() {
     // console.log(new Date().toLocaleDateString());
     return (
+      
       <Card style={{width:'97%', alignSelf:'center'}}>
                 
         <CardBody>
@@ -385,6 +392,7 @@ class AddPartner extends React.Component {
                         <Button type="submit" color="success" style={{ flex: 1 }}>บันทึก</Button>
                       </FormGroup>
                     </Col>
+                   
                   </Row>
                 </Form>
               </LoadingOverlay>

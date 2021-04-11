@@ -164,7 +164,7 @@ class Sell extends React.PureComponent {
                         defaultFilterValue={filterValue}
                         showColumnMenuTool={true}
                         emptyText="ไม่มีรายการ"
-                        style={{ minHeight: 400 }}
+                        style={{ minHeight: 550 }}
                     />
                     </Row>
                

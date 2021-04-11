@@ -82,15 +82,18 @@ class Po extends React.Component {
             log : [],
             companyCheck : false,
             
+            loading:false
         }
         this.product = []
         
+        
+
         this.companyID = ""
     }
 
-    async componentDidMount() {
-        await fire_base.getAllCompany(this.getCompanySuccess, this.unSuccess)
-        await fire_base.getAllProduct(this.getAllProductSuccess, this.unSuccess);
+    componentDidMount() {
+        fire_base.getAllCompany(this.getCompanySuccess, this.unSuccess)
+        
     
 
     }
@@ -102,45 +105,94 @@ class Po extends React.Component {
             element.push(e);
         })
         this.setState({ elementPartnerCompany: element });
-        // console.log(element);
+
+        fire_base.getAllProduct(this.getAllProductSuccess, this.unSuccess);
+
+        // console.log(this.state.elementPartnerCompany[0].props.value);
     }
 
-    getAllProductSuccess = (querySnapshot) => {
+    filterElement=()=>{
+        let element=[],e = this.product.filter((doc)=>{
+                if(doc.companyID == this.state.elementPartnerCompany[0].props.value){
+                    return true;
+                }
+        });
+
+        e.forEach(doc=>{
+            element.push(<option key={doc.id} value={doc.id}>{doc.id + ' : ' + doc.productName}</option>);
+        })
+        this.setState({elementProduct:element});
+        
+    }
+
+    getAllProductSuccess = async(querySnapshot) => {
         let element = [],data=[]
-        querySnapshot.forEach((doc) => {
-            let p;
+       querySnapshot.forEach(async(doc) => {
+            let p=[];
             p = doc.data()
             p.id = doc.id
-            p.companyID.get().then(doc=>{
-                p.companyID = doc.id
-                data.push(p)
+            p.companyID.get().then(a=>{
+                p.companyID = a.id
+                
             })
-            let e = <option key={doc.id} value={doc.id}>{doc.id + ' : ' + doc.data().productName}</option>
-            element.push(e);
+            data.push(p);
+            // element.push(<option key={doc.id} value={doc.id}>{doc.id + ' : ' + doc.data().productName}</option>);
         })
-        // console.log(data);
         this.product = data;
-        this.setState({ elementProduct: element });
-        // console.log(element);
+        setTimeout(
+            ()=>this.filterElement()
+            ,
+            200
+        )
+       
+
+        // let e = this.product.filter((doc)=>{
+        //     console.log('111');
+        //     if(doc.companyID == this.state.elementPartnerCompany[0].props.value){
+                
+        //         return true;
+        //     }
+        // });
+        // console.log(e);
+        // e.forEach(doc=>{
+        //     element.push(<option key={doc.id} value={doc.id}>{doc.id + ' : ' + doc.data().productName}</option>)
+        // })
+        // this.setState({ elementProduct: element });
+        
     }
 
     unSuccess = (error) => {
-        // console.log(error)
+        this.setState({loading:false});
+        console.log(error)
+        this.sweetAlret('ล้มเหลว', 'การเชื่อมต่อผิดพลาด', 'error', 'ตกลง');
     }
 
     addPOSuccess=()=>{
+        this.setState({loading:false});
+        this.sweetAlret('สำเร็จ', 'เพิ่มรายการซื้อเรียบร้อย', 'success', 'ตกลง');
+        this.setState({companyCheck:false});
+        this.setState({log:[]});
 
+    }
+
+    sweetAlret(title, text, icon, button) {
+        swal({
+            title: title,
+            text: text,
+            icon: icon,
+            button: button,
+        })
     }
 
     uploadTodb =()=>{
         let data = {
             log : this.state.log,
             status : 'รอใบเสนอราคา',
-            companyID : this.companyID,
+            companyID : this.state.elementPartnerCompany[0].props.value,
             res : this.props.userProfile.firstName + " " +  this.props.userProfile.lastName
         }
         // let llog = []
-        console.log(this.state.log)
+        
         // for(let x of this.state.log){           
         //     let b = this.product.find((doc,index)=>{
         //         if(doc.id == x.productID){
@@ -150,13 +202,28 @@ class Po extends React.Component {
             
         //     llog.push(b)
         // }
-        
+        console.log(data)
+        this.setState({loading:true});
         fire_base.addPO(data,this.addPOSuccess, this.unSuccess)
     }
-
+    
+    checkCom=(setFieldValue,values)=>{
+        if(values.companyID == '' && this.state.elementPartnerCompany.length>0){
+            setFieldValue('companyID',this.state.elementPartnerCompany[0].props.value);
+        }
+        console.log(values.companyID);
+        if(values.productID == '' && this.state.elementProduct.length>0){
+            setFieldValue('productID',this.state.elementProduct[0].props.value);
+        }
+    }
     render() {
         
         return (
+            <LoadingOverlay
+                active={this.state.loading}
+                spinner
+                text='กำลังเพิ่มรายการซื้อ...'
+            >
             <div>
                 <Formik
                     validationSchema={formPo}
@@ -177,7 +244,7 @@ class Po extends React.Component {
                         }
                         if(g)
                         {
-                            console.log(values.productID)   
+                               
                             let a ={},
                             b = this.product.find((doc,index)=>{
                                 if(doc.id == values.productID){
@@ -188,8 +255,9 @@ class Po extends React.Component {
                             a.productName = b.productName
                             a.volume = values.volume
                             a.productID = values.productID
-                            a.productPrice = '-'
-                            a.disCount = '-'
+                            a.productPrice = null
+                            a.disCount = null
+                            console.log(a)
                             this.setState({log : this.state.log.concat(a)})
                         }
 
@@ -197,8 +265,7 @@ class Po extends React.Component {
                     }}
                     initialValues={{
                         productName: '',
-                        productID: '300000',
-                        productPrice: '0',
+                        productID: '',
                         companyID: '00',
                         volume: 1
                     }}
@@ -216,7 +283,7 @@ class Po extends React.Component {
                         errors,
                     }) => (
                         <Form onSubmit={handleSubmit} onReset={(e) => { e.preventDefault(); handleReset(e); }} >
-
+                            {this.checkCom(setFieldValue,values)}
                             <Row form>
                                 
                                 <Col md={6} >
@@ -233,7 +300,7 @@ class Po extends React.Component {
                                                 let element = []
                                                 let d = this.product.filter(doc=>{
                                                     if(doc.companyID == e.target.value){
-                                                        this.companyID = e.target.value;
+                                                        // this.companyID = e.target.value;
                                                         return true;
                                                     }
                                                 })
@@ -241,6 +308,7 @@ class Po extends React.Component {
                                                 d.forEach(doc=>{
                                                     element.push(<option key={doc.id} value={doc.id}>{doc.id + ' : ' + doc.productName}</option>);
                                                 })
+                                                setFieldValue('productName',d[0].id);
                                                 this.setState({elementProduct:element});
                                                 // console.log(values.companyID)
                                             
@@ -358,6 +426,7 @@ class Po extends React.Component {
                 </Row> */}
                 
             </div>
+            </LoadingOverlay>
         );
     }
 }

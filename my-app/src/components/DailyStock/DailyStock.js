@@ -1,203 +1,200 @@
 import React from 'react';
 
-
-import './DailyStock.css';
-
 import {
     Button,
-    InputGroup,
-    InputGroupAddon,
-    InputGroupText,
-    Input,
-    Table,
-    Pagination,
-    PaginationItem,
-    PaginationLink
+    Label,
+    Row,
+    Col,
+    Container,
+    UncontrolledCollapse,
+    CardBody,
+    Card,
+    Modal, 
+    ModalHeader, 
+    ModalBody, 
+    ModalFooter,
+    Input
 } from 'reactstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+import styled from 'styled-components';
+
+import { MdSearch, MdDescription, MdCallReceived, MdCallMade } from "react-icons/md";
+
+import ReactDataGrid from '@inovua/reactdatagrid-community'
+import '@inovua/reactdatagrid-community/base.css'
+import '@inovua/reactdatagrid-community/theme/default-light.css'
+import NumberFilter from '@inovua/reactdatagrid-community/NumberFilter'
+import SelectFilter from '@inovua/reactdatagrid-community/SelectFilter'
+
+import firestore from '../../firebase/Firestore'
 
 import {
-    ProSidebar,
-    Menu,
-    MenuItem,
-    SubMenu
-} from 'react-pro-sidebar';
-import 'react-pro-sidebar/dist/css/styles.css';
+    Switch,
+    Route,
+    Link,
+    NavLink,
+    withRouter
+} from 'react-router-dom';
 
-import { BsFillPersonFill, BsFillLockFill } from "react-icons/bs";
-import { MdSearch, MdDescription } from "react-icons/md";
-import { IoMdTrash } from "react-icons/io";
+import { AiFillFileText } from "react-icons/ai";
 
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import ReportDailyStock from './ReportDailyStock'
 
-class DailyStock extends React.Component {
+// import EditEmployee from './EditEmployee';
+// import EditPartnerCompany from './EditPartner'
+// import AddPartner from './AddPartner'
+
+
+const filterValue = [
+    { name: 'productID', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'productName', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'respName', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'productTotal', operator: 'startsWith', type: 'string', value: '' },
+    { name: 'balance', operator: 'startsWith', type: 'string', value: '' }
+    
+];
+const i18n = Object.assign({}, ReactDataGrid.defaultProps.i18n, {
+    sortAsc: 'เรียงน้อยไปมาก',
+    sortDesc: 'เรียงมากไปน้อย',
+    clear: 'ลบ',
+    clearAll: 'ลบทั้งหมด',
+    contains: 'ประกอบด้วย',
+    startsWith: 'เริ่มด้วย',
+    endsWith: 'จบด้วย',
+    neq: 'ไม่เท่ากับ',
+    eq: 'เท่ากับ',
+    notEmpty: 'ไม่ว่าง',
+    empty: 'ว่าง',
+    notContains: 'ไม่ได้ประกอบด้วย',
+    disable:'ปิดตัวกรอง',
+    enable:'เปิดตัวกรอง',
+    pageText:'หน้า ',
+    ofText:' จาก ',
+    perPageText:'แสดงรายการทีละ',
+    showingText:'กำลังแสดงรายการ '
+})
+
+class DailyStock extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            startStateBefore: new Date(),
-            setStartStateBeofre: new Date(),
-            startStateAfter: new Date(),
-            setStartStateAfter: new Date()
-
+            searchText: '',
+            dataSource: [],
+            modalHistoryStock: false,
+            modalAddPartner : false,
+            modalTest : false
         }
+        this.data = {};
+        this.columns = [
+            
+            { name: 'productID', groupBy: false,defaultFlex: 0.5, header: 'รหัสสินค้า'},
+            { name: 'productName', groupBy: false,defaultFlex: 1, header: 'ชื่อสินค้า' },
+            { name: 'respName', groupBy: false,defaultFlex: 1, header: 'ชื่อผู้รับผิดชอบ' },
+            { name: 'productTotal', groupBy: false, defaultFlex: 1, header: 'จำนวนที่เหลือ' },
+            { name: 'balance', groupBy: false, defaultFlex: 1, header: 'จำนวนที่เช็ค' },
+            { name: 'report', groupBy: false, defaultFlex: 1, header: 'หมายเหตุ' },
+            { name: 'detail', header: 'รายละเอียด', maxWidth: 109, render: ({data})=><button onClick={(e)=>{this.togglemodalHistoryStock(e);this.data=data;}} style={{display:'contents'}}><AiFillFileText color='#00A3FF' size={30} /></button> },
+        ]
+    }
+
+    setDataGridRef = (ref) => (this.dataGrid = ref)
+
+    togglemodalHistoryStock = (e) => {
+        e.preventDefault();
+        this.setState({ modalHistoryStock: !this.state.modalHistoryStock });
+    }
+
+
+    
+
+    async componentDidMount(){
+        //await fire_base.getAllUserProfile(this.getAllUserProfileSuccess,this.unSuccess);
+        // await firestore.listeningProfile(this.listeningProfileSuccess,this.unSuccess);
+        //await firestore.getAllPartnerCompany(this.getAllPartnerCompanySuccess,this.unSuccess);
+        // await firestore.listeningPartnerCompany(this.listeningPartnerCompanySuccess, this.unSuccess);
+        await firestore.getAllHistoryStock(this.getAllHistorySuccess, this.unSuccess)
+
+    }
+
+    
+
+    getAllHistorySuccess=(querySnapshot)=>{
+        let data = []
+        querySnapshot.forEach(doc => {
+            let d = doc.data();
+        
+            d.id = doc.id
+            d.respName = d.profile.firstName+" "+d.profile.lastName
+            d.date = d.profile.date
+            console.log(doc.id, " => ", doc.data());
+            for(let x of d.task){
+                d.balance = x.balance
+                d.report = x.report
+                d.damage = x.damage
+                d.productID = x.id
+                d.productName = x.productName
+                d.productTotal = x.productTotal
+            }
+            data.push(d)
+
+        });
+        this.setState({dataSource:data});
+    }
+
+    unSuccess(error){
+        console.log(error);
     }
 
     render() {
         return (
-            <div className="Container">
 
-                <header className="Header">
-                    <div className="Profile">
-                        <div className="tab">
-                            <b>ประยา จันโอชุท</b>
-                            <b className="tabLeft">ID: M44114</b>
-                        </div>
-                        <b className="rank">Manager</b>
-                    </div>
-                    <Button color="danger" style={{borderRadius:0}}>ออกจากระบบ</Button>
-                    
-                </header>
-
-                <div className="Content">
-                    <div className="Sidebar">
-                        <ProSidebar>
-                            <Menu iconShape="square">
-                                <MenuItem >Dashboard</MenuItem>
-                                <MenuItem >จัดการสินค้า</MenuItem>
-                                <MenuItem >ตรวจสอบสินค้า</MenuItem>
-                                <MenuItem >ประวัติสินค้าเข้า/ออกคลัง</MenuItem>
-                                <MenuItem >ผู้ติดต่อ</MenuItem>
-                                <MenuItem >จัดการพนักงาน</MenuItem>
-                                <MenuItem >เช็ค Stock สินค้า</MenuItem>
-                                <MenuItem >จัดการพนักงาน</MenuItem>
-                                <MenuItem >ตั้งเวลาเช็คStockสินค้าประจำวัน</MenuItem>
-                                <MenuItem >ยอดขายสินค้า</MenuItem>
-                                <MenuItem >คำนวนปริมาณการสั่งซื่อสินค้า</MenuItem>
-                                {/* <SubMenu title="Components" >
-                                    <MenuItem>Component 1</MenuItem>
-                                    <MenuItem>Component 2</MenuItem>
-                                </SubMenu> */}
-                            </Menu>
-                        </ProSidebar>
-                    </div>
-                    <body className="Body">
-                        <h1 style={{marginTop:20, 
-                                    marginBottom:20, 
-                                    width:'95%', 
-                                    alignSelf:'center'}}>ตรวจสอบสินค้าประจำวัน</h1>
-                        <div className="Date_Select">
-
-                            {/* <InputGroup style={{width:400}}>
-                                <Input placeholder="รหัสบริษัท/ชื่อบริษัท" />
-                                <InputGroupAddon addonType="append">
-                                    <InputGroupText><MdSearch color="#1F1F1F" size={22}/></InputGroupText>
-                                </InputGroupAddon>
-                            </InputGroup>
-                            <Button color="success" style={{width:100}}>Filter</Button> */}
-
-                            <p style={{paddingRight:10}}>ระหว่าง</p>
-                            <DatePicker
-                                placeholderText={this.state.setStartStateBeofre.toLocaleDateString()} 
-                                selected={this.state.startDateBefore} 
-                                onChange={date => this.setState({setStartStateBeofre:date})} />
-                            <p style={{paddingRight:10, paddingLeft:10}}>ถึง</p>
-                            <DatePicker
-                                placeholderText={this.state.setStartStateAfter.toLocaleDateString()} 
-                                selected={this.state.startDateAfter} 
-                                onChange={date => this.setState({setStartStateAfter:date})} />
-
-                        </div>
-
-                        <Table striped style={{width:'95%', alignSelf:'center', marginTop:20}}>
-                            <thead>
-                                <tr>
-                                    <th>ลำดับ</th>
-                                    <th>รหัสสินค้า</th>
-                                    <th>ชื่อสินค้า</th>
-                                    <th>ผู้รับผิดชอบ</th>
-                                    <th>รับเข้า</th>
-                                    <th>ส่งออก</th>
-                                    <th>จำนวนที่เหลือ</th>
-                                    <th>จำนวนที่เช็คจริง</th>
-                                    <th>ตรวจเช็ควันที่</th>
-                                    <th>หมายเหตุ</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>110100</td>
-                                    <td>ข้าวหอมมะลิ ตราสส</td>
-                                    <td>ผม ครับ</td>
-                                    <td>0</td>
-                                    <td>20</td>
-                                    <td>100</td>
-                                    <td>100</td>
-                                    <td>01/01/2563</td>
-                                    <td className="CenterTd"> <MdDescription color="#00A3FF" size={25}/> </td>
-                                </tr>
-
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>110100</td>
-                                    <td>ข้าวหอมมะลิ ตราสส</td>
-                                    <td>ผม ครับ</td>
-                                    <td>0</td>
-                                    <td>20</td>
-                                    <td>100</td>
-                                    <td>100</td>
-                                    <td>01/01/2563</td>
-                                    <td className="CenterTd"> <MdDescription color="#00A3FF" size={25}/> </td>
-                                </tr>
-
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>110100</td>
-                                    <td>ข้าวหอมมะลิ ตราสส</td>
-                                    <td>ผม ครับ</td>
-                                    <td>0</td>
-                                    <td>20</td>
-                                    <td>100</td>
-                                    <td>100</td>
-                                    <td>01/01/2563</td>
-                                    <td className="CenterTd"><MdDescription color="#00A3FF" size={25}/></td>
-                                </tr>
-
-                            </tbody>
-                        </Table>
-                        <Pagination aria-label="Page navigation example" 
-                                    style={{justifyContent:'center',
-                                            marginTop:10}}>
-                            <PaginationItem>
-                                <PaginationLink first href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink previous href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">1</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">2</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">3</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink next href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink last href="#" />
-                            </PaginationItem>
-                        </Pagination>
-                    </body>
+            <div>
+                <Modal isOpen={this.state.modalHistoryStock} toggle={this.togglemodalHistoryStock} backdrop='static' size='lg' >
+                    <ModalHeader toggle={this.togglemodalHistoryStock}>รายละเอียด</ModalHeader>
+                    <ModalBody>
+                        {/* <EditEmployee profile={this.profile} /> */}
+                        <ReportDailyStock data={this.data}/>
+                    </ModalBody>
+                </Modal>
+                
+                {/* <Row style={{ marginBottom: '1rem' }}>
+                    <Col md="6">.col-3</Col>
+                    <Col md="6" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <Button color="primary" id="toggler"  >            
+                            เพิ่มพนักงาน                   
+                        </Button>           
+                    </Col>
+                </Row> */}
+                <div style={{display:'flex', width:'100%', justifyContent:'flex-end'}}>
+                             
                 </div>
+                
+                <ReactDataGrid
+                    onReady={this.setDataGridRef}
+                    i18n={i18n}
+                    idProperty="id"
+                    columns={this.columns}
+                    pagination
+                    defaultLimit={15}
+                    defaultSkip={15}
+                    pageSizes={[10, 15, 30]}
+                    dataSource={this.state.dataSource}
+                    defaultFilterValue={filterValue}
+                    showColumnMenuTool={false}
+                    emptyText="ไม่มีรายการ"
+                    style={{minHeight: 550}}
+                />
+                {/* <UncontrolledCollapse toggler="#toggler">
+                <FormEmployee />
+                </UncontrolledCollapse> */}
+
             </div>
+
         );
     }
 }
+
 
 
 export default DailyStock;

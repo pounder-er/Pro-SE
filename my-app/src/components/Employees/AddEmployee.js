@@ -295,7 +295,7 @@ class AddEmployee extends React.Component {
           >
             {/* from กรอกข้อมูล */}
             <Form onSubmit={handleSubmit} onReset={(e) => { e.preventDefault(); this.setDefaultImageCrop(); handleReset(e); }}>
-              {/* <Button onClick={()=>this.sweetAlret("ไม่สำเร็จ","สัส!!! อีเมลซ้ำหรือเน็ตมึงเน่าวะ","error","ตกลง")}>hhhh</Button> */}
+              
               {/* modal แสดงหน้าแก้ไขรูปโปร */}
               <Modal isOpen={this.state.ModalProfileImage} toggle={this.toggleModalProfileImage} backdrop='static' >
                 <ModalHeader >เลือก/แก้ไข รูปโปรไฟล์</ModalHeader>
