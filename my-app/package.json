@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@david.kucsai/react-pdf-table": "^0.3.0",
     "@firebase/app": "^0.6.18",
     "@firebase/app-types": "^0.6.1",
     "@inovua/reactdatagrid-community": "^4.0.31",
     "@react-icons/all-files": "^4.1.0",
+    "@react-pdf/renderer": "^2.0.3",
     "@reactchartjs/react-chart.js": "^1.0.0-rc.3",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
