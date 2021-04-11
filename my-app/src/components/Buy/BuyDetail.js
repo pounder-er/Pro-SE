@@ -214,7 +214,6 @@ class BuyDetail extends React.Component {
 
         this.setState({ dataSource: data,sum:this.state.sum,disButtonSave: check });
 
-
     }
 
     setDataGridRef = (ref) => (this.dataGrid = ref)
